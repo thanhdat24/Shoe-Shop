@@ -1,24 +1,17 @@
 // ----------------------------------------------------------------------
 
-export default function Paper(theme) {
+export default function Paper() {
   return {
     MuiPaper: {
       defaultProps: {
-        elevation: 0,
+        elevation: 0
       },
-
-      variants: [
-        {
-          props: { variant: 'outlined' },
-          style: { borderColor: theme.palette.grey[500_12] },
-        },
-      ],
 
       styleOverrides: {
         root: {
-          backgroundImage: 'none',
-        },
-      },
-    },
+          backgroundImage: 'none'
+        }
+      }
+    }
   };
 }
