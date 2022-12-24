@@ -3,11 +3,12 @@ const express = require('express');
 const morgan = require('morgan');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
-
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const app = express();
 
+const authRouters = require('./routers/authRouters');
+const adminRouters = require('./routers/adminRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -30,13 +31,14 @@ app.use('/api', limiter);
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
-
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
 
 // 3) Router
+app.use('/api/v1/auth', authRouters);
+app.use('/api/v1/admin', adminRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {

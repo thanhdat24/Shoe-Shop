@@ -10,7 +10,6 @@ process.on('uncaughtException', (err) => {
 dotenv.config({ path: './.env' });
 const app = require('./app');
 
-const http = require('http').createServer(app);
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -26,14 +25,14 @@ mongoose
 
 // lắng nghe event kết nối
 const port = process.env.PORT || 8080;
-const server = http.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App listening on port ${port}...`);
 });
 
-// After you declare "app"
-
 process.on('unhandledRejection', (err) => {
   console.log('UNHANDLED REJECTION! 🧨 Shutting down...');
+  console.log(err);
+
   console.log(err.name, err.message);
   server.close(() => {
     process.exit(1);
