@@ -9,6 +9,9 @@ const app = express();
 
 const authRouters = require('./routers/authRouters');
 const adminRouters = require('./routers/adminRouters');
+const categoryRouters = require('./routers/categoryRouters');
+const brandRouters = require('./routers/brandRouters');;
+const objUseRouters = require('./routers/objectUseRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -39,6 +42,9 @@ app.use((req, res, next) => {
 // 3) Router
 app.use('/api/v1/auth', authRouters);
 app.use('/api/v1/admin', adminRouters);
+app.use('/api/v1/categories', categoryRouters);
+app.use('/api/v1/brands', brandRouters);
+app.use('/api/v1/objectUses', objUseRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
