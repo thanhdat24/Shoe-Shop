@@ -8,6 +8,7 @@ const categorySchema = new mongoose.Schema(
       trim: true,
     },
   },
+  
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },

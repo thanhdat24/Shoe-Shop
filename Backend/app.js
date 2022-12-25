@@ -12,6 +12,7 @@ const adminRouters = require('./routers/adminRouters');
 const categoryRouters = require('./routers/categoryRouters');
 const brandRouters = require('./routers/brandRouters');;
 const objUseRouters = require('./routers/objectUseRouters');
+const shoesRouters = require('./routers/shoesRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -45,6 +46,7 @@ app.use('/api/v1/admin', adminRouters);
 app.use('/api/v1/categories', categoryRouters);
 app.use('/api/v1/brands', brandRouters);
 app.use('/api/v1/objectUses', objUseRouters);
+app.use('/api/v1/shoes', shoesRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
