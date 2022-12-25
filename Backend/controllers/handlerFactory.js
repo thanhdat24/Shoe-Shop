@@ -2,7 +2,6 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
 
-
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
@@ -53,7 +52,6 @@ exports.updateOne = (Model) =>
     });
   });
 
-
 exports.createOne = (Model, uploadCloudName, imageModelName, bannerModelName) =>
   catchAsync(async (req, res, next) => {
     if (imageModelName && imageModelName === 'photo') {
@@ -89,7 +87,6 @@ exports.createOne = (Model, uploadCloudName, imageModelName, bannerModelName) =>
     });
   });
 
-
 exports.getOne = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
@@ -105,8 +102,9 @@ exports.getOne = (Model, populateOptions) =>
     });
   });
 
-exports.getAll = (Model, populateOptions) =>
+exports.getAll = (Model, populateOptions, isSort) =>
   catchAsync(async (req, res, next) => {
+    console.log('req.query', req.query);
     // To allow for nested GET reviews on tour (hack)
     // let filter = {};
     // if (req.params.tourId) filter = { tour: req.params.tourId };
@@ -117,8 +115,10 @@ exports.getAll = (Model, populateOptions) =>
     //   .limitFields()
     //   .paginate();
     // const doc = await features.query;
-
-    let query = Model.find(req.query);
+    let query;
+    if (isSort) query = Model.find(req.query).sort([['name', 1]]);
+    else query = Model.find(req.query);
+    // let query = Model.find(req.query).sort([['name', 1]]);
     if (populateOptions) query = query.populate(populateOptions);
     const doc = await query;
 
