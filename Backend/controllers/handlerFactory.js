@@ -1,5 +1,6 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const cloudinary = require('../utils/cloudinary');
 
 
 exports.deleteOne = (Model) =>

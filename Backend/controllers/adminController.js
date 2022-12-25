@@ -4,13 +4,13 @@ const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const mkdirp = require('mkdirp');
+const cloudinary = require('../utils/cloudinary');
 
 exports.getAllAdmins = factory.getAll(Admin);
 exports.createAdmin = factory.createOne(Admin);
 exports.updateAdmin = factory.updateOne(Admin);
 exports.deleteAdmin = factory.deleteOne(Admin);
 exports.getDetailAdmin = factory.getOne(Admin);
-
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -52,7 +52,7 @@ const signToken = (id) => {
 };
 
 const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user._id);
+  const accessToken = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -61,14 +61,14 @@ const createSendToken = (user, statusCode, res) => {
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  res.cookie('jwt', token, cookieOptions);
+  res.cookie('jwt', accessToken, cookieOptions);
 
   // Remove password from output
   user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
-    token,
+    accessToken,
     user,
   });
 };
@@ -95,18 +95,20 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'idRole'
   );
   console.log('filteredBody ', filteredBody);
-  const uploadedResponse = await cloudinary.uploader.upload(
-    filteredBody.avatar,
-    {
-      upload_preset: 'profile',
-    }
-  );
+  if (filteredBody.avatar) {
+    const uploadedResponse = await cloudinary.uploader.upload(
+      filteredBody.avatar,
+      {
+        upload_preset: 'profile',
+      }
+    );
+    filteredBody.avatar = uploadedResponse.secure_url;
+  }
+
   //multer
   // const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
   // const urlImage = `http://localhost:8080${path}`;
 
-  filteredBody.avatar = uploadedResponse.secure_url;
-  console.log('uploadedResponse', uploadedResponse);
   const user = await Admin.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,

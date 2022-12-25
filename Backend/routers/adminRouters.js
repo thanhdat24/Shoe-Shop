@@ -8,7 +8,7 @@ router.use(authController.protect);
 
 router.get('/getMe', authController.getMe, adminController.getDetailAdmin);
 
-router.patch(
+router.put(
   '/updateMe',
   adminController.uploadUserPhoto,
   adminController.updateMe
