@@ -1,6 +1,6 @@
 // i18n
 import './locales/i18n';
-
+import './tailwind.css';
 // highlight
 import './utils/highlight';
 

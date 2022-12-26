@@ -41,7 +41,7 @@ export default function AppWelcome({ displayName }) {
           <br /> {!displayName ? '...' : displayName}!
         </Typography>
 
-        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
+        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }} className=" text-7xl text-red-500">
           If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything
         </Typography>
 

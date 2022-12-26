@@ -7,6 +7,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "tailwindcss": "postcss src/tailwind.css -o src/app_tailwind.css",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx ./src",
     "lint:fix": "eslint --fix --ext .js,.jsx ./src",
@@ -122,6 +123,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
+    "autoprefixer": "^10.4.13",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -133,7 +135,9 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "postcss": "^8.4.20",
     "prettier": "^2.5.1",
+    "tailwindcss": "^3.2.4",
     "typescript": "^4.5.5"
   }
 }

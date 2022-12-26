@@ -20,6 +20,7 @@ export const PATH_AUTH = {
 };
 
 export const PATH_PAGE = {
+  root: '/',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   pricing: '/pricing',
@@ -30,12 +31,13 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+
 };
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
-    app: path(ROOTS_DASHBOARD, '/app'),
+     
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),

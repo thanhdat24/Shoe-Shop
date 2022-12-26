@@ -1,12 +1,15 @@
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Switch, Container, Typography, Stack } from '@mui/material';
+import { useParams, useSearchParams } from 'react-router-dom';
 // _mock_
 import { _pricingPlans } from '../_mock';
 // components
 import Page from '../components/Page';
 // sections
 import { PricingPlanCard } from '../sections/pricing';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +22,9 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Pricing() {
+ const { id } = useParams();
+  console.log('userId', id);
+
   return (
     <Page title="Pricing">
       <RootStyle>

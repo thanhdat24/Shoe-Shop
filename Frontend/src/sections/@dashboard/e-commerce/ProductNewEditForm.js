@@ -25,7 +25,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTION = ['Men', 'Women', 'Kids'];
+const GENDER_OPTION = ['Men', 'Women'];
 
 const CATEGORY_OPTION = [
   { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
@@ -33,21 +33,8 @@ const CATEGORY_OPTION = [
   { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
 ];
 
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
-];
+const COLOR_OPTION = ['xanh', 'đỏ', 'cam'];
+const SIZE_OPTION = ['35', '36.5', '37', '38'];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -69,25 +56,28 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    description: Yup.string().required('Description is required'),
-    images: Yup.array().min(1, 'Images is required'),
+    desc: Yup.string().required('Description is required'),
+    // images: Yup.array().min(1, 'Images is required'),
     price: Yup.number().moreThan(0, 'Price should not be $0.00'),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
+      desc: currentProduct?.description || '',
       images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
       sku: currentProduct?.sku || '',
       price: currentProduct?.price || 0,
       priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
-      inStock: true,
-      taxes: true,
-      gender: currentProduct?.gender || GENDER_OPTION[2],
+      size: currentProduct?.tags || [SIZE_OPTION[0]],
+      color: currentProduct?.tags || [COLOR_OPTION[0]],
+      gender: currentProduct?.gender || GENDER_OPTION[1],
       category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
+      origin: currentProduct?.category || '',
+      material: currentProduct?.material || '',
+      supplier: currentProduct?.supplier || '',
+      quantity: Number(currentProduct?.quantity) || 0,
+      style: currentProduct?.style || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -120,8 +110,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentProduct]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (product) => {
     try {
+      console.log('product', product);
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
@@ -164,8 +155,28 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
               <div>
                 <LabelStyle>Description</LabelStyle>
-                <RHFEditor simple name="description" />
+                <RHFEditor simple name="desc" />
               </div>
+              <Grid container rowSpacing={1} columns={17}>
+                <Grid xs={8} mr={5}>
+                  <RHFTextField name="sku" label="SKU" />
+                  <RHFTextField name="origin" label="Xuất sứ" sx={{ margin: '10px 0' }} />
+                  <RHFTextField name="material" label="Chất liệu" />
+                </Grid>
+                <Grid xs={8}>
+                  <RHFTextField name="style" label="Kiểu dáng" />
+                  <RHFTextField name="supplier" label="Nhà cung cấp" sx={{ margin: '10px 0' }} />
+                  <RHFTextField
+                    name="quantity"
+                    label="Số lượng"
+                    onChange={(event) => setValue('quantity', Number(event.target.value))}
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                      type: 'number',
+                    }}
+                  />
+                </Grid>
+              </Grid>
 
               <div>
                 <LabelStyle>Images</LabelStyle>
@@ -186,12 +197,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
             <Card sx={{ p: 3 }}>
-              <RHFSwitch name="inStock" label="In stock" />
-
-              <Stack spacing={3} mt={2}>
-                <RHFTextField name="code" label="Product Code" />
-                <RHFTextField name="sku" label="Product SKU" />
-
+              <Stack spacing={2} mt={1}>
                 <div>
                   <LabelStyle>Gender</LabelStyle>
                   <RHFRadioGroup
@@ -216,7 +222,31 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 </RHFSelect>
 
                 <Controller
-                  name="tags"
+                  name="size"
+                  control={control}
+                  render={({ field }) => (
+                    <Autocomplete
+                      {...field}
+                      multiple
+                      freeSolo
+                      onChange={(event, newValue) =>
+                        field.onChange(
+                          newValue.map((x)=> {
+                            return parseFloat(x, 10)
+                          }))                    
+                      }
+                      options={SIZE_OPTION.map((option) => option)}
+                      renderTags={(value, getTagProps) =>
+                        value.map((option, index) => (
+                          <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
+                        ))
+                      }
+                      renderInput={(params) => <TextField label="Kích thước" {...params} />}
+                    />
+                  )}
+                />
+                <Controller
+                  name="color"
                   control={control}
                   render={({ field }) => (
                     <Autocomplete
@@ -224,13 +254,13 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                       multiple
                       freeSolo
                       onChange={(event, newValue) => field.onChange(newValue)}
-                      options={TAGS_OPTION.map((option) => option)}
+                      options={COLOR_OPTION.map((option) => option)}
                       renderTags={(value, getTagProps) =>
                         value.map((option, index) => (
                           <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
                         ))
                       }
-                      renderInput={(params) => <TextField label="Tags" {...params} />}
+                      renderInput={(params) => <TextField label="Màu sắc" {...params} />}
                     />
                   )}
                 />
@@ -241,32 +271,30 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               <Stack spacing={3} mb={2}>
                 <RHFTextField
                   name="price"
-                  label="Regular Price"
+                  label="Giá so sánh"
                   placeholder="0.00"
                   value={getValues('price') === 0 ? '' : getValues('price')}
                   onChange={(event) => setValue('price', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    startAdornment: <InputAdornment position="start">₫</InputAdornment>,
                     type: 'number',
                   }}
                 />
 
                 <RHFTextField
                   name="priceSale"
-                  label="Sale Price"
+                  label="Giá giảm"
                   placeholder="0.00"
                   value={getValues('priceSale') === 0 ? '' : getValues('priceSale')}
-                  onChange={(event) => setValue('price', Number(event.target.value))}
+                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    startAdornment: <InputAdornment position="start">₫</InputAdornment>,
                     type: 'number',
                   }}
                 />
               </Stack>
-
-              <RHFSwitch name="taxes" label="Price includes taxes" />
             </Card>
 
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>

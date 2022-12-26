@@ -68,7 +68,7 @@ export default function Router() {
         { path: 'ecommerce', element: <GeneralEcommerce /> },
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
-        { path: 'booking', element: <GeneralBooking /> },
+        // { path: 'booking', element: <GeneralBooking /> },
 
         {
           path: 'e-commerce',
@@ -113,26 +113,6 @@ export default function Router() {
             { path: 'new', element: <BlogNewPost /> },
           ],
         },
-        {
-          path: 'mail',
-          children: [
-            { element: <Navigate to="/admin/mail/all" replace />, index: true },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> },
-          ],
-        },
-        {
-          path: 'chat',
-          children: [
-            { element: <Chat />, index: true },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> },
-          ],
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> },
       ],
     },
 
@@ -158,6 +138,15 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        {
+          path: 'product',
+          children: [
+            { element: <Contact />, index: true },
+            { path: '', element: <Contact /> },
+            { path: ':id', element: <Pricing /> },
+          ],
+        },
+        { path: 'checkout', element: <About /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -177,7 +166,7 @@ const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')))
 const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
 const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
-const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+// const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
@@ -205,10 +194,6 @@ const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 
 // APP
-const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
-const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));

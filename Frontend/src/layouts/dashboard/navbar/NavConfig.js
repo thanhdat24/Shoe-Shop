@@ -11,14 +11,13 @@ const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 
 const ICONS = {
   blog: getIcon('ic_blog'),
   cart: getIcon('ic_cart'),
-  chat: getIcon('ic_chat'),
-  mail: getIcon('ic_mail'),
+ 
+  
   user: getIcon('ic_user'),
-  kanban: getIcon('ic_kanban'),
-  banking: getIcon('ic_banking'),
-  booking: getIcon('ic_booking'),
+  // kanban: getIcon('ic_kanban'),
+ 
   invoice: getIcon('ic_invoice'),
-  calendar: getIcon('ic_calendar'),
+
   ecommerce: getIcon('ic_ecommerce'),
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
@@ -30,11 +29,10 @@ const navConfig = [
   {
     subheader: 'Tổng quan',
     items: [
-      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+    
       { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-      { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+ 
+   
     ],
   },
 
@@ -105,19 +103,18 @@ const navConfig = [
   {
     subheader: 'app',
     items: [
-      {
-        title: 'mail',
-        path: PATH_DASHBOARD.mail.root,
-        icon: ICONS.mail,
-        info: (
-          <Label variant="outlined" color="error">
-            +32
-          </Label>
-        ),
-      },
-      { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
-      { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+      // {
+      //   title: 'mail',
+      //   path: PATH_DASHBOARD.mail.root,
+      //   icon: ICONS.mail,
+      //   info: (
+      //     <Label variant="outlined" color="error">
+      //       +32
+      //     </Label>
+      //   ),
+      // },
+     
+      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },
 ];
