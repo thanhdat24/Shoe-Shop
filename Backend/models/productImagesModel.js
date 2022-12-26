@@ -6,6 +6,10 @@ const productImagesSchema = new mongoose.Schema(
       required: [true, 'Please tell us url'],
       trim: true,
     },
+    idProduct: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Product',
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -13,6 +17,13 @@ const productImagesSchema = new mongoose.Schema(
   }
 );
 
+productImagesSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'idProduct',
+  });
+
+  next();
+});
 const productImages = mongoose.model('productImages', productImagesSchema);
 
 module.exports = productImages;
