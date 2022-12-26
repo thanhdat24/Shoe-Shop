@@ -16,6 +16,7 @@ const productRouters = require('./routers/productRouters');
 const colorRouters = require('./routers/colorRouters');
 const sizeRouters = require('./routers/sizeRouters');
 const productDetailRouters = require('./routers/productDetailRouters');
+const promotionRouters = require('./routers/promotionRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -53,6 +54,8 @@ app.use('/api/v1/products', productRouters);
 app.use('/api/v1/colors', colorRouters);
 app.use('/api/v1/sizes', sizeRouters);
 app.use('/api/v1/productDetail', productDetailRouters);
+app.use('/api/v1/promotions', promotionRouters);
+
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
   next(new AppError(`Can'n find ${req.originalUrl} on this sever!`, 404));

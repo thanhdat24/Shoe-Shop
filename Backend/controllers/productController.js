@@ -3,6 +3,7 @@ const Product = require('../models/productModel');
 const ProductDetail = require('../models/productDetailModel');
 const ProductImages = require('../models/productImagesModel');
 const catchAsync = require('../utils/catchAsync');
+const _ = require('lodash');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -15,7 +16,7 @@ const filterObj = (obj, ...allowedField) => {
 exports.getDetailProduct = factory.getOne();
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
-exports.getAllProduct = factory.getAll(Product);
+exports.getAllProduct = factory.getAll(Product, { path: 'productDetail' });
 
 // exports.createProduct = factory.createOne(Product);
 exports.createProduct = catchAsync(async (req, res, next) => {

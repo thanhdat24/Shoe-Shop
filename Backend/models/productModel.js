@@ -92,6 +92,14 @@ productSchema.pre(/^find/, function (next) {
 
   next();
 });
+
+productSchema.virtual('productDetail', {
+  ref: 'ProductDetail',
+  foreignField: 'idProduct',
+  localField: '_id',
+});
+
+
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
