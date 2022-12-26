@@ -11,10 +11,9 @@ import { LoadingButton } from '@mui/lab';
 import useAuth from '../../../../hooks/useAuth';
 // utils
 import { fData } from '../../../../utils/formatNumber';
-// _mock
-import { countries } from '../../../../_mock';
+
 // components
-import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
 import { resetAdmin, updateCurrentUser } from '../../../../redux/slices/admin';
 import { useDispatch, useSelector } from '../../../../redux/store';
 

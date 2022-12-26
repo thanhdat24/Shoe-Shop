@@ -15,7 +15,6 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import {
   FormProvider,
-  RHFSwitch,
   RHFSelect,
   RHFEditor,
   RHFTextField,

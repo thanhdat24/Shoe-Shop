@@ -104,15 +104,15 @@ export default function Router() {
             { path: 'new', element: <InvoiceCreate /> },
           ],
         },
-        {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/admin/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
-          ],
-        },
+        // {
+        //   path: 'blog',
+        //   children: [
+        //     { element: <Navigate to="/admin/blog/posts" replace />, index: true },
+        //     { path: 'posts', element: <BlogPosts /> },
+        //     { path: 'post/:title', element: <BlogPost /> },
+        //     { path: 'new', element: <BlogNewPost /> },
+        //   ],
+        // },
       ],
     },
 
@@ -181,10 +181,6 @@ const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDet
 const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
 const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
 
-// BLOG
-const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
-const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
-const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
 
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));

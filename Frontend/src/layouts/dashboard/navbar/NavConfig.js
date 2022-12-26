@@ -85,16 +85,16 @@ const navConfig = [
       },
 
       // BLOG
-      {
-        title: 'blog',
-        path: PATH_DASHBOARD.blog.root,
-        icon: ICONS.blog,
-        children: [
-          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          { title: 'create', path: PATH_DASHBOARD.blog.new },
-        ],
-      },
+      // {
+      //   title: 'blog',
+      //   path: PATH_DASHBOARD.blog.root,
+      //   icon: ICONS.blog,
+      //   children: [
+      //     { title: 'posts', path: PATH_DASHBOARD.blog.posts },
+      //     { title: 'post', path: PATH_DASHBOARD.blog.demoView },
+      //     { title: 'create', path: PATH_DASHBOARD.blog.new },
+      //   ],
+      // },
     ],
   },
 
