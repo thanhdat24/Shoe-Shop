@@ -13,10 +13,24 @@ const filterObj = (obj, ...allowedField) => {
   return newObj;
 };
 
-exports.getDetailProduct = factory.getOne();
+exports.getDetailProduct = factory.getOne(Product, {
+  path: 'productDetail productImages',
+});
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
-exports.getAllProduct = factory.getAll(Product, { path: 'productDetail' });
+// exports.getAllProduct = catchAsync(async (req, res, next) => {
+//   let query = Product.find(req.query).populate('productDetail productImages');
+//   const doc = await query;
+//   // console.log('doc', doc.productDetail);
+//   res.status(200).json({
+//     status: 'success',
+//     result: doc.length,
+//     data: doc,
+//   });
+// });
+exports.getAllProduct = factory.getAll(Product, {
+  path: 'productDetail productImages',
+});
 
 // exports.createProduct = factory.createOne(Product);
 exports.createProduct = catchAsync(async (req, res, next) => {

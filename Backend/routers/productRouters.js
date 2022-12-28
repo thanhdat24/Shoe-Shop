@@ -8,10 +8,6 @@ router
   .post(productRouters.createProduct)
   .get(productRouters.getAllProduct);
 
-router
-  .route('/:objectUseId')
-  .delete(productRouters.deleteProduct)
-  .get(productRouters.getDetailProduct)
-  .put(productRouters.updateProduct);
+router.route('/:id').get(productRouters.getDetailProduct);
 
 module.exports = router;

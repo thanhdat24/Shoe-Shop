@@ -24,6 +24,6 @@ productImagesSchema.pre(/^find/, function (next) {
 
   next();
 });
-const productImages = mongoose.model('productImages', productImagesSchema);
+const ProductImages = mongoose.model('ProductImages', productImagesSchema);
 
-module.exports = productImages;
+module.exports = ProductImages;

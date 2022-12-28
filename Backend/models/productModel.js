@@ -99,6 +99,11 @@ productSchema.virtual('productDetail', {
   localField: '_id',
 });
 
+productSchema.virtual('productImages', {
+  ref: 'ProductImages',
+  foreignField: 'idProduct',
+  localField: '_id',
+});
 
 const Product = mongoose.model('Product', productSchema);
 
