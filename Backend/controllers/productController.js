@@ -16,6 +16,10 @@ const filterObj = (obj, ...allowedField) => {
 exports.getDetailProduct = factory.getOne(Product, {
   path: 'productDetail productImages',
 });
+exports.getDetailProductByName = factory.getOneByName(Product, {
+  path: 'productDetail productImages',
+});
+
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
 // exports.getAllProduct = catchAsync(async (req, res, next) => {
