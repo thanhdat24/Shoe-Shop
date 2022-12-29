@@ -28,10 +28,6 @@ const productSchema = new mongoose.Schema(
       trim: true,
       default: 0,
     },
-    sku: {
-      type: String,
-      required: [true, 'Please tell us your sku'],
-    },
     origin: {
       type: String,
       required: [true, 'Please tell us your origin'],
@@ -51,6 +47,14 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please tell us your supplier'],
       trim: true,
+    },
+    inventoryType: {
+      type: String,
+      default: 'còn hàng',
+    },
+    status: {
+      type: String,
+      default: 'mới',
     },
     idCate: {
       type: mongoose.Schema.ObjectId,

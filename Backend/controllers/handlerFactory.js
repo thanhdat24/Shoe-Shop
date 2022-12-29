@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
+const { capitalCase } = require('change-case');
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -83,6 +84,21 @@ exports.createOne = (Model, uploadCloudName, imageModelName, bannerModelName) =>
     res.status(201).json({
       status: 'success',
       result: doc.length,
+      data: doc,
+    });
+  });
+
+exports.getOneByName = (Model, populateOptions) =>
+  catchAsync(async (req, res, next) => {
+    let query = Model.find({ name: capitalCase(req.query.name) });
+    if (populateOptions) query = query.populate(populateOptions);
+    const doc = await query;
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+    res.status(200).json({
+      status: 'success',
+      length: 1,
       data: doc,
     });
   });

@@ -6,6 +6,10 @@ const productDetailSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Please tell us your quality'],
     },
+    sku: {
+      type: String,
+      required: [true, 'Please tell us your sku'],
+    },
     idProduct: {
       type: mongoose.Schema.ObjectId,
       ref: 'Product',
