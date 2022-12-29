@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
 // utils
@@ -263,10 +264,28 @@ export function getProduct(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
+      const response = await axios.get('/api/v1/products/product/', {
         params: { name },
       });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const groupByColors = _(response.data.data[0].productDetail)
+        .groupBy((x) => x.idColor.color)
+        .map((value, key) => ({ color: key, productDetail: value }))
+        .value();
+      console.log('groupByColors', groupByColors);
+
+      const groupBySizes = _(response.data.data[0].productDetail)
+        .groupBy((x) => x.idSize.name)
+        .map((value, key) => ({ size: Number(key), productDetail: value }))
+        .value();
+      const colors = [];
+      const sizes = [];
+      const images = [];
+      response.data.data[0].productImages[0].url.map((item) => images.push(item));
+      groupByColors.map((item) => colors.push({ id: item.productDetail[0].idColor._id, color: item.color }));
+      groupBySizes.map((item) => sizes.push({ id: item.productDetail[0].idSize._id, size: item.size }));
+      response.data.data[0] = { ...response.data.data[0], colors, sizes, images };
+      console.log('response.data.data[0]', response.data.data[0]);
+      dispatch(slice.actions.getProductSuccess(response.data.data[0]));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

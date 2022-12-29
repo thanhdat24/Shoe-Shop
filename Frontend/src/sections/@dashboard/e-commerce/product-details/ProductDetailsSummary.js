@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
@@ -34,14 +35,14 @@ ProductDetailsSummary.propTypes = {
   onGotoStep: PropTypes.func,
   product: PropTypes.shape({
     available: PropTypes.number,
-    colors: PropTypes.arrayOf(PropTypes.string),
+    colors: PropTypes.arrayOf(PropTypes.object),
     cover: PropTypes.string,
     id: PropTypes.string,
     inventoryType: PropTypes.string,
     name: PropTypes.string,
     price: PropTypes.number,
     priceSale: PropTypes.number,
-    sizes: PropTypes.arrayOf(PropTypes.string),
+    sizes: PropTypes.arrayOf(PropTypes.object),
     status: PropTypes.string,
     totalRating: PropTypes.number,
     totalReview: PropTypes.number,
@@ -50,9 +51,8 @@ ProductDetailsSummary.propTypes = {
 
 export default function ProductDetailsSummary({ cart, product, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
-
   const navigate = useNavigate();
-
+  const [detailColorSize, setDetailColorSize] = useState({});
   const {
     id,
     name,
@@ -67,10 +67,10 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     totalReview,
     inventoryType,
   } = product;
+  console.log('product56', product);
+  // const alreadyProduct = cart.map((item) => item.id).includes(id);
 
-  const alreadyProduct = cart.map((item) => item.id).includes(id);
-
-  const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+  // const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
     id,
@@ -78,11 +78,10 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     cover,
     available,
     price,
-    color: colors[0],
-    size: sizes[4],
+    color: colors[0]?.color,
+    size: sizes[0].size,
     quantity: available < 1 ? 0 : 1,
   };
-
   const methods = useForm({
     defaultValues,
   });
@@ -90,21 +89,30 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   const { watch, control, setValue, handleSubmit } = methods;
 
   const values = watch();
+  useEffect(() => {
+    const idColorAndSize = product.productDetail.filter(
+      (item) => item.idColor.color === values.color && item.idSize.name === Number(values.size)
+    );
+    setDetailColorSize(idColorAndSize[0]);
+  }, [values.color, values.size]);
 
-  const onSubmit = async (data) => {
-    try {
-      if (!alreadyProduct) {
-        onAddCart({
-          ...data,
-          subtotal: data.price * data.quantity,
-        });
-      }
-      onGotoStep(0);
-      navigate(PATH_DASHBOARD.eCommerce.checkout);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  console.log('values123', values);
+  console.log('detailColorSize', detailColorSize);
+
+  // const onSubmit = async (data) => {
+  //   try {
+  //     if (!alreadyProduct) {
+  //       onAddCart({
+  //         ...data,
+  //         subtotal: data.price * data.quantity,
+  //       });
+  //     }
+  //     onGotoStep(0);
+  //     navigate(PATH_DASHBOARD.eCommerce.checkout);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const handleAddCart = async () => {
     try {
@@ -119,7 +127,10 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   return (
     <RootStyle {...other}>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider
+        methods={methods}
+        //  onSubmit={handleSubmit(onSubmit)}
+      >
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
           color={inventoryType === 'in_stock' ? 'success' : 'error'}
@@ -163,7 +174,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Color
+            Màu
           </Typography>
 
           <Controller
@@ -187,7 +198,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Size
+            Kích cỡ
           </Typography>
 
           <RHFSelect
@@ -204,8 +215,8 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             }
           >
             {sizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
+              <option key={size.size} value={size.size}>
+                {size.size}
               </option>
             ))}
           </RHFSelect>
@@ -213,7 +224,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Quantity
+            Số lượng
           </Typography>
 
           <div>
@@ -225,7 +236,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
               onDecrementQuantity={() => setValue('quantity', values.quantity - 1)}
             />
             <Typography variant="caption" component="div" sx={{ mt: 1, textAlign: 'right', color: 'text.secondary' }}>
-              Available: {available}
+              Có sẵn: {detailColorSize ? detailColorSize.quality : 0}
             </Typography>
           </div>
         </Stack>
@@ -235,19 +246,19 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
           <Button
             fullWidth
-            disabled={isMaxQuantity}
+            // disabled={isMaxQuantity}
             size="large"
             color="warning"
             variant="contained"
             startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            onClick={handleAddCart}
+            // onClick={handleAddCart}
             sx={{ whiteSpace: 'nowrap' }}
           >
-            Add to Cart
+            Thêm giỏ hàng
           </Button>
 
           <Button fullWidth size="large" type="submit" variant="contained">
-            Buy Now
+            Mua ngay
           </Button>
         </Stack>
 

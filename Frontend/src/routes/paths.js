@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/admin';
+const ROOTS = '/';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,13 @@ export const PATH_AUTH = {
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
+};
+
+export const PATH_HOME = {
+  product: {
+    root: path(ROOTS, '/product'),
+    view: (name) => path(ROOTS, `product/${name}`),
+  },
 };
 
 export const PATH_PAGE = {
@@ -31,13 +39,11 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
-
 };
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
-     
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),

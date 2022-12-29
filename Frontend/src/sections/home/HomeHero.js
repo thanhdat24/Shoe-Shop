@@ -1,8 +1,22 @@
+import { capitalCase } from 'change-case';
+import { useState } from 'react';
 import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack } from '@mui/material';
+import { styled, alpha } from '@mui/material/styles';
+import {
+  Button,
+  Box,
+  Link,
+  Container,
+  Typography,
+  Stack,
+  Radio,
+  Tooltip,
+  RadioGroup,
+  CardActionArea,
+  FormControlLabel,
+} from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -10,6 +24,7 @@ import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
 import TextIconLabel from '../../components/TextIconLabel';
 import { MotionContainer, varFade } from '../../components/animate';
+import useSettings from '../../hooks/useSettings';
 
 // ----------------------------------------------------------------------
 
@@ -49,47 +64,110 @@ const HeroOverlayStyle = styled(m.img)({
   position: 'absolute',
 });
 
-const HeroImgStyle = styled(m.img)(({ theme }) => ({
-  top: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 8,
-  width: '100%',
-  margin: 'auto',
-  position: 'absolute',
-  [theme.breakpoints.up('lg')]: {
-    right: '8%',
-    width: 'auto',
-    height: '48vh',
-  },
-}));
-
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
+  const [settings, setSettings] = useState('default');
+
+  const onChangeColor = (event) => {
+    setSettings(event.target.value);
+  };
+  const { themeColorPresets, colorSetting } = useSettings();
   return (
     <MotionContainer>
       <RootStyle>
-        <HeroOverlayStyle
-          alt="overlay"
-          src="https://minimal-assets-api.vercel.app/assets/overlay.svg"
-          variants={varFade().in}
-        />
+        <Box sx={{ position: 'absolute', top: '-75px', right: '122px' }}>
+          <m.div variants={varFade().inDown}>
+            <m.div animate={{ y: [-25, 5, -25] }} transition={{ duration: 10, repeat: Infinity }}>
+              <Image
+                disabledEffect
+                alt="sidebar"
+                src={`/static/shoes-${settings}.png`}
+                sx={{ transform: 'rotate(-22deg)' }}
+              />
+            </m.div>
+          </m.div>
+        </Box>
 
-        <HeroImgStyle
-          alt="hero"
-          src="https://minimal-assets-api.vercel.app/assets/images/home/hero.png"
-          variants={varFade().inUp}
-        />
+        <RadioGroup name="themeColorPresets" value={settings} onChange={onChangeColor} sx={{ my: 5 }}>
+          <Stack
+            direction={{ xs: 'row', lg: 'column' }}
+            justifyContent="center"
+            spacing={1}
+            sx={{
+              position: { lg: 'absolute' },
+              right: { lg: '76px' },
+              top: { lg: '45%' },
+            }}
+          >
+            {colorSetting.map((color) => {
+              const colorName = color.name;
+              const colorValue = color.value;
+              const isSelected = settings === colorName;
+
+              return (
+                <Tooltip key={colorName} title={capitalCase(colorName)} placement="right">
+                  <CardActionArea sx={{ color: colorValue, borderRadius: '50%', width: 32, height: 32 }}>
+                    <Box
+                      sx={{
+                        width: 1,
+                        height: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '50%',
+                        ...(isSelected && {
+                          borderStyle: 'solid',
+                          borderWidth: 4,
+                          borderColor: alpha(colorValue, 0.24),
+                        }),
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: '50%',
+                          bgcolor: colorValue,
+                          ...(isSelected && {
+                            width: 14,
+                            height: 14,
+                            transition: (theme) =>
+                              theme.transitions.create('all', {
+                                easing: theme.transitions.easing.easeInOut,
+                                duration: theme.transitions.duration.shorter,
+                              }),
+                          }),
+                        }}
+                      />
+                      <FormControlLabel
+                        label=""
+                        value={colorName}
+                        control={<Radio sx={{ display: 'none' }} />}
+                        sx={{
+                          top: 0,
+                          left: 0,
+                          margin: 0,
+                          width: 1,
+                          height: 1,
+                          position: 'absolute',
+                        }}
+                      />
+                    </Box>
+                  </CardActionArea>
+                </Tooltip>
+              );
+            })}
+          </Stack>
+        </RadioGroup>
 
         <Container>
           <ContentStyle>
             <m.div variants={varFade().inRight}>
-              <Typography variant="h1" sx={{ color: 'common.white' }}>
-                Start a <br />
-                new project <br /> with
+              <Typography variant="h1" sx={{ color: 'common.black', marginTop: 20 }}>
+                Nike Blue Shoes <br />
                 <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
-                  &nbsp;Minimal
+                  Nike Metcon Shoes
                 </Typography>
               </Typography>
             </m.div>
@@ -104,47 +182,23 @@ export default function HomeHero() {
             <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
               <m.div variants={varFade().inRight}>
                 <TextIconLabel
-                  icon={
-                    <Image
-                      alt="sketch icon"
-                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch_small.svg"
-                      sx={{ width: 20, height: 20, mr: 1 }}
-                    />
-                  }
-                  value={
-                    <Link
-                      href="https://www.sketch.com/s/76388a4d-d6e5-4b7f-8770-e5446bfa1268"
-                      target="_blank"
-                      rel="noopener"
-                      color="common.white"
-                      sx={{ typography: 'body2' }}
-                    >
-                      Preview Sketch
-                    </Link>
-                  }
+                  icon={<Image alt="sketch icon" src="/static/logo-nike.svg" sx={{ width: 80, height: 80, mr: 1 }} />}
                 />
               </m.div>
 
               <m.div variants={varFade().inRight}>
                 <TextIconLabel
-                  icon={
-                    <Image
-                      alt="sketch icon"
-                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_figma_small.svg"
-                      sx={{ width: 20, height: 20, mr: 1 }}
-                    />
-                  }
-                  value={
-                    <Link
-                      href="https://www.figma.com/file/x7earqGD0VGFjFdk5v2DgZ/%5BPreview%5D-Minimal-Web?node-id=866%3A55474"
-                      target="_blank"
-                      rel="noopener"
-                      color="common.white"
-                      sx={{ typography: 'body2' }}
-                    >
-                      Preview Figma
-                    </Link>
-                  }
+                  icon={<Image alt="sketch icon" src="/static/logo-adidas.svg" sx={{ width: 80, height: 80, mr: 1 }} />}
+                />
+              </m.div>
+              <m.div variants={varFade().inRight}>
+                <TextIconLabel
+                  icon={<Image alt="sketch icon" src="/static/logo-reebok.svg" sx={{ width: 80, height: 80, mr: 1 }} />}
+                />
+              </m.div>
+              <m.div variants={varFade().inRight}>
+                <TextIconLabel
+                  icon={<Image alt="sketch icon" src="/static/logo-puma.svg" sx={{ width: 80, height: 80, mr: 1 }} />}
                 />
               </m.div>
             </Stack>
@@ -157,7 +211,7 @@ export default function HomeHero() {
                 to={PATH_DASHBOARD.root}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
-                Live Preview
+                Mua ngay
               </Button>
             </m.div>
 

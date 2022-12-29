@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { paramCase } from 'change-case';
+import _ from 'lodash';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_HOME } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -19,9 +20,32 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  const { name, cover, price, status = 'new', priceSale, productImages, productDetail } = product;
+  const linkTo = PATH_HOME.product.view(paramCase(name));
+  console.log('linkTo', linkTo);
+  console.log('linkTo', linkTo);
+  const colors = [];
+  const sizes = [];
+  const groupByColor = _(productDetail)
+    .groupBy((x) => x.idColor.color)
+    .map((value, key) => ({ color: key, productDetail: value }))
+    .value();
 
-  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  const groupBySizes = _(productDetail)
+    .groupBy((x) => x.idSize.name)
+    .map((value, key) => ({ size: key, productDetail: value }))
+    .value();
+
+
+  groupByColor.map((item) => {
+    return colors.push(item.color);
+  });
+
+  groupBySizes.map((item) => {
+    return sizes.push(Number(item.size));
+  });
+  console.log('sizes', sizes);
+  console.log('colors', colors);
 
   return (
     <Card>
@@ -41,7 +65,7 @@ export default function ShopProductCard({ product }) {
             {status}
           </Label>
         )}
-        <Image alt={name} src={cover} ratio="1/1" />
+        <Image alt={name} src={productImages[0].url[0]} ratio="1/1" />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>

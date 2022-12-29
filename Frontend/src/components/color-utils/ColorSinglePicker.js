@@ -7,13 +7,15 @@ import Iconify from '../Iconify';
 // ----------------------------------------------------------------------
 
 ColorSinglePicker.propTypes = {
-  colors: PropTypes.arrayOf(PropTypes.string),
+  colors: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default function ColorSinglePicker({ colors, ...other }) {
   return (
     <RadioGroup row {...other}>
-      {colors.map((color) => {
+      {colors?.map((item) => {
+        const { color, _id } = item;
+
         const isWhite = color === '#FFFFFF' || color === 'white';
 
         return (

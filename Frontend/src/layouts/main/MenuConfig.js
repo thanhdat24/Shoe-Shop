@@ -58,6 +58,21 @@ const menuConfig = [
     ],
   },
   {
+    title: 'Nam',
+    path: '/men',
+    icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
+  },
+  {
+    title: 'Nữ',
+    path: '/women',
+    icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
+  },
+  {
+    title: 'Trẻ em',
+    path: '/kids',
+    icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
+  },
+  {
     title: 'Documentation',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
     path: PATH_DOCS,

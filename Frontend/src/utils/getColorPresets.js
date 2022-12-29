@@ -2,6 +2,13 @@
 import palette from '../theme/palette';
 
 // ----------------------------------------------------------------------
+export const colorSettings = [
+  { name: 'default', ...palette.light.primary },
+  { name: 'cyan', main: '#1CCAFF' },
+  { name: 'red', main: '#FF3030' },
+  { name: 'yellow', main: "#FFE700" },
+  { name: 'black', main: '#000' },
+];
 
 export const colorPresets = [
   // DEFAULT

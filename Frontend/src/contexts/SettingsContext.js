@@ -3,7 +3,7 @@ import { createContext } from 'react';
 // hooks
 import useLocalStorage from '../hooks/useLocalStorage';
 // utils
-import getColorPresets, { colorPresets, defaultPreset } from '../utils/getColorPresets';
+import getColorPresets, { colorPresets, defaultPreset, colorSettings } from '../utils/getColorPresets';
 // config
 import { defaultSettings } from '../config';
 
@@ -103,6 +103,10 @@ function SettingsProvider({ children }) {
         // Color
         onChangeColor,
         setColor: getColorPresets(settings.themeColorPresets),
+        colorSetting: colorSettings.map((color) => ({
+          name: color.name,
+          value: color.main,
+        })),
         colorOption: colorPresets.map((color) => ({
           name: color.name,
           value: color.main,

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 // @mui
 import { alpha, useTheme, styled } from '@mui/material/styles';
@@ -5,6 +6,9 @@ import { Box, Card, Container, Typography } from '@mui/material';
 // components
 import Image from '../../components/Image';
 import { MotionViewport, varFade } from '../../components/animate';
+import { ShopProductList } from '../@dashboard/e-commerce/shop';
+import { getProducts } from '../../redux/slices/product';
+import { useDispatch, useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -85,8 +89,15 @@ const CardStyle = styled(Card)(({ theme }) => {
 // ----------------------------------------------------------------------
 
 export default function HomeMinimal() {
-  const theme = useTheme();
+  const dispatch = useDispatch();
 
+  const theme = useTheme();
+  const { products } = useSelector((state) => state.product);
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+  console.log('products', products);
   const isLight = theme.palette.mode === 'light';
 
   return (
@@ -98,51 +109,12 @@ export default function HomeMinimal() {
             mb: { xs: 10, md: 25 },
           }}
         >
-          <m.div variants={varFade().inUp}>
-            <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              Minimal
-            </Typography>
-          </m.div>
           <m.div variants={varFade().inDown}>
-            <Typography variant="h2">What minimal helps you?</Typography>
+            <Typography variant="h2">Sản phẩm mới nhất</Typography>
           </m.div>
         </Box>
 
-        <Box
-          sx={{
-            display: 'grid',
-            gap: { xs: 5, lg: 10 },
-            gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' },
-          }}
-        >
-          {CARDS.map((card, index) => (
-            <m.div variants={varFade().inUp} key={card.title}>
-              <CardStyle className={(index === 0 && 'cardLeft') || (index === 1 && 'cardCenter') || ''}>
-                <Image
-                  src={card.icon}
-                  alt={card.title}
-                  sx={{
-                    mb: 10,
-                    mx: 'auto',
-                    width: 40,
-                    height: 40,
-                    filter: (theme) => shadowIcon(theme.palette.primary.main),
-                    ...(index === 0 && {
-                      filter: (theme) => shadowIcon(theme.palette.info.main),
-                    }),
-                    ...(index === 1 && {
-                      filter: (theme) => shadowIcon(theme.palette.error.main),
-                    }),
-                  }}
-                />
-                <Typography variant="h5" paragraph>
-                  {card.title}
-                </Typography>
-                <Typography sx={{ color: isLight ? 'text.secondary' : 'common.white' }}>{card.description}</Typography>
-              </CardStyle>
-            </m.div>
-          ))}
-        </Box>
+        <ShopProductList products={products} loading={!products.length} />
       </Container>
     </RootStyle>
   );

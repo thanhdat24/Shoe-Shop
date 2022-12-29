@@ -104,15 +104,6 @@ export default function Router() {
             { path: 'new', element: <InvoiceCreate /> },
           ],
         },
-        // {
-        //   path: 'blog',
-        //   children: [
-        //     { element: <Navigate to="/admin/blog/posts" replace />, index: true },
-        //     { path: 'posts', element: <BlogPosts /> },
-        //     { path: 'post/:title', element: <BlogPost /> },
-        //     { path: 'new', element: <BlogNewPost /> },
-        //   ],
-        // },
       ],
     },
 
@@ -143,7 +134,7 @@ export default function Router() {
           children: [
             { element: <Contact />, index: true },
             { path: '', element: <Contact /> },
-            { path: ':id', element: <Pricing /> },
+            { path: ':name', element: <Pricing /> },
           ],
         },
         { path: 'checkout', element: <About /> },
