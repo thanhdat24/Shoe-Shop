@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { sentenceCase } from 'change-case';
+import _ from 'lodash';
 // @mui
-import { useTheme } from '@mui/material/styles';
+
+import { useTheme, alpha, styled } from '@mui/material/styles';
 import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
+
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
@@ -23,12 +25,37 @@ ProductTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
+const IconStyle = styled('div')(({ theme }) => ({
+  marginLeft: -4,
+  borderRadius: '50%',
+  width: theme.spacing(2),
+  height: theme.spacing(2),
+  border: `solid 2px ${theme.palette.background.paper}`,
+  boxShadow: `inset -1px 1px 2px ${alpha(theme.palette.common.black, 0.24)}`,
+}));
 
 export default function ProductTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, cover, createdAt, inventoryType, price } = row;
+  const { name, inventoryType, productDetail, productImages, price, idCate, supplier } = row;
+  const color = _(productDetail)
+    .groupBy((x) => x.idColor.color)
+    .map((value, key) => ({
+      color: key,
+      colorID: value,
+    }))
+    .value();
 
+  const sizes = _(productDetail)
+    .groupBy((x) => x.idSize.name)
+    .map((value, key) => ({
+      name: key,
+      nameColor: value,
+    }))
+    .value();
+  console.log('color24', color);
+  console.log('sizes', sizes);
+  console.log('price', price);
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -44,30 +71,43 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Image disabledEffect alt={name} src={cover} sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }} />
+        <Image
+          disabledEffect
+          alt={name}
+          src={productImages[0].url[0]}
+          sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }}
+        />
         <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>
       </TableCell>
-
-      <TableCell>{fDate(createdAt)}</TableCell>
+      <TableCell>
+        {' '}
+        <div className="flex">
+          {' '}
+          {color.map((color1, index) => (
+            <IconStyle key={color1 + index} sx={{ bgcolor: color1.color }} />
+          ))}
+        </div>
+      </TableCell>
+      <TableCell>
+        {' '}
+        <div className="flex"> {sizes.map((size, index) => size.name).join(', ')}</div>
+      </TableCell>
+      <TableCell> {idCate.name}</TableCell>
+      <TableCell> {supplier}</TableCell>
 
       <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={
-            (inventoryType === 'out_of_stock' && 'error') || (inventoryType === 'low_stock' && 'warning') || 'success'
-          }
+          color={inventoryType === 'còn hàng' ? 'success' : 'error'}
           sx={{ textTransform: 'capitalize' }}
         >
-          {inventoryType ? sentenceCase(inventoryType) : ''}
+          {inventoryType }
         </Label>
       </TableCell>
-
-      <TableCell align="right">{fCurrency(price)}</TableCell>
-
+      <TableCell align="right">{fCurrency(price)}₫</TableCell>
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

@@ -12,6 +12,10 @@ const initialState = {
   isLoading: false,
   error: null,
   products: [],
+  cates:[],
+  sizes:[],
+  colors:[],
+ productList: null,
   product: null,
   sortBy: null,
   filters: {
@@ -41,6 +45,7 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+   
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -53,6 +58,10 @@ const slice = createSlice({
       state.products = action.payload;
     },
 
+  getAllProductSuccess(state, action) {
+      state.isLoading = false;
+      state.productList = action.payload;
+    },
     // GET PRODUCT
     getProductSuccess(state, action) {
       state.isLoading = false;
@@ -64,6 +73,8 @@ const slice = createSlice({
       state.sortBy = action.payload;
     },
 
+    // }
+
     filterProducts(state, action) {
       state.filters.gender = action.payload.gender;
       state.filters.category = action.payload.category;
@@ -72,6 +83,26 @@ const slice = createSlice({
       state.filters.rating = action.payload.rating;
     },
 
+    // CATE
+    // getAllCate(){
+    getCateSuccess(state, action) {
+      state.isLoading = false;
+      state.cates = action.payload;
+    },
+
+    // SIZE
+    getSizesSucess(state, action) {
+      state.isLoading = false;
+      state.sizes = action.payload;
+    },
+
+    // COLOR
+    getColorsSucess(state, action) {
+      state.isLoading = false;
+      state.colors = action.payload;
+    },
+
+ 
     // CHECKOUT
     getCart(state, action) {
       const cart = action.payload;
@@ -210,12 +241,15 @@ export const {
 
 // ----------------------------------------------------------------------
 
+
+// PRODUCT
 export function getProducts() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products');
-      dispatch(slice.actions.getProductsSuccess(response.data.products));
+      const response = await axios.get('/api/v1/products');
+      console.log('response', response);
+      dispatch(slice.actions.getProductsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -224,6 +258,7 @@ export function getProducts() {
 
 // ----------------------------------------------------------------------
 
+// PRODUCT
 export function getProduct(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -238,3 +273,61 @@ export function getProduct(name) {
     }
   };
 }
+export function getAllProduct() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/products');
+      console.log('response product', response);
+      dispatch(slice.actions.getAllProductSuccess(response.data.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+
+
+// Category
+export function getAllCate() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/categories');
+      console.log('response342', response);
+        dispatch(slice.actions.getCateSuccess(response.data.data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+
+// Size
+export function getAllSize() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/sizes');
+      console.log('response342345', response);
+      dispatch(slice.actions.getSizesSucess(response.data.data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+
+// COLOR
+export function getAllColor() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/colors');
+      console.log('resp4et45', response);
+      dispatch(slice.actions.getColorsSucess(response.data.data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+

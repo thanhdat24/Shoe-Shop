@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { getAllSize, getProducts } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -23,11 +23,17 @@ export default function EcommerceProductCreate() {
   const { pathname } = useLocation();
   const { name } = useParams();
   const { products } = useSelector((state) => state.product);
+  console.log('products', products);
   const isEdit = pathname.includes('edit');
-  const currentProduct = products.find((product) => paramCase(product.name) === name);
+  const currentProduct = products?.find((product) => paramCase(product.name) === name);
 
   useEffect(() => {
     dispatch(getProducts());
+  }, [dispatch]);
+
+  
+  useEffect(() => {
+    dispatch(getAllSize());
   }, [dispatch]);
 
   return (

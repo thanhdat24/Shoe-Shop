@@ -24,6 +24,7 @@
       "impliedStrict": true
     }
   },
+  
   "rules": {
     "no-shadow": 0,
     "no-console": 0,
