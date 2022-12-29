@@ -43,8 +43,11 @@ import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', align: 'left' },
-  { id: 'createdAt', label: 'Create at', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center', width: 180 },
+  { id: 'color', label: 'Color', align: 'left', width: 120 },
+  { id: 'size', label: 'Size', align: 'left', width: 120 },
+  { id: 'cate', label: 'Thể loại', align: 'left' },
+  { id: 'supplier', label: 'Nhà cung cấp', align: 'left' },
+  { id: 'inventoryType', label: 'Status', align: 'center' },
   { id: 'price', label: 'Price', align: 'right' },
   { id: '' },
 ];
@@ -82,7 +85,8 @@ export default function EcommerceProductList() {
   const { products, isLoading } = useSelector((state) => state.product);
 
   const [tableData, setTableData] = useState([]);
-
+  console.log('first', tableData);
+  console.log('products', products);
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -90,7 +94,7 @@ export default function EcommerceProductList() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (products.length) {
+    if (products?.length) {
       setTableData(products);
     }
   }, [products]);
@@ -230,11 +234,7 @@ export default function EcommerceProductList() {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
 
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-            />
+           
           </Box>
         </Card>
       </Container>
