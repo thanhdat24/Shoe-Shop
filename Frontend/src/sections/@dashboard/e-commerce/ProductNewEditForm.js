@@ -25,6 +25,7 @@ import {
   StepLabel,
   TableContainer,
 } from '@mui/material';
+import _ from 'lodash';
 import { DataGrid } from '@mui/x-data-grid';
 import { getAllCate, getAllColor, getAllSize, getProducts } from '../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -60,6 +61,7 @@ ProductNewEditForm.propTypes = {
 
 const steps = ['Select campaign settings', 'Create an ad group'];
 export default function ProductNewEditForm({ isEdit, currentProduct }) {
+  console.log('currentProduct', currentProduct);
   const [activeStep, setActiveStep] = useState(0);
   const [productUpdate, setNewProductUpdate] = useState({});
   const [arrayNewProduct, setArrayNewProduct] = useState();
@@ -69,6 +71,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   };
   console.log('step', steps);
   console.log('activeStep', activeStep);
+  console.log('isEdit', isEdit);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -129,9 +132,45 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   colors.map((item) => {
     return colorName.push(item.name);
   });
-  const COLOR_OPTION = colors;
 
-  console.log('COLOR_OPTION', COLOR_OPTION);
+  const COLOR_OPTION = colors;
+  const color = _(currentProduct?.productDetail)
+    .groupBy((x) => x.idColor.name)
+    .map((value, key) => ({
+      nameColor: key,
+      color: value,
+    }))
+    .value();
+
+  const newArrColor = [];
+  color.map((item, index) => {
+    return newArrColor.push({
+      name: item.nameColor,
+      _id: item.color[0]?.idColor._id,
+      color: item.color[0]?.idColor.color,
+    });
+  });
+
+  console.log('color', color);
+  console.log('newArrColor', newArrColor);
+  const sizesProduct = _(currentProduct?.productDetail)
+    .groupBy((x) => x.idSize.name)
+    .map((value, key) => ({
+      name: key,
+      nameSize: value,
+    }))
+    .value();
+
+  const newArrSize = [];
+  sizesProduct.map((item, index) => {
+    return newArrSize.push({
+      name: item.name,
+      _id: item.nameSize[0]?.idSize._id,
+    
+    });
+  });
+
+  console.log('newArrSize', newArrSize);
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
@@ -144,16 +183,16 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const defaultValues = useMemo(
     () => ({
       name: currentProduct?.name || '',
-      desc: currentProduct?.description || '',
+      desc: currentProduct?.desc || '',
       images: currentProduct?.images || [],
       sku: currentProduct?.sku || '',
       price: currentProduct?.price || 0,
       priceSale: currentProduct?.priceSale || 0,
-      size: currentProduct?.tags || [],
-      color: currentProduct?.tags || [],
+      size: newArrSize || [],
+      color: newArrColor || [],
       gender: currentProduct?.gender || GENDER_OPTION[1],
       category: currentProduct?.category || '',
-      origin: currentProduct?.category || '',
+      origin: currentProduct?.origin || '',
       material: currentProduct?.material || '',
       supplier: currentProduct?.supplier || '',
       quantity: Number(currentProduct?.quantity) || 0,
@@ -290,7 +329,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     },
   ];
 
-
   console.log('columns', columns);
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -332,7 +370,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   </div>
                   <Grid container rowSpacing={1} columns={17}>
                     <Grid xs={8} mr={5}>
-                      <RHFTextField name="sku" label="SKU" />
+                      <RHFTextField disabled={isEdit ? 'true' : 'false'} name="sku" label="SKU" />
                       <RHFTextField name="origin" label="Xuất sứ" sx={{ margin: '10px 0' }} />
                       <RHFTextField name="material" label="Chất liệu" />
                     </Grid>

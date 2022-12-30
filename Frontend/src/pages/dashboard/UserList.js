@@ -1,5 +1,5 @@
 import { paramCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -19,6 +19,9 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import { getUsers } from '../../redux/slices/admin';
+import { useDispatch, useSelector } from '../../redux/store';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -40,24 +43,13 @@ import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/l
 
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
-const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
-];
+const ROLE_OPTIONS = ['all', 'Quản trị', 'khách hàng'];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
+  { id: 'gender', label: 'Giới tính', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: '' },
 ];
@@ -65,6 +57,12 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function UserList() {
+  const { accountList } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+  console.log('accountList', accountList);
   const {
     dense,
     page,
@@ -100,6 +98,11 @@ export default function UserList() {
     setFilterName(filterName);
     setPage(0);
   };
+  useEffect(() => {
+    if (accountList?.length) {
+      setTableData(accountList);
+    }
+  }, [accountList]);
 
   const handleFilterRole = (event) => {
     setFilterRole(event.target.value);
@@ -251,12 +254,6 @@ export default function UserList() {
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
-
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-            />
           </Box>
         </Card>
       </Container>
@@ -267,6 +264,16 @@ export default function UserList() {
 // ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
+  console.log('filterRole', filterRole);
+  // filterStatus = filterStatus === 'active' ? true : (filterStatus === 'banned' || filterStatus !== 'all') && false;
+
+  if (filterStatus === 'active') {
+    filterStatus = true;
+  } else if (filterStatus === 'banned') {
+    filterStatus = false;
+  }
+
+  console.log('filterStatus say', filterStatus);
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -278,15 +285,19 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((item) => item.fullName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   if (filterStatus !== 'all') {
-    tableData = tableData.filter((item) => item.status === filterStatus);
+    tableData = tableData.filter((item) => item.active === filterStatus);
   }
 
   if (filterRole !== 'all') {
-    tableData = tableData.filter((item) => item.role === filterRole);
+    if (filterRole === 'Quản trị') {
+      tableData = tableData.filter((item) => item.role !== 'khách hàng');
+    } else {
+      tableData = tableData.filter((item) => item.role === filterRole);
+    }
   }
 
   return tableData;

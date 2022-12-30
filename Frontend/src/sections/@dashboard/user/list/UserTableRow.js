@@ -21,8 +21,8 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, avatarUrl, company, role, isVerified, status } = row;
-
+  const { name, fullName, email, role, gender, active, avatar, status } = row;
+  console.log('active', active);
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -40,19 +40,22 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
+        <Avatar alt={name} src={avatar} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
-          {name}
+          {fullName}
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{company}</TableCell>
+      <TableCell align="left">{email}</TableCell>
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {role}
       </TableCell>
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {gender}
+      </TableCell>
 
-      <TableCell align="center">
+      {/* <TableCell align="center">
         <Iconify
           icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
           sx={{
@@ -62,15 +65,16 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             ...(!isVerified && { color: 'warning.main' }),
           }}
         />
-      </TableCell>
+      </TableCell> */}
 
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(status === 'banned' && 'error') || 'success'}
+          // color={active ? 'success' : 'error'}
+          color={(active === false && 'error') || 'success'}
           sx={{ textTransform: 'capitalize' }}
         >
-          {status}
+          {active ? "Active" : "Banned"}
         </Label>
       </TableCell>
 
