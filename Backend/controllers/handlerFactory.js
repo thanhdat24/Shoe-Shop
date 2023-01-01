@@ -19,23 +19,14 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    if (req.body.photo) {
+    if (req.body.avatar) {
       const uploadedResponse = await cloudinary.uploader.upload(
-        req.body.photo,
+        req.body.avatar,
         {
-          upload_preset: 'image_movie',
+          upload_preset: 'avatar',
         }
       );
-      req.body.photo = uploadedResponse.secure_url;
-    }
-    if (req.body.banner) {
-      const uploadedResponse = await cloudinary.uploader.upload(
-        req.body.banner,
-        {
-          upload_preset: 'image_movie',
-        }
-      );
-      req.body.banner = uploadedResponse.secure_url;
+      req.body.avatar = uploadedResponse.secure_url;
     }
     const _id = req.params.id;
     const doc = await Model.findByIdAndUpdate(_id, req.body, {

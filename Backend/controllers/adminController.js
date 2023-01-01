@@ -91,15 +91,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'gender',
     'dateOfBirth',
     'avatar',
-    'address',
-    'idRole'
+    'address'
   );
   console.log('filteredBody ', filteredBody);
   if (filteredBody.avatar) {
     const uploadedResponse = await cloudinary.uploader.upload(
       filteredBody.avatar,
       {
-        upload_preset: 'profile',
+        upload_preset: 'avatar',
       }
     );
     filteredBody.avatar = uploadedResponse.secure_url;
