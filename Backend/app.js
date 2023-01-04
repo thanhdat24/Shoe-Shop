@@ -18,6 +18,8 @@ const colorRouters = require('./routers/colorRouters');
 const sizeRouters = require('./routers/sizeRouters');
 const productDetailRouters = require('./routers/productDetailRouters');
 const promotionRouters = require('./routers/promotionRouters');
+const orderRouters = require('./routers/orderRouters');
+const orderDetailRouters = require('./routers/orderDetailRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -57,6 +59,8 @@ app.use('/api/v1/colors', colorRouters);
 app.use('/api/v1/sizes', sizeRouters);
 app.use('/api/v1/productDetail', productDetailRouters);
 app.use('/api/v1/promotions', promotionRouters);
+app.use('/api/v1/orders', orderRouters);
+app.use('/api/v1/order-details', orderDetailRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
