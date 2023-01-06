@@ -13,7 +13,8 @@ const initialState = {
   errorUpdateAdmin: null,
   error: null,
   success: '',
-  accountList:null,
+  accountList: null,
+  newAccount: null,
 };
 
 const slice = createSlice({
@@ -33,6 +34,12 @@ const slice = createSlice({
       console.log('action', action);
     },
 
+    // CRREATE ADMIN
+    createAdminSuccess(state, action) {
+      console.log('action', action.payload);
+      state.isLoading = false;
+      state.newAccount = action.payload;
+    },
     // UPDATE ADMIN
     updateAdminSuccess(state, action) {
       const user = action.payload;
@@ -41,8 +48,8 @@ const slice = createSlice({
       state.success = user;
     },
     getAccountsSuccess(state, action) {
-      
       state.isLoading = false;
+
       state.accountList = action.payload;
     },
 
@@ -60,6 +67,7 @@ const slice = createSlice({
     resetAdmin(state) {
       state.error = null;
       state.success = '';
+      state.newAccount = '';
     },
   },
 });
@@ -71,6 +79,21 @@ export default slice.reducer;
 export const { openModal, closeModal, selectEvent, resetAdmin } = slice.actions;
 
 // ----------------------------------------------------------------------
+
+export function createAdmin(account) {
+  console.log('createAdmin', account);
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/v1/auth/signup', account);
+      console.log('response', response);
+      dispatch(slice.actions.createAdminSuccess(response.data?.user));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 export function updateCurrentUser(updateAdmin) {
   console.log('updateAdmin', updateAdmin);

@@ -233,8 +233,6 @@ export default function EcommerceProductList() {
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
-
-           
           </Box>
         </Card>
       </Container>

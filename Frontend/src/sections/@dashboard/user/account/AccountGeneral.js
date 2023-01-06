@@ -61,14 +61,12 @@ export default function AccountGeneral() {
   } = methods;
 
   const onSubmit = async (data) => {
-    const newCurrentAdmin = {
-      fullName: data?.fullName,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      address: data?.address,
-    };
+    // console.log("data",data)
+    // const newCurrentAdmin = {
+    //   ...data
+    // };
     try {
-      dispatch(updateCurrentUser(newCurrentAdmin));
+      dispatch(updateCurrentUser(data));
     } catch (error) {
       console.error(error);
     }
@@ -77,15 +75,23 @@ export default function AccountGeneral() {
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
+      const reader = new FileReader();
+       reader.readAsDataURL(file);
+       reader.onload = function (e) {
+         // sau khi thực hiên xong lênh trên thì set giá trị có được
+         setValue('avatar',e.target.result);
 
-      if (file) {
-        setValue(
-          'avatar',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
-      }
+       };
+      // Đem dữ liệu file lưu vào formik
+      //  formik.setFieldValue('photo', file);
+      // if (file) {
+      //   setValue(
+      //     'avatar',
+      //     Object.assign(file, {
+      //       preview: URL.createObjectURL(file),
+      //     })
+      //   );
+      // }
     },
     [setValue]
   );

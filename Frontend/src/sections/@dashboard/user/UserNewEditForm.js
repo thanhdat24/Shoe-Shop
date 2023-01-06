@@ -7,8 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import DatePicker from '@mui/lab/DatePicker';
+
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, TextField } from '@mui/material';
+import { createAdmin, resetAdmin } from '../../../redux/slices/admin';
 // utils
 import { fData } from '../../../utils/formatNumber';
 // routes
@@ -19,6 +22,8 @@ import { countries } from '../../../_mock';
 import Label from '../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
 
+import { useDispatch, useSelector } from '../../../redux/store';
+
 // ----------------------------------------------------------------------
 
 UserNewEditForm.propTypes = {
@@ -28,37 +33,45 @@ UserNewEditForm.propTypes = {
 
 export default function UserNewEditForm({ isEdit, currentUser }) {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { newAccount, error } = useSelector((state) => state.admin);
+console.log('newAccount',newAccount);
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Thêm người dùng không thành công!', { variant: 'error' });
+    } else if (newAccount) {
+      console.log('234', newAccount);
+      enqueueSnackbar('Thêm người dùng  thành công!');
+      // navigate(PATH_DASHBOARD.user.list);
+    }
+    setTimeout(() => {
+      dispatch(resetAdmin());
+    }, 3000);
+  }, [error, newAccount]);
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    fullName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
-    country: Yup.string().required('country is required'),
-    company: Yup.string().required('Company is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role Number is required'),
-    avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+    gender: Yup.string().required('gender is required'),
+    password: Yup.string().required('password is required'),
+    passwordConfirm: Yup.string().required('passwordConfirm is required'),
+    dateOfBirth: Yup.string().required('dateOfBirth is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
+      fullName: currentUser?.fullName || '',
       email: currentUser?.email || '',
+      avatar: currentUser?.avatar || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      state: currentUser?.state || '',
-      city: currentUser?.city || '',
-      zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.avatarUrl || '',
-      isVerified: currentUser?.isVerified || true,
-      status: currentUser?.status,
-      company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      gender: currentUser?.gender || '',
+      password: currentUser?.password || '',
+      passwordConfirm: currentUser?.passwordConfirm || '',
+      dateOfBirth: currentUser?.dateOfBirth || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -90,12 +103,13 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUser]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (account) => {
+    console.log('account', account);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.user.list);
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      await dispatch(createAdmin(account));
+      // reset();
+      // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
     } catch (error) {
       console.error(error);
     }
@@ -104,15 +118,20 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
-
-      if (file) {
-        setValue(
-          'avatarUrl',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
-      }
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function (e) {
+        // sau khi thực hiên xong lênh trên thì set giá trị có được
+        setValue('avatarUrl', e.target.result);
+      };
+      // if (file) {
+      //   setValue(
+      //     'avatarUrl',
+      //     Object.assign(file, {
+      //       preview: URL.createObjectURL(file),
+      //     })
+      //   );
+      // }
     },
     [setValue]
   );
@@ -184,22 +203,6 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
               />
             )}
-
-            <RHFSwitch
-              name="isVerified"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Email Verified
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Disabling this will automatically send the user a verification email
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-            />
           </Card>
         </Grid>
 
@@ -213,25 +216,36 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="name" label="Full Name" />
+              <RHFTextField name="fullName" label="Full Name" />
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
 
-              <RHFSelect name="country" label="Country" placeholder="Country">
+              <RHFSelect name="gender" label="Giới tính" placeholder="Giới tính">
                 <option value="" />
-                {countries.map((option) => (
-                  <option key={option.code} value={option.label}>
-                    {option.label}
-                  </option>
+                {['Nam', 'Nữ'].map((option, index) => (
+                  <option value={option}>{option}</option>
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="state" label="State/Region" />
-              <RHFTextField name="city" label="City" />
+              <RHFTextField name="password" label="Password" />
+              <RHFTextField name="passwordConfirm" label="Password Confirm" />
               <RHFTextField name="address" label="Address" />
-              <RHFTextField name="zipCode" label="Zip/Code" />
-              <RHFTextField name="company" label="Company" />
-              <RHFTextField name="role" label="Role" />
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <DatePicker
+                    label="Ngày sinh"
+                    value={field.value}
+                    onChange={(newValue) => {
+                      field.onChange(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} fullWidth error={!!error} helperText={error?.message} />
+                    )}
+                  />
+                )}
+              />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
