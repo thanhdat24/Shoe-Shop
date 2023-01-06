@@ -16,10 +16,10 @@ export default function GuestGuard({ children }) {
   console.log('isAuthenticated', isAuthenticated);
   console.log('userêtry', user);
   if (isAuthenticated && user?.role === 'admin') {
-   return  <Navigate to={PATH_DASHBOARD.root} />;
-  } 
-   if (isAuthenticated && user?.role === 'staff') {
-   return  <Navigate to={PATH_PAGE.root} />;
+    return <Navigate to={PATH_DASHBOARD.root} />;
+  }
+  if (isAuthenticated && user?.role === 'khách hàng') {
+    return <Navigate to={PATH_PAGE.root} />;
   }
   return <>{children}</>;
 }

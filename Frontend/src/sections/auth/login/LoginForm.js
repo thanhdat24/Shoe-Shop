@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+// notistack
+import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,7 +20,9 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function LoginForm({ onClose }) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { login } = useAuth();
 
   const isMountedRef = useIsMountedRef();
@@ -51,8 +55,8 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      
-
+      onClose();
+      enqueueSnackbar('Đăng nhập thành công!');
     } catch (error) {
       console.error(error);
       reset();
@@ -67,11 +71,11 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Email" />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Mật khẩu"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -86,14 +90,14 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" />
+        <RHFCheckbox name="remember" label="Quên mật khẩu" />
         <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
-          Forgot password?
+          Quên mật khẩu?
         </Link>
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Login
+        Đăng nhập
       </LoadingButton>
     </FormProvider>
   );

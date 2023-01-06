@@ -72,11 +72,16 @@ const menuConfig = [
     path: '/kids',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
-  {
-    title: 'Documentation',
-    icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: PATH_DOCS,
-  },
+  // {
+  //   title: '',
+  //   path: '',
+  //   icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
+  // },
+  // {
+  //   title: 'Documentation',
+  //   icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
+  //   path: PATH_DOCS,
+  // },
 ];
 
 export default menuConfig;

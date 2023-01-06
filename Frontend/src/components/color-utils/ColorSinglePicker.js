@@ -15,7 +15,6 @@ export default function ColorSinglePicker({ colors, ...other }) {
     <RadioGroup row {...other}>
       {colors?.map((item) => {
         const { color, _id } = item;
-
         const isWhite = color === '#FFFFFF' || color === 'white';
 
         return (

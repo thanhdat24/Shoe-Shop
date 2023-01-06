@@ -55,6 +55,7 @@ const AuthContext = createContext({
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
+  registerUser: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -135,6 +136,21 @@ function AuthProvider({ children }) {
       gender,
       dateOfBirth,
     });
+    console.log('response', response);
+    const { accessToken, user } = response.data;
+
+    window.localStorage.setItem('accessToken', accessToken);
+    dispatch({
+      type: 'REGISTER',
+      payload: {
+        user,
+      },
+    });
+  };
+
+  const registerUser = async (data) => {
+    console.log('data', data);
+    const response = await axios.post('/api/v1/user/createUser', data);
     const { accessToken, user } = response.data;
 
     // window.localStorage.setItem('accessToken', accessToken);
@@ -159,6 +175,7 @@ function AuthProvider({ children }) {
         login,
         logout,
         register,
+        registerUser,
       }}
     >
       {children}

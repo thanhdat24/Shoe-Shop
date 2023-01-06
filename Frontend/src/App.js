@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+
+
 // routes
 import Router from './routes';
 // theme
@@ -11,24 +14,29 @@ import { ProgressBarStyle } from './components/ProgressBar';
 import NotistackProvider from './components/NotistackProvider';
 import ThemeColorPresets from './components/ThemeColorPresets';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
+import useAuth from './hooks/useAuth';
+import { useDispatch } from './redux/store';
+import { setSession } from './utils/jwt';
 // import style from "./style.css"
+
 // ----------------------------------------------------------------------
 
 export default function App() {
+
   return (
     <ThemeProvider>
       <ThemeColorPresets>
-          <RtlLayout>
-            <NotistackProvider>
-              <MotionLazyContainer>
-                <ProgressBarStyle />
-                <ChartStyle />
-                <Settings />
-                <ScrollToTop />
-                <Router />
-              </MotionLazyContainer>
-            </NotistackProvider>
-          </RtlLayout>
+        <RtlLayout>
+          <NotistackProvider>
+            <MotionLazyContainer>
+              <ProgressBarStyle />
+              <ChartStyle />
+              <Settings />
+              <ScrollToTop />
+              <Router />
+            </MotionLazyContainer>
+          </NotistackProvider>
+        </RtlLayout>
       </ThemeColorPresets>
     </ThemeProvider>
   );

@@ -1,7 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container } from '@mui/material';
+import { Box, Button, AppBar, Toolbar, Container, Link } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -16,6 +19,14 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
+import AccountPopover from '../dashboard/header/AccountPopover';
+import useAuth from '../../hooks/useAuth';
+import createAvatar from '../../utils/createAvatar';
+import Avatar from '../../components/Avatar';
+import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
+import { createBilling, onNextStep } from '../../redux/slices/product';
+import { useDispatch } from '../../redux/store';
+import LoginRegisterForm from '../../pages/auth/LoginRegisterForm';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +57,10 @@ const ToolbarShadowStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function MainHeader() {
+  const dispatch = useDispatch();
   const isOffset = useOffSetTop(HEADER.MAIN_DESKTOP_HEIGHT);
+
+  const { user } = useAuth();
 
   const theme = useTheme();
 
@@ -56,6 +70,24 @@ export default function MainHeader() {
 
   const isHome = pathname === '/';
 
+  //
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleNextStep = () => {
+    dispatch(onNextStep());
+  };
+
+  const handleCreateBilling = (value) => {
+    dispatch(createBilling(value));
+  };
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle
@@ -82,15 +114,23 @@ export default function MainHeader() {
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
+          {user ? (
+            <AccountPopover avatarUser="true" />
+          ) : (
+            <button onClick={handleClickOpen}>
+              <Avatar src="" alt={user?.fullName} color={'default'}>
+                {/* {createAvatar(user?.fullName).name} */}
+              </Avatar>
+            </button>
+          )}
+          <CartWidget />
 
-          <Button
-            variant="contained"
-            target="_blank"
-            rel="noopener"
-            href="https://material-ui.com/store/items/minimal-dashboard/"
-          >
-            Purchase Now
-          </Button>
+          <LoginRegisterForm
+            open={open}
+            onClose={handleClose}
+            onNextStep={handleNextStep}
+            onCreateBilling={handleCreateBilling}
+          />
 
           {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
         </Container>

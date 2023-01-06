@@ -137,7 +137,7 @@ export default function Router() {
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
         { path: 'maintenance', element: <Maintenance /> },
-        // { path: 'product', element: <Pricing /> },
+        { path: 'pricing', element: <Product /> },
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
@@ -160,7 +160,7 @@ export default function Router() {
             { path: ':name', element: <Product /> },
           ],
         },
-        { path: 'checkout', element: <About /> },
+        { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
