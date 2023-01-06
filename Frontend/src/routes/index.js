@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
+
 // layouts
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
@@ -12,6 +13,10 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import PromotionCreate from '../pages/dashboard/PromotionCreate';
+import BrandList from '../pages/dashboard/BrandList';
+import BrandCreate from '../pages/dashboard/BrandCreate';
+
 
 // ----------------------------------------------------------------------
 
@@ -95,6 +100,24 @@ export default function Router() {
           ],
         },
         {
+          path: 'promotion',
+          children: [
+            { element: <Navigate to="/admin/promotion/list" replace />, index: true },
+            { path: 'list', element: <PromotionList /> },
+            { path: 'new', element: <PromotionCreate /> },
+            { path: 'edit/:id', element: <PromotionEdit /> },
+          ],
+        },
+        {
+          path: 'brand',
+          children: [
+            { element: <Navigate to="/admin/brand/list" replace />, index: true },
+            { path: 'list', element: <BrandList /> },
+            { path: 'new', element: <BrandCreate /> },
+            // { path: 'edit/:id', element: <PromotionCreate /> },
+          ],
+        },
+        {
           path: 'invoice',
           children: [
             { element: <Navigate to="/admin/invoice/list" replace />, index: true },
@@ -172,13 +195,16 @@ const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDet
 const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
 const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
 
-
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+
+// PROMOTION
+const PromotionList = Loadable(lazy(() => import('../pages/dashboard/PromotionList')));
+const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/PromotionEdit')));
 
 // APP
 

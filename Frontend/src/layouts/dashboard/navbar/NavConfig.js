@@ -11,8 +11,8 @@ const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 
 const ICONS = {
   blog: getIcon('ic_blog'),
   cart: getIcon('ic_cart'),
- 
-  
+  promotion: getIcon('ic_cart'),
+
   user: getIcon('ic_user'),
   // kanban: getIcon('ic_kanban'),
  
@@ -28,12 +28,7 @@ const navConfig = [
   // ----------------------------------------------------------------------
   {
     subheader: 'Tổng quan',
-    items: [
-    
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
- 
-   
-    ],
+    items: [{ title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics }],
   },
 
   // MANAGEMENT
@@ -53,6 +48,28 @@ const navConfig = [
           { title: 'create', path: PATH_DASHBOARD.user.new },
           { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
           { title: 'account', path: PATH_DASHBOARD.user.account },
+        ],
+      },
+      // PROMOTION
+      {
+        title: 'promotion',
+        path: PATH_DASHBOARD.promotion.root,
+        icon: ICONS.promotion,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.promotion.list },
+          { title: 'create', path: PATH_DASHBOARD.promotion.new },
+          // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
+        ],
+      },
+      // Ưu đãi
+      {
+        title: 'Thương hiệu',
+        path: PATH_DASHBOARD.brand.root,
+        icon: ICONS.promotion,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.brand.list },
+          { title: 'create', path: PATH_DASHBOARD.promotion.new },
+          // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
         ],
       },
 
@@ -113,7 +130,6 @@ const navConfig = [
       //     </Label>
       //   ),
       // },
-     
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

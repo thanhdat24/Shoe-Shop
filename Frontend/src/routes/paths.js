@@ -70,6 +70,18 @@ export const PATH_DASHBOARD = {
     edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
+  promotion: {
+    root: path(ROOTS_DASHBOARD, '/promotion'),
+    list: path(ROOTS_DASHBOARD, '/promotion/list'),
+    new: path(ROOTS_DASHBOARD, '/promotion/new'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/promotion/edit/${id}`),
+  },
+  brand: {
+    root: path(ROOTS_DASHBOARD, '/brand'),
+    list: path(ROOTS_DASHBOARD, '/brand/list'),
+    new: path(ROOTS_DASHBOARD, '/brand/new'),
+    // edit: (id) => path(ROOTS_DASHBOARD, `${id}`),
+  },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
