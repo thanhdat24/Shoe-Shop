@@ -34,20 +34,21 @@ export default function CheckoutCart() {
 
   const isEmptyCart = cart.length === 0;
 
-  const handleDeleteCart = (productId) => {
-    dispatch(deleteCart(productId));
+  const handleDeleteCart = (itemIndex) => {
+    console.log('itemIndex', itemIndex);
+    dispatch(deleteCart(itemIndex));
   };
 
   const handleNextStep = () => {
     dispatch(onNextStep());
   };
 
-  const handleIncreaseQuantity = (productId) => {
-    dispatch(increaseQuantity(productId));
+  const handleIncreaseQuantity = (itemIndex) => {
+    dispatch(increaseQuantity(itemIndex));
   };
 
-  const handleDecreaseQuantity = (productId) => {
-    dispatch(decreaseQuantity(productId));
+  const handleDecreaseQuantity = (itemIndex) => {
+    dispatch(decreaseQuantity(itemIndex));
   };
 
   const handleApplyDiscount = (value) => {
@@ -61,7 +62,7 @@ export default function CheckoutCart() {
           <CardHeader
             title={
               <Typography variant="h6">
-                Card
+                Tất cả
                 <Typography component="span" sx={{ color: 'text.secondary' }}>
                   &nbsp;({totalItems} item)
                 </Typography>
@@ -88,13 +89,8 @@ export default function CheckoutCart() {
           )}
         </Card>
 
-        <Button
-          color="inherit"
-          component={RouterLink}
-          to={PATH_DASHBOARD.eCommerce.root}
-          startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
-        >
-          Continue Shopping
+        <Button color="inherit" component={RouterLink} to="/" startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}>
+          Tiếp tục mua sắm
         </Button>
       </Grid>
 

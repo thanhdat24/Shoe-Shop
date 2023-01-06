@@ -53,34 +53,20 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   const theme = useTheme();
   const navigate = useNavigate();
   const [detailColorSize, setDetailColorSize] = useState({});
-  const {
-    id,
-    name,
-    sizes,
-    price,
-    cover,
-    status,
-    colors,
-    available,
-    priceSale,
-    totalRating,
-    totalReview,
-    inventoryType,
-  } = product;
+  const { id, name, sizes, price, cover, status, colors, priceSale, totalRating, totalReview, inventoryType } = product;
   console.log('product56', product);
-  // const alreadyProduct = cart.map((item) => item.id).includes(id);
+  const alreadyProduct = cart?.map((item) => item.id).includes(id);
 
   // const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
     id,
     name,
-    cover,
-    available,
+    cover: product.images[0],
     price,
     color: colors[0]?.color,
     size: sizes[0].size,
-    quantity: available < 1 ? 0 : 1,
+    quantity: detailColorSize.quality < 1 ? 0 : 1,
   };
   const methods = useForm({
     defaultValues,
@@ -99,26 +85,30 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   console.log('values123', values);
   console.log('detailColorSize', detailColorSize);
 
-  // const onSubmit = async (data) => {
-  //   try {
-  //     if (!alreadyProduct) {
-  //       onAddCart({
-  //         ...data,
-  //         subtotal: data.price * data.quantity,
-  //       });
-  //     }
-  //     onGotoStep(0);
-  //     navigate(PATH_DASHBOARD.eCommerce.checkout);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const onSubmit = async (data) => {
+    try {
+      if (!alreadyProduct) {
+        onAddCart({
+          ...data,
+          subtotal: data.price * data.quantity,
+        });
+      }
+      onGotoStep(0);
+      navigate('/checkout');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAddCart = async () => {
     try {
       onAddCart({
         ...values,
         subtotal: values.price * values.quantity,
+        available: detailColorSize.quality,
+        idColor: detailColorSize.idColor._id,
+        idSize: detailColorSize.idSize._id,
+        productId: detailColorSize.idProduct._id,
       });
     } catch (error) {
       console.error(error);
@@ -127,16 +117,13 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   return (
     <RootStyle {...other}>
-      <FormProvider
-        methods={methods}
-        //  onSubmit={handleSubmit(onSubmit)}
-      >
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={inventoryType === 'in_stock' ? 'success' : 'error'}
+          color={inventoryType === 'còn hàng' ? 'success' : 'error'}
           sx={{ textTransform: 'uppercase' }}
         >
-          {sentenceCase(inventoryType || '')}
+          {inventoryType || ''}
         </Label>
 
         <Typography
@@ -231,7 +218,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             <Incrementer
               name="quantity"
               quantity={values.quantity}
-              available={available}
+              available={detailColorSize.quality}
               onIncrementQuantity={() => setValue('quantity', values.quantity + 1)}
               onDecrementQuantity={() => setValue('quantity', values.quantity - 1)}
             />
@@ -251,7 +238,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             color="warning"
             variant="contained"
             startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            // onClick={handleAddCart}
+            onClick={handleAddCart}
             sx={{ whiteSpace: 'nowrap' }}
           >
             Thêm giỏ hàng

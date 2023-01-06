@@ -22,8 +22,6 @@ ShopProductCard.propTypes = {
 export default function ShopProductCard({ product }) {
   const { name, cover, price, status = 'new', priceSale, productImages, productDetail } = product;
   const linkTo = PATH_HOME.product.view(paramCase(name));
-  console.log('linkTo', linkTo);
-  console.log('linkTo', linkTo);
   const colors = [];
   const sizes = [];
   const groupByColor = _(productDetail)

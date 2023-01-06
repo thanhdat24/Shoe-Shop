@@ -137,7 +137,7 @@ export default function Router() {
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
         { path: 'maintenance', element: <Maintenance /> },
-        { path: 'pricing', element: <Pricing /> },
+        // { path: 'product', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
@@ -157,7 +157,7 @@ export default function Router() {
           children: [
             { element: <Contact />, index: true },
             { path: '', element: <Contact /> },
-            { path: ':name', element: <Pricing /> },
+            { path: ':name', element: <Product /> },
           ],
         },
         { path: 'checkout', element: <About /> },
@@ -215,7 +215,7 @@ const Contact = Loadable(lazy(() => import('../pages/Contact')));
 const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
-const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
+const Product = Loadable(lazy(() => import('../pages/Product')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

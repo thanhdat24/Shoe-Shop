@@ -59,8 +59,8 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  const { promotiontList, isLoading, success, error } = useSelector((state) => state.promotion);
-  console.log('promotiontList', promotiontList);
+  const { promotions, isLoading, success, error } = useSelector((state) => state.promotion);
+  console.log('promotions', promotions);
   console.log('success', success);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -69,10 +69,10 @@ export default function UserList() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (promotiontList?.length) {
-      setTableData(promotiontList);
+    if (promotions?.length) {
+      setTableData(promotions);
     }
-  }, [promotiontList]);
+  }, [promotions]);
 
 
   const {

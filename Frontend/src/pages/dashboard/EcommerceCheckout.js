@@ -25,7 +25,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const STEPS = ['Cart', 'Billing & address', 'Payment'];
+const STEPS = ['Giỏ hàng', 'Địa chỉ giao hàng', 'Thanh toán'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   top: 10,
@@ -98,16 +98,16 @@ export default function EcommerceCheckout() {
 
   return (
     <Page title="Ecommerce: Checkout">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'} sx={{ marginTop: 10, marginBottom: 10 }}>
         <HeaderBreadcrumbs
-          heading="Checkout"
+          heading="Thanh toán"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            { name: 'Checkout' },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            // {
+            //   name: 'Giỏ hàng',
+            //   href: PATH_DASHBOARD.eCommerce.root,
+            // },
+            { name: 'Giỏ hàng' },
           ]}
         />
 

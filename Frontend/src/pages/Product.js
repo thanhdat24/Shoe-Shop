@@ -7,7 +7,7 @@ import { Box, Tab, Card, Grid, Divider, Container, Typography } from '@mui/mater
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { ProductDetailsCarousel, ProductDetailsSummary } from '../sections/@dashboard/e-commerce/product-details';
 import { useDispatch, useSelector } from '../redux/store';
-import { getProduct } from '../redux/slices/product';
+import { addCart, getProduct, onGotoStep, resetProduct } from '../redux/slices/product';
 import Page from '../components/Page';
 import useSettings from '../hooks/useSettings';
 import { SkeletonProduct } from '../components/skeleton';
@@ -49,17 +49,26 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Pricing() {
+export default function Product() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
-  const { product, error } = useSelector((state) => state.product);
+  const { product, error, checkout } = useSelector((state) => state.product);
   const { name = '' } = useParams();
-  console.log('productDetail', product);
 
   useEffect(() => {
     dispatch(getProduct(name));
+    return dispatch(resetProduct());
   }, [dispatch, name]);
+
+  const handleAddCart = (product) => {
+    console.log('product123', product);
+    dispatch(addCart(product));
+  };
+
+  const handleGotoStep = (step) => {
+    dispatch(onGotoStep(step));
+  };
 
   return (
     <Page title="Ecommerce: Product Details">
@@ -74,9 +83,9 @@ export default function Pricing() {
                 <Grid item xs={12} md={6} lg={5}>
                   <ProductDetailsSummary
                     product={product}
-                    // cart={checkout.cart}
-                    // onAddCart={handleAddCart}
-                    // onGotoStep={handleGotoStep}
+                    cart={checkout.cart}
+                    onAddCart={handleAddCart}
+                    onGotoStep={handleGotoStep}
                   />
                 </Grid>
               </Grid>

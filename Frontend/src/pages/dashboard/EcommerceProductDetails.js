@@ -73,8 +73,10 @@ export default function EcommerceProductDetails() {
   }, [dispatch, name]);
 
   const handleAddCart = (product) => {
+    // console.log('product123', product);
     dispatch(addCart(product));
   };
+
 
   const handleGotoStep = (step) => {
     dispatch(onGotoStep(step));

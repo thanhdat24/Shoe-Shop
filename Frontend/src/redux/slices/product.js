@@ -13,10 +13,10 @@ const initialState = {
   isLoading: false,
   error: null,
   products: [],
-  cates:[],
-  sizes:[],
-  colors:[],
- productList: null,
+  cates: [],
+  sizes: [],
+  colors: [],
+  productList: null,
   product: null,
   sortBy: null,
   filters: {
@@ -34,6 +34,7 @@ const initialState = {
     discount: 0,
     shipping: 0,
     billing: null,
+    idPromotion: null,
   },
 };
 
@@ -46,7 +47,6 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-   
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -59,7 +59,7 @@ const slice = createSlice({
       state.products = action.payload;
     },
 
-  getAllProductSuccess(state, action) {
+    getAllProductSuccess(state, action) {
       state.isLoading = false;
       state.productList = action.payload;
     },
@@ -103,7 +103,6 @@ const slice = createSlice({
       state.colors = action.payload;
     },
 
- 
     // CHECKOUT
     getCart(state, action) {
       const cart = action.payload;
@@ -128,22 +127,39 @@ const slice = createSlice({
       if (isEmptyCart) {
         state.checkout.cart = [...state.checkout.cart, product];
       } else {
-        state.checkout.cart = state.checkout.cart.map((_product) => {
-          const isExisted = _product.id === product.id;
-          if (isExisted) {
-            return {
-              ..._product,
-              quantity: _product.quantity + 1,
-            };
-          }
-          return _product;
-        });
+        const indexCart = state.checkout.cart?.findIndex(
+          (_product) =>
+            _product.id === product.id &&
+            Number(_product.size) === Number(product.size) &&
+            _product.color === product.color
+        );
+        if (indexCart !== -1) {
+          state.checkout.cart[indexCart].quantity += 1;
+        } else {
+          state.checkout.cart = [...state.checkout.cart, product];
+        }
+        // state.checkout.cart = state.checkout.cart.map((_product) => {
+        //   console.log('_product.id', _product);
+        //   console.log('product.id', product);
+        //   console.log('Number(product.size)', Number(product.size));
+
+        //   const isExisted =
+        //     _product.id === product.id && _product.size === Number(product.size) && _product.color === product.color;
+        //   console.log('isExisted', isExisted);
+        //   if (isExisted) {
+        //     return {
+        //       ..._product,
+        //       quantity: _product.quantity + 1,
+        //     };
+        //   }
+        //   return _product;
+        // });
       }
-      state.checkout.cart = uniqBy([...state.checkout.cart, product], 'id');
     },
 
     deleteCart(state, action) {
-      const updateCart = state.checkout.cart.filter((item) => item.id !== action.payload);
+      const itemIndex = action.payload;
+      const updateCart = state.checkout.cart.filter((item, index) => index !== itemIndex);
 
       state.checkout.cart = updateCart;
     },
@@ -156,6 +172,10 @@ const slice = createSlice({
       state.checkout.discount = 0;
       state.checkout.shipping = 0;
       state.checkout.billing = null;
+    },
+
+    resetProduct(state) {
+      state.product = null;
     },
 
     onBackStep(state) {
@@ -172,9 +192,9 @@ const slice = createSlice({
     },
 
     increaseQuantity(state, action) {
-      const productId = action.payload;
-      const updateCart = state.checkout.cart.map((product) => {
-        if (product.id === productId) {
+      const itemIndex = action.payload;
+      const updateCart = state.checkout.cart.map((product, index) => {
+        if (index === itemIndex) {
           return {
             ...product,
             quantity: product.quantity + 1,
@@ -187,9 +207,9 @@ const slice = createSlice({
     },
 
     decreaseQuantity(state, action) {
-      const productId = action.payload;
-      const updateCart = state.checkout.cart.map((product) => {
-        if (product.id === productId) {
+      const itemIndex = action.payload;
+      const updateCart = state.checkout.cart.map((product, index) => {
+        if (index === itemIndex) {
           return {
             ...product,
             quantity: product.quantity - 1,
@@ -206,9 +226,10 @@ const slice = createSlice({
     },
 
     applyDiscount(state, action) {
-      const discount = action.payload;
-      state.checkout.discount = discount;
-      state.checkout.total = state.checkout.subtotal - discount;
+      const { price, _id } = action.payload;
+      state.checkout.discount = price;
+      state.checkout.total = state.checkout.subtotal - price;
+      state.checkout.idPromotion = _id;
     },
 
     applyShipping(state, action) {
@@ -238,10 +259,10 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
+  resetProduct,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
-
 
 // PRODUCT
 export function getProducts() {
@@ -306,8 +327,6 @@ export function getAllProduct() {
   };
 }
 
-
-
 // Category
 export function getAllCate() {
   return async () => {
@@ -315,7 +334,7 @@ export function getAllCate() {
     try {
       const response = await axios.get('/api/v1/categories');
       console.log('response342', response);
-        dispatch(slice.actions.getCateSuccess(response.data.data));
+      dispatch(slice.actions.getCateSuccess(response.data.data));
     } catch (err) {
       console.log(err);
     }
@@ -349,4 +368,3 @@ export function getAllColor() {
     }
   };
 }
-

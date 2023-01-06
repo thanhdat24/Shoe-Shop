@@ -47,8 +47,8 @@ PromotionTableRow.propTypes = {
 };
 
 export default function PromotionTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { promotiontList, isLoading } = useSelector((state) => state.promotion);
-  console.log('promotion', promotiontList);
+  const { promotions, isLoading } = useSelector((state) => state.promotion);
+  console.log('promotion', promotions);
   const theme = useTheme();
   const classes = useStyles();
   
@@ -75,7 +75,7 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
 
   const handleActiveCode = () => {
     console.log('id,', id);
-    let discountChangeActiveCode = promotiontList.find((item) => item._id === id);
+    let discountChangeActiveCode = promotions.find((item) => item._id === id);
     console.log('discountChangeActiveCode', discountChangeActiveCode);
     if (discountChangeActiveCode) {
       discountChangeActiveCode = { ...discountChangeActiveCode ,activeCode:"Kết thúc"};

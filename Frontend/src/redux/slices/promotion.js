@@ -13,7 +13,7 @@ const initialState = {
   errorUpdateAdmin: null,
   error: null,
   success: '',
-  promotiontList: null,
+  promotions: null,
   newAccount: null,
   newDiscount: null,
   promotionDetail:null
@@ -49,7 +49,7 @@ const slice = createSlice({
     },
     getPromotionsSuccess(state, action) {
       state.isLoading = false;
-      state.promotiontList = action.payload;
+      state.promotions = action.payload;
     },
 
     getPromotionDetailSuccess(state, action) {
