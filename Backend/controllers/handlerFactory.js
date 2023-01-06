@@ -44,7 +44,7 @@ exports.updateOne = (Model) =>
     });
   });
 
-exports.createOne = (Model, uploadCloudName, imageModelName, bannerModelName) =>
+exports.createOne = (Model, uploadCloudName, imageModelName) =>
   catchAsync(async (req, res, next) => {
     if (imageModelName && imageModelName === 'photo') {
       if (req.body.photo) {
@@ -55,18 +55,6 @@ exports.createOne = (Model, uploadCloudName, imageModelName, bannerModelName) =>
           }
         );
         req.body.photo = uploadedResponse.secure_url;
-      }
-    }
-
-    if (bannerModelName && bannerModelName === 'banner') {
-      if (req.body.banner) {
-        const uploadedResponse = await cloudinary.uploader.upload(
-          req.body.banner,
-          {
-            upload_preset: uploadCloudName,
-          }
-        );
-        req.body.banner = uploadedResponse.secure_url;
       }
     }
 

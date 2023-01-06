@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Please tell us your priceSale'],
       trim: true,
     },
+    sku: {
+      type: String,
+      required: [true, 'Please tell us your sku'],
+    },
     soldQuality: {
       type: Number,
       required: [true, 'Please tell us your soldQuality'],

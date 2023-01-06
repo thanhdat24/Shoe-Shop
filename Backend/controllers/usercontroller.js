@@ -9,7 +9,26 @@ const cloudinary = require('../utils/cloudinary');
 //
 
 exports.getAllUser = factory.getAll(User);
-exports.createUser = factory.createOne(User);
+exports.createUser = catchAsync(async (req, res, next) => {
+  const { googleId } = req.body;
+  console.log('req.body', req.body);
+
+  User.findOne(
+    {
+      googleId,
+    },
+    async (err, user) => {
+      if (err) {
+        console.log('err', err);
+      }
+      if (!user) {
+        await User.create(req.body);
+      } else {
+        console.log('Người dùng đã tồn tại!');
+      }
+    }
+  );
+});
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 exports.getDetailUser = factory.getOne(User);
@@ -108,15 +127,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUserLoginOtp = catchAsync(async (req, res, next) => {
-  const { phoneNumber } = req.body;
-  let customPhoneNumber = 0 + phoneNumber.slice(3);
-  let userNumber = await User.findOne({ phoneNumber: customPhoneNumber });
-  if (!userNumber) {
-    return next(
-      new AppError('Số điện thoại không chính xác hoặc không tồn tại!', 401)
-    );
+exports.getUserLoginGoogle = catchAsync(async (req, res, next) => {
+  const { googleId } = req.body;
+  let user = await User.findOne({ googleId });
+  if (!user) {
+    return next(new AppError('Người dùng không tồn tại!', 401));
+  } else {
+    createSendToken(user, 200, res);
   }
-
-  createSendToken(userNumber, 200, res);
 });

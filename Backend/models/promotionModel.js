@@ -7,14 +7,14 @@ const promotionSchema = new mongoose.Schema(
       required: [true, 'A promotion must have a title'],
     },
     price: {
-      type: String,
+      type: Number,
       required: [true, 'A promotion must have a price'],
     },
     percent: {
       type: String,
     },
     miniPrice: {
-      type: String,
+      type: Number,
     },
     quality: {
       type: Number,

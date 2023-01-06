@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: [true, 'Please tell us your fullName'],
+      // required: [true, 'Please tell us your fullName'],
       trim: true,
     },
     phoneNumber: {
@@ -14,13 +14,12 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      required: [true, 'Please tell us your gender'],
+      // required: [true, 'Please tell us your gender'],
       // enum: ['Nam', 'Nữ'],
       allowNull: true,
     },
     email: {
       type: String,
-      required: [true, 'Please provide your email'],
       // unique: true,
       // chuyển về chữ thường
       lowercase: true,
@@ -33,13 +32,13 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
-    role: {
-      type: String,
-      default: 'Customer',
-    },
-    address: {
+    googleId: {
       type: String,
       allowNull: true,
+    },
+    role: {
+      type: String,
+      default: 'Khách hàng',
     },
     passwordChangeAt: Date,
     passwordResetToken: String,

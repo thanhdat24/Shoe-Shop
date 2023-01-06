@@ -4,11 +4,11 @@ const productDetailSchema = new mongoose.Schema(
   {
     quality: {
       type: Number,
-      required: [true, 'Please tell us your quality'],
+      // required: [true, 'Please tell us your quality'],
     },
     sku: {
       type: String,
-      required: [true, 'Please tell us your sku'],
+      // required: [true, 'Please tell us your sku'],
     },
     idProduct: {
       type: mongoose.Schema.ObjectId,

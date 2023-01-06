@@ -50,8 +50,8 @@ const adminSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'staff'],
-      default: 'staff',
+      enum: ['admin', 'nhân viên', 'khách hàng'],
+      default: 'khách hàng',
     },
     password: {
       type: String,

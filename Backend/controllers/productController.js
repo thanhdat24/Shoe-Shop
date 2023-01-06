@@ -42,7 +42,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   let productItems = [];
   let productImages = { url: [], idProduct: '' };
   req.body.map((item, index) => {
-    item.sku = item.sku + `-${index + 1}`;
+    // item.sku = item.sku + `-${index + 1}`;
     productItems.push({
       idSize: item.idSize,
       idColor: item.idColor,
