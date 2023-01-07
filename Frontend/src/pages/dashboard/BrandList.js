@@ -1,5 +1,5 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
@@ -15,7 +15,15 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
@@ -39,8 +47,9 @@ import {
 // sections
 import BrandTableRow from '../../sections/@dashboard/brand/list/BrandTableRow';
 
-import { getBrands } from '../../redux/slices/brand';
+import { createBrand, getBrands, resetBrand } from '../../redux/slices/brand';
 import BrandTableToolbar from '../../sections/@dashboard/brand/list/BrandTableToolbar';
+import { DialogAnimate } from '../../components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +64,22 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function BrandList() {
+  const [open, setOpen] = useState(false);
+  const valueRef = useRef('');
+  const dispatch = useDispatch();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCreate = () => {
+    setOpen(false);
+    dispatch(createBrand({ name: valueRef.current.value }));
+  };
+
   const {
     dense,
     page,
@@ -79,10 +104,8 @@ export default function BrandList() {
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
-  const { brandList, isLoading } = useSelector((state) => state.brand);
+  const { enqueueSnackbar } = useSnackbar();
+  const { brandList, isLoading, newBrand, error } = useSelector((state) => state.brand);
 
   const [tableData, setTableData] = useState([]);
   console.log('first', tableData);
@@ -92,7 +115,18 @@ export default function BrandList() {
   useEffect(() => {
     dispatch(getBrands());
   }, [dispatch]);
-
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
+    } else if (newBrand) {
+      console.log('234', newBrand);
+      enqueueSnackbar('Thêm thương hiệu  thành công!');
+      // navigate(PATH_DASHBOARD.user.list);
+    }
+    setTimeout(() => {
+      dispatch(resetBrand());
+    }, 3000);
+  }, [error, newBrand]);
   useEffect(() => {
     if (brandList?.length) {
       setTableData(brandList);
@@ -147,13 +181,60 @@ export default function BrandList() {
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.brand.new}
+              // component={RouterLink}
+              // to={PATH_DASHBOARD.brand.new}
+              onClick={handleClickOpen}
             >
               Thêm thương hiệu
             </Button>
           }
         />
+        <DialogAnimate open={open} onClose={handleClose} title={'Tạo thương hiệu'} onClickSubmit={handleCreate}>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Tên thương hiệu"
+              type="text"
+              fullWidth
+              name="name"
+              inputRef={valueRef}
+              id="outlined-basic"
+              variant="outlined"
+            />
+          </DialogContent>
+        </DialogAnimate>
+        {/* <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title" sx={{ textAlign: 'center', fontSize: '18px', marginBottom: '10px' }}>
+            {'Tạo thương hiệu'}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Tên thương hiệu"
+              type="text"
+              fullWidth
+              name="name"
+              inputRef={valueRef}
+              id="outlined-basic"
+              variant="outlined"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} variant="contained" color="error">
+              Hủy{' '}
+            </Button>
+            <Button type="submit" onClick={handleCreate} variant="outlined">
+              Tạo{' '}
+            </Button>
+          </DialogActions>
+        </Dialog> */}
 
         <Card>
           <BrandTableToolbar filterName={filterName} onFilterName={handleFilterName} />

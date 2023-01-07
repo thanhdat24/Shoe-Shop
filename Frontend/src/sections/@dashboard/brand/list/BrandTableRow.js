@@ -37,7 +37,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function BrandTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, id } = row;
+  const { name, _id, color } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -54,15 +54,14 @@ export default function BrandTableRow({ row, selected, onEditRow, onSelectRow, o
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-      <TableCell align="left">
-       {id}
-      </TableCell>
+      <TableCell align="left">{_id}</TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>
       </TableCell>
 
+      {color && <TableCell align="left">{color}</TableCell>}
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}
