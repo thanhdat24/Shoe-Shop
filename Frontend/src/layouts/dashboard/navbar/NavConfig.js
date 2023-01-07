@@ -11,11 +11,13 @@ const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 
 const ICONS = {
   blog: getIcon('ic_blog'),
   cart: getIcon('ic_cart'),
-  promotion: getIcon('ic_cart'),
 
+  color: getIcon('ic_color'),
+  shoes: getIcon('ic_shoes'),
+  brand: getIcon('ic_brand'),
   user: getIcon('ic_user'),
   // kanban: getIcon('ic_kanban'),
- 
+  promotion: getIcon('ic_promotion'),
   invoice: getIcon('ic_invoice'),
 
   ecommerce: getIcon('ic_ecommerce'),
@@ -42,11 +44,9 @@ const navConfig = [
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
-          { title: 'profile', path: PATH_DASHBOARD.user.profile },
-          { title: 'cards', path: PATH_DASHBOARD.user.cards },
           { title: 'list', path: PATH_DASHBOARD.user.list },
           { title: 'create', path: PATH_DASHBOARD.user.new },
-          { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
+
           { title: 'account', path: PATH_DASHBOARD.user.account },
         ],
       },
@@ -57,7 +57,7 @@ const navConfig = [
         icon: ICONS.promotion,
         children: [
           { title: 'list', path: PATH_DASHBOARD.promotion.list },
-          { title: 'create', path: PATH_DASHBOARD.promotion.new },
+          // { title: 'create', path: PATH_DASHBOARD.promotion.new },
           // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
         ],
       },
@@ -65,11 +65,33 @@ const navConfig = [
       {
         title: 'Thương hiệu',
         path: PATH_DASHBOARD.brand.root,
-        icon: ICONS.promotion,
+        icon: ICONS.brand,
         children: [
           { title: 'list', path: PATH_DASHBOARD.brand.list },
-          { title: 'create', path: PATH_DASHBOARD.promotion.new },
+          // { title: 'create', path: PATH_DASHBOARD.promotion.new },
           // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
+        ],
+      },
+      // Color
+      {
+        title: 'Màu sắc',
+        path: PATH_DASHBOARD.color.root,
+        icon: ICONS.color,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.color.list },
+          // { title: 'create', path: PATH_DASHBOARD.color.new },
+          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
+        ],
+      },
+      // SIZE
+      {
+        title: 'Kích thước',
+        path: PATH_DASHBOARD.size.root,
+        icon: ICONS.shoes,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.size.list },
+          // { title: 'create', path: PATH_DASHBOARD.size.new },
+          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
         ],
       },
 

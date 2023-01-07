@@ -10,6 +10,8 @@ import kanbanReducer from './slices/kanban';
 import adminReducer from './slices/admin';
 import promotionReducer from './slices/promotion';
 import brandReducer from './slices/brand';
+import colorReducer from './slices/color';
+import sizeReducer from './slices/size';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +38,8 @@ const rootReducer = combineReducers({
   admin: adminReducer,
   promotion: promotionReducer,
   brand: brandReducer,
+  color: colorReducer,
+  size: sizeReducer
 });
 
 export { rootPersistConfig, rootReducer };

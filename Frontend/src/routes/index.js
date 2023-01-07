@@ -13,10 +13,11 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-import PromotionCreate from '../pages/dashboard/PromotionCreate';
-import BrandList from '../pages/dashboard/BrandList';
-import BrandCreate from '../pages/dashboard/BrandCreate';
-
+import SizeList from '../pages/dashboard/SizeList';
+// import PromotionCreate from '../pages/dashboard/PromotionCreate';
+// import BrandList from '../pages/dashboard/BrandList';
+// import BrandCreate from '../pages/dashboard/BrandCreate';
+// import ColorList from '../pages/dashboard/ColorList';
 
 // ----------------------------------------------------------------------
 
@@ -91,8 +92,7 @@ export default function Router() {
           path: 'user',
           children: [
             { element: <Navigate to="/admin/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'cards', element: <UserCards /> },
+
             { path: 'list', element: <UserList /> },
             { path: 'new', element: <UserCreate /> },
             { path: ':name/edit', element: <UserCreate /> },
@@ -113,10 +113,29 @@ export default function Router() {
           children: [
             { element: <Navigate to="/admin/brand/list" replace />, index: true },
             { path: 'list', element: <BrandList /> },
+            // { path: 'new', element: <BrandCreate /> },
+            // { path: 'edit/:id', element: <PromotionCreate /> },
+          ],
+        },
+        {
+          path: 'color',
+          children: [
+            { element: <Navigate to="/admin/color/list" replace />, index: true },
+            { path: 'list', element: <ColorList /> },
             { path: 'new', element: <BrandCreate /> },
             // { path: 'edit/:id', element: <PromotionCreate /> },
           ],
         },
+        {
+          path: 'size',
+          children: [
+            { element: <Navigate to="/admin/size/list" replace />, index: true },
+            { path: 'list', element: <SizeList /> },
+            { path: 'new', element: <InvoiceList /> },
+            // { path: 'edit/:id', element: <PromotionCreate /> },
+          ],
+        },
+
         {
           path: 'invoice',
           children: [
@@ -196,8 +215,7 @@ const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCrea
 const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
 
 // USER
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
-const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
+
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
@@ -205,6 +223,13 @@ const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')))
 // PROMOTION
 const PromotionList = Loadable(lazy(() => import('../pages/dashboard/PromotionList')));
 const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/PromotionEdit')));
+const PromotionCreate = Loadable(lazy(() => import('../pages/dashboard/PromotionCreate')));
+// Brand
+const BrandList = Loadable(lazy(() => import('../pages/dashboard/BrandList')));
+const BrandCreate = Loadable(lazy(() => import('../pages/dashboard/BrandCreate')));
+// Color
+const ColorList = Loadable(lazy(() => import('../pages/dashboard/ColorList')));
+// const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/PromotionEdit')));
 
 // APP
 

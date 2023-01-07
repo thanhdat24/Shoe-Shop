@@ -65,10 +65,9 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/user/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
-    profile: path(ROOTS_DASHBOARD, '/user/profile'),
+
     account: path(ROOTS_DASHBOARD, '/user/account'),
     edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
-    demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
   promotion: {
     root: path(ROOTS_DASHBOARD, '/promotion'),
@@ -76,6 +75,19 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/promotion/new'),
     edit: (id) => path(ROOTS_DASHBOARD, `/promotion/edit/${id}`),
   },
+  color: {
+    root: path(ROOTS_DASHBOARD, '/color'),
+    list: path(ROOTS_DASHBOARD, '/color/list'),
+    new: path(ROOTS_DASHBOARD, '/color/new'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/color/edit/${id}`),
+  },
+  size: {
+    root: path(ROOTS_DASHBOARD, '/size'),
+    list: path(ROOTS_DASHBOARD, '/size/list'),
+    new: path(ROOTS_DASHBOARD, '/size/new'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/size/edit/${id}`),
+  },
+ 
   brand: {
     root: path(ROOTS_DASHBOARD, '/brand'),
     list: path(ROOTS_DASHBOARD, '/brand/list'),
