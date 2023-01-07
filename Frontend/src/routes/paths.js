@@ -88,6 +88,13 @@ export const PATH_DASHBOARD = {
     edit: (id) => path(ROOTS_DASHBOARD, `/size/edit/${id}`),
   },
  
+  shipper: {
+    root: path(ROOTS_DASHBOARD, '/shipper'),
+    list: path(ROOTS_DASHBOARD, '/shipper/list'),
+    new: path(ROOTS_DASHBOARD, '/shipper/new'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/shipper/edit/${id}`),
+  },
+ 
   brand: {
     root: path(ROOTS_DASHBOARD, '/brand'),
     list: path(ROOTS_DASHBOARD, '/brand/list'),

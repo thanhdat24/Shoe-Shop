@@ -37,7 +37,8 @@ export default function AccountChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+    console.log("data45",data)
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();

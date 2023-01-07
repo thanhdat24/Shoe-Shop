@@ -23,6 +23,7 @@ import Label from '../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
 
 import { useDispatch, useSelector } from '../../../redux/store';
+import { createShipper, resetShipper } from '../../../redux/slices/shipper';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +37,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { newAccount, error } = useSelector((state) => state.admin);
-console.log('newAccount',newAccount);
+  console.log('newAccount', newAccount);
   useEffect(() => {
     if (error) {
       enqueueSnackbar('Thêm người dùng không thành công!', { variant: 'error' });
@@ -46,7 +47,7 @@ console.log('newAccount',newAccount);
       // navigate(PATH_DASHBOARD.user.list);
     }
     setTimeout(() => {
-      dispatch(resetAdmin());
+      dispatch(resetShipper());
     }, 3000);
   }, [error, newAccount]);
 
@@ -107,7 +108,14 @@ console.log('newAccount',newAccount);
     console.log('account', account);
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
-      await dispatch(createAdmin(account));
+      await dispatch(createShipper(account))
+        .then(() => {
+          navigate(PATH_DASHBOARD.shipper.list);
+        })
+        .catch((err) => {
+          console.log('Error', error);
+        });
+
       // reset();
       // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
     } catch (error) {
@@ -167,8 +175,8 @@ console.log('newAccount',newAccount);
                       color: 'text.secondary',
                     }}
                   >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
+                    Cho phép *.jpeg, *.jpg, *.png, *.gif
+                    <br /> tối đa {fData(3145728)}
                   </Typography>
                 }
               />
@@ -216,9 +224,9 @@ console.log('newAccount',newAccount);
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="fullName" label="Full Name" />
-              <RHFTextField name="email" label="Email Address" />
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="fullName" label="Họ tên" />
+              <RHFTextField name="email" label="Email " />
+              <RHFTextField name="phoneNumber" label="Số điện thoại" />
 
               <RHFSelect name="gender" label="Giới tính" placeholder="Giới tính">
                 <option value="" />
@@ -227,9 +235,9 @@ console.log('newAccount',newAccount);
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="password" label="Password" />
-              <RHFTextField name="passwordConfirm" label="Password Confirm" />
-              <RHFTextField name="address" label="Address" />
+              <RHFTextField name="password" label="Mật khẩu" />
+              <RHFTextField name="passwordConfirm" label="Xác nhận mật khẩu" />
+              <RHFTextField name="address" label="Địa chỉ" />
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -250,7 +258,7 @@ console.log('newAccount',newAccount);
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Create User' : 'Save Changes'}
+                {!isEdit ? 'Tạo người dùng' : 'Lưu thay đổi'}
               </LoadingButton>
             </Stack>
           </Card>

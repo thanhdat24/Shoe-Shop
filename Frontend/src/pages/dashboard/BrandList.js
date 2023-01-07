@@ -170,9 +170,9 @@ export default function BrandList() {
         <HeaderBreadcrumbs
           heading="Danh sách thương hiệu"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
+              name: 'Thương hiệu',
               href: PATH_DASHBOARD.brand.root,
             },
             { name: 'Product List' },

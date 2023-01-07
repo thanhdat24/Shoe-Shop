@@ -42,13 +42,13 @@ import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product', align: 'left' },
-  { id: 'color', label: 'Color', align: 'left', width: 120 },
-  { id: 'size', label: 'Size', align: 'left', width: 120 },
+  { id: 'name', label: 'Tên sản phẩm', align: 'left' },
+  { id: 'color', label: 'Màu sắc', align: 'left', width: 120 },
+  { id: 'size', label: 'Kích thước', align: 'left', width: 120 },
   { id: 'cate', label: 'Thể loại', align: 'left' },
   { id: 'supplier', label: 'Nhà cung cấp', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center' },
-  { id: 'price', label: 'Price', align: 'right' },
+  { id: 'inventoryType', label: 'Trạng thái', align: 'center' },
+  { id: 'price', label: 'Giá', align: 'right' },
   { id: '' },
 ];
 
@@ -131,17 +131,17 @@ export default function EcommerceProductList() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="Ecommerce: Product List">
+    <Page title="Ecommerce: Danh sách sản phẩm">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Product List"
+          heading="Danh sách sản phẩm"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
+              name: 'Sản phẩm',
               href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: 'Product List' },
+            { name: 'Danh sách sản phẩm' },
           ]}
           action={
             <Button
@@ -150,7 +150,7 @@ export default function EcommerceProductList() {
               component={RouterLink}
               to={PATH_DASHBOARD.eCommerce.new}
             >
-              New Product
+              Sản phẩm mới
             </Button>
           }
         />

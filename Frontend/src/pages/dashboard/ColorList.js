@@ -233,10 +233,10 @@ export default function ColorList() {
         <HeaderBreadcrumbs
           heading="Danh sách màu"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.brand.root,
+              name: 'Màu',
+              href: PATH_DASHBOARD.color.root,
             },
             { name: 'Danh sách màu' },
           ]}

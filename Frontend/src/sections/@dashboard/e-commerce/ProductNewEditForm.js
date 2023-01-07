@@ -44,7 +44,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTION = ['Men', 'Women'];
+const GENDER_OPTION = ['Nam', 'Nữ'];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -362,10 +362,10 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
             <Grid item xs={12} md={8}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <RHFTextField name="name" label="Product Name" />
+                  <RHFTextField name="name" label="Tên sản phẩm" />
 
                   <div>
-                    <LabelStyle>Description</LabelStyle>
+                    <LabelStyle>Mô tả</LabelStyle>
                     <RHFEditor simple name="desc" />
                   </div>
                   <Grid container rowSpacing={1} columns={17}>
@@ -390,7 +390,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   </Grid>
 
                   <div>
-                    <LabelStyle>Images</LabelStyle>
+                    <LabelStyle>Hình ảnh</LabelStyle>
                     <RHFUploadMultiFile
                       name="images"
                       showPreview
@@ -410,7 +410,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 <Card sx={{ p: 3 }}>
                   <Stack spacing={2} mt={1}>
                     <div>
-                      <LabelStyle>Gender</LabelStyle>
+                      <LabelStyle>Giới tính</LabelStyle>
                       <RHFRadioGroup
                         name="gender"
                         options={GENDER_OPTION}
@@ -420,16 +420,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                       />
                     </div>
 
-                    {/* <RHFSelect name="country" label="Country" placeholder="Country">
-                  <option value="" />
-                  {countries.map((option) => (
-                    <option key={option.code} value={option.label}>
-                      {option.label}
-                    </option>
-                  ))}
-                </RHFSelect> */}
+                   
 
-                    <RHFSelect name="category" label="Category">
+                    <RHFSelect name="category" label="Loại">
                       {CATEGORY_OPTION?.map((category) => (
                         <optgroup key={category.group} label={category.group}>
                           {category?.classify.map((classify) => (
@@ -521,7 +514,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   size="large"
                   loading={isSubmitting}
                 >
-                  {!isEdit ? 'Create Product' : 'Save Changes'}
+                  {!isEdit ? 'Tạo sản phẩm' : 'Lưu thay đổi'}
                 </LoadingButton>
               </Stack>
             </Grid>

@@ -227,10 +227,10 @@ export default function ColorList() {
         <HeaderBreadcrumbs
           heading="Danh sách kích thước"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.brand.root,
+              name: 'Kích thước',
+              href: PATH_DASHBOARD.size.root,
             },
             { name: 'Danh sách kích thước' },
           ]}

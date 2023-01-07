@@ -17,7 +17,7 @@ export default function ProductTableToolbar({ filterName, onFilterName }) {
       <TextField
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Search product..."
+        placeholder="Tìm kiếm sản phẩm..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

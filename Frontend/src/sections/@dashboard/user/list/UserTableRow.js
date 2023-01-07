@@ -54,19 +54,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {gender}
       </TableCell>
-
-      {/* <TableCell align="center">
-        <Iconify
-          icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-          sx={{
-            width: 20,
-            height: 20,
-            color: 'success.main',
-            ...(!isVerified && { color: 'warning.main' }),
-          }}
-        />
-      </TableCell> */}
-
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

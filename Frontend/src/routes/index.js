@@ -13,7 +13,7 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-import SizeList from '../pages/dashboard/SizeList';
+
 // import PromotionCreate from '../pages/dashboard/PromotionCreate';
 // import BrandList from '../pages/dashboard/BrandList';
 // import BrandCreate from '../pages/dashboard/BrandCreate';
@@ -131,7 +131,16 @@ export default function Router() {
           children: [
             { element: <Navigate to="/admin/size/list" replace />, index: true },
             { path: 'list', element: <SizeList /> },
-            { path: 'new', element: <InvoiceList /> },
+
+            // { path: 'edit/:id', element: <PromotionCreate /> },
+          ],
+        },
+        {
+          path: 'shipper',
+          children: [
+            { element: <Navigate to="/admin/shipper/list" replace />, index: true },
+            { path: 'list', element: <ShipperList /> },
+            { path: 'new', element: <ShipperCreate /> },
             // { path: 'edit/:id', element: <PromotionCreate /> },
           ],
         },
@@ -231,6 +240,13 @@ const BrandCreate = Loadable(lazy(() => import('../pages/dashboard/BrandCreate')
 const ColorList = Loadable(lazy(() => import('../pages/dashboard/ColorList')));
 // const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/PromotionEdit')));
 
+// Size
+
+const SizeList = Loadable(lazy(() => import('../pages/dashboard/SizeList')));
+// shipper
+
+const ShipperList = Loadable(lazy(() => import('../pages/dashboard/ShipperList')));
+const ShipperCreate = Loadable(lazy(() => import('../pages/dashboard/ShipperCreate')));
 // APP
 
 // MAIN
