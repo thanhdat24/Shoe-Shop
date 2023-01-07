@@ -12,6 +12,7 @@ import promotionReducer from './slices/promotion';
 import brandReducer from './slices/brand';
 import colorReducer from './slices/color';
 import sizeReducer from './slices/size';
+import shipperReducer from './slices/shipper';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +40,9 @@ const rootReducer = combineReducers({
   promotion: promotionReducer,
   brand: brandReducer,
   color: colorReducer,
-  size: sizeReducer
+  size: sizeReducer,
+  shipper: shipperReducer,
+
 });
 
 export { rootPersistConfig, rootReducer };
