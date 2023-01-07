@@ -118,6 +118,15 @@ export default function Router() {
           ],
         },
         {
+          path: 'cate',
+          children: [
+            { element: <Navigate to="/admin/cate/list" replace />, index: true },
+            { path: 'list', element: <CateList /> },
+            // { path: 'new', element: <BrandCreate /> },
+            // { path: 'edit/:id', element: <PromotionCreate /> },
+          ],
+        },
+        {
           path: 'color',
           children: [
             { element: <Navigate to="/admin/color/list" replace />, index: true },
@@ -247,6 +256,9 @@ const SizeList = Loadable(lazy(() => import('../pages/dashboard/SizeList')));
 
 const ShipperList = Loadable(lazy(() => import('../pages/dashboard/ShipperList')));
 const ShipperCreate = Loadable(lazy(() => import('../pages/dashboard/ShipperCreate')));
+
+// cate
+const CateList = Loadable(lazy(() => import('../pages/dashboard/CateList')));
 // APP
 
 // MAIN

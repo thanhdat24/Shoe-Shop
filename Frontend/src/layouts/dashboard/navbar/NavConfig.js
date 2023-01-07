@@ -108,6 +108,15 @@ const navConfig = [
 
       // E-COMMERCE
       {
+        title: 'Loại giày',
+        path: PATH_DASHBOARD.cate.root,
+        icon: ICONS.cart,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.cate.list },
+          { title: 'Tạo', path: PATH_DASHBOARD.cate.new },
+        ],
+      },
+      {
         title: 'Sản phẩm',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
