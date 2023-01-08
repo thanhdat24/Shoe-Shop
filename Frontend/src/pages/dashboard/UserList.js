@@ -46,11 +46,11 @@ const STATUS_OPTIONS = ['all', 'active', 'banned'];
 const ROLE_OPTIONS = ['all', 'Quản trị', 'Khách hàng'];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'name', label: 'Tên', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
+  { id: 'role', label: 'Quyền', align: 'left' },
   { id: 'gender', label: 'Giới tính', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'status', label: 'Trạng thái', align: 'left' },
   { id: '' },
 ];
 
@@ -114,6 +114,9 @@ export default function UserList() {
     setTableData(deleteRow);
   };
 
+ 
+
+
   const handleDeleteRows = (selected) => {
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
@@ -143,11 +146,11 @@ export default function UserList() {
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="User List"
+          heading="Danh sách người dùng"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'List' },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Người dùng', href: PATH_DASHBOARD.user.root },
+            { name: 'Danh sách' },
           ]}
           action={
             <Button
@@ -156,7 +159,7 @@ export default function UserList() {
               to={PATH_DASHBOARD.user.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
-              New User
+              Thêm người dùng
             </Button>
           }
         />

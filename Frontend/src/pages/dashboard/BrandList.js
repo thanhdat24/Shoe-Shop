@@ -189,7 +189,13 @@ export default function BrandList() {
             </Button>
           }
         />
-        <DialogAnimate open={open} onClose={handleClose} title={'Tạo thương hiệu'} onClickSubmit={handleCreate}>
+        <DialogAnimate
+          open={open}
+          onClose={handleClose}
+          title={'Tạo thương hiệu'}
+          onClickSubmit={handleCreate}
+          isEdit={'Tạo'}
+        >
           <DialogContent>
             <TextField
               autoFocus

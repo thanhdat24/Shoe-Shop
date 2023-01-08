@@ -233,6 +233,7 @@ export default function ShipperList() {
         />
         <DialogAnimate
           open={open}
+          isEdit={'Tạo'}
           onClose={handleClose}
           title={'Tạo kích thước'}
           onClickSubmit={handleSubmit(onSubmit)}

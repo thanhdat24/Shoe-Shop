@@ -15,9 +15,20 @@ DialogAnimate.propTypes = {
   sx: PropTypes.object,
   variants: PropTypes.object,
   title: PropTypes.string.isRequired,
+  isEdit: PropTypes.bool,
 };
 
-export default function DialogAnimate({ open = false, variants, onClose, children, sx,title, onClickSubmit,...other }) {
+export default function DialogAnimate({
+  open = false,
+  variants,
+  onClose,
+  children,
+  sx,
+  title,
+  onClickSubmit,
+  isEdit,
+  ...other
+}) {
   return (
     <AnimatePresence>
       {open && (
@@ -53,12 +64,13 @@ export default function DialogAnimate({ open = false, variants, onClose, childre
                   {title}
                 </DialogTitle>
                 {props.children}
+
                 <DialogActions>
                   <Button onClick={onClose} variant="contained" color="error">
                     Hủy{' '}
                   </Button>
                   <Button type="submit" onClick={onClickSubmit} variant="outlined">
-                    Tạo{' '}
+                    {isEdit}
                   </Button>
                 </DialogActions>
               </Paper>

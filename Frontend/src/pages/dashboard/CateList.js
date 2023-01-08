@@ -193,7 +193,13 @@ export default function CateList() {
             </Button>
           }
         />
-        <DialogAnimate open={open} onClose={handleClose} title={'Tạo loại giày'} onClickSubmit={handleCreate}>
+        <DialogAnimate
+          open={open}
+          onClose={handleClose}
+          title={'Tạo loại giày'}
+          onClickSubmit={handleCreate}
+          isEdit={'Tạo'}
+        >
           <DialogContent>
             <TextField
               autoFocus

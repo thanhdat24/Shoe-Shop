@@ -252,7 +252,13 @@ export default function ColorList() {
             </Button>
           }
         />
-        <DialogAnimate open={open} onClose={handleClose} title={'Tạo màu sắc'} onClickSubmit={handleSubmit(onSubmit)}>
+        <DialogAnimate
+          open={open}
+          onClose={handleClose}
+          title={'Tạo màu sắc'}
+          onClickSubmit={handleSubmit(onSubmit)}
+          isEdit={'Tạo'}
+        >
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <DialogContent>
               {' '}

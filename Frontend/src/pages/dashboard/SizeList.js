@@ -248,6 +248,7 @@ export default function ColorList() {
         />
         <DialogAnimate
           open={open}
+          isEdit={'Tạo'}
           onClose={handleClose}
           title={'Tạo kích thước'}
           onClickSubmit={handleSubmit(onSubmit)}
