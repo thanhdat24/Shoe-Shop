@@ -14,7 +14,7 @@ const initialState = {
   error: null,
   success: '',
   accountList: null,
-  newAccount: null,
+  adminUpdate: null,
 };
 
 const slice = createSlice({
@@ -41,11 +41,15 @@ const slice = createSlice({
       state.newAccount = action.payload;
     },
     // UPDATE ADMIN
-    updateAdminSuccess(state, action) {
+    updateCurrentSuccess(state, action) {
       const user = action.payload;
 
       state.isLoading = false;
       state.success = user;
+    },
+    updateAdminSuccess(state, action) {
+      state.isLoading = false;
+      state.adminUpdate = action.payload;
     },
     getAccountsSuccess(state, action) {
       state.isLoading = false;
@@ -102,7 +106,22 @@ export function updateCurrentUser(updateAdmin) {
     try {
       const response = await axios.put('/api/v1/admin/updateMe', updateAdmin);
       console.log('response', response);
-      dispatch(slice.actions.updateAdminSuccess(response.data.user));
+      dispatch(slice.actions.updateCurrentSuccess(response.data.user));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateAdmin(updateAdmin, id) {
+  console.log('updateAdmin', updateAdmin);
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`api/v1/admin/${id}`, updateAdmin);
+      console.log('response', response);
+      dispatch(slice.actions.updateAdminSuccess(response.data.data));
     } catch (error) {
       console.log('error', error);
       dispatch(slice.actions.hasError(error));
