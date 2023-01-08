@@ -18,22 +18,22 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
-    linkTo: '/',
+    label: 'Trang chủ',
+    linkTo: PATH_DASHBOARD.general.analytics,
   },
   {
-    label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
-  },
-  {
-    label: 'Settings',
+    label: 'Tài khoản',
     linkTo: PATH_DASHBOARD.user.account,
   },
+  // {
+  //   label: 'Settings',
+  //   linkTo: PATH_DASHBOARD.user.account,
+  // },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover({ avatarUser }) {
+export default function AccountPopover() {
   const navigate = useNavigate();
 
   const { user, logout, logoutAdmin } = useAuth();
@@ -48,17 +48,15 @@ export default function AccountPopover({ avatarUser }) {
     setOpen(event.currentTarget);
   };
 
-
   const handleClose = () => {
     setOpen(null);
   };
-  console.log('userAdmin', user);
   const handleLogout = async () => {
     if (user.googleId !== undefined) {
       try {
         await logout();
         navigate(PATH_AUTH.home, { replace: true });
-
+        window.location.reload();
         if (isMountedRef.current) {
           handleClose();
         }
@@ -127,7 +125,7 @@ export default function AccountPopover({ avatarUser }) {
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-        {avatarUser !== 'true' && (
+        {user.role === 'quản trị' && (
           <Stack sx={{ p: 1 }}>
             {MENU_OPTIONS.map((option) => (
               <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>

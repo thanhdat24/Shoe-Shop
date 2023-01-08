@@ -25,7 +25,7 @@ import Avatar from '../../components/Avatar';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import { createBilling, onNextStep } from '../../redux/slices/product';
 import { useDispatch } from '../../redux/store';
-import LoginRegisterForm from '../../pages/auth/LoginRegisterForm';
+import LoginUserForm from '../../pages/auth/LoginUserForm';
 
 // ----------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ export default function MainHeader() {
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
           {user.email !== undefined ? (
-            <AccountPopover avatarUser="true"/>
+            <AccountPopover/>
           ) : (
             <button onClick={handleClickOpen}>
               <Avatar src="" alt={user?.displayName} color={'default'}>
@@ -124,7 +124,7 @@ export default function MainHeader() {
           )}
           <CartWidget />
 
-          <LoginRegisterForm
+          <LoginUserForm
             open={open}
             onClose={handleClose}
             onNextStep={handleNextStep}

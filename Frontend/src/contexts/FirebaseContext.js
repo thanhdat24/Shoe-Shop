@@ -180,7 +180,10 @@ function AuthProvider({ children }) {
     });
   };
 
-  const logout = () => signOut(AUTH);
+  const logout = () => {
+    setSession(null);
+    signOut(AUTH);
+  };
   const logoutAdmin = async () => {
     setSession(null);
     dispatch({
