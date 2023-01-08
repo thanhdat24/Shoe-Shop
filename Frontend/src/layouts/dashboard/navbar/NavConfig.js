@@ -16,6 +16,8 @@ const ICONS = {
   shoes: getIcon('ic_shoes'),
   brand: getIcon('ic_brand'),
   user: getIcon('ic_user'),
+  obj: getIcon('ic_obj'),
+  cate: getIcon('ic_cate'),
   // kanban: getIcon('ic_kanban'),
   promotion: getIcon('ic_promotion'),
   invoice: getIcon('ic_invoice'),
@@ -110,10 +112,19 @@ const navConfig = [
       {
         title: 'Loại giày',
         path: PATH_DASHBOARD.cate.root,
-        icon: ICONS.cart,
+        icon: ICONS.cate,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.cate.list },
           { title: 'Tạo', path: PATH_DASHBOARD.cate.new },
+        ],
+      },
+      {
+        title: 'Đối tượng sử dụng',
+        path: PATH_DASHBOARD.objUse.root,
+        icon: ICONS.obj,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.objUse.list },
+          { title: 'Tạo', path: PATH_DASHBOARD.objUse.new },
         ],
       },
       {

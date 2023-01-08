@@ -66,7 +66,6 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/user/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
-
     account: path(ROOTS_DASHBOARD, '/user/account'),
     edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
   },
@@ -106,6 +105,12 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/cate'),
     list: path(ROOTS_DASHBOARD, '/cate/list'),
     new: path(ROOTS_DASHBOARD, '/cate/new'),
+    // edit: (id) => path(ROOTS_DASHBOARD, `${id}`),
+  },
+  objUse: {
+    root: path(ROOTS_DASHBOARD, '/objUse'),
+    list: path(ROOTS_DASHBOARD, '/objUse/list'),
+    new: path(ROOTS_DASHBOARD, '/objUse/new'),
     // edit: (id) => path(ROOTS_DASHBOARD, `${id}`),
   },
   eCommerce: {

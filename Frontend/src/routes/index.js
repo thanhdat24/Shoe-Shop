@@ -127,6 +127,15 @@ export default function Router() {
           ],
         },
         {
+          path: 'objUse',
+          children: [
+            { element: <Navigate to="/admin/objUse/list" replace />, index: true },
+            { path: 'list', element: <ObjectUseList /> },
+            // { path: 'new', element: <BrandCreate /> },
+            // { path: 'edit/:id', element: <PromotionCreate /> },
+          ],
+        },
+        {
           path: 'color',
           children: [
             { element: <Navigate to="/admin/color/list" replace />, index: true },
@@ -259,6 +268,8 @@ const ShipperCreate = Loadable(lazy(() => import('../pages/dashboard/ShipperCrea
 
 // cate
 const CateList = Loadable(lazy(() => import('../pages/dashboard/CateList')));
+// ObjectUse
+const ObjectUseList = Loadable(lazy(() => import('../pages/dashboard/ObjectUseList')));
 // APP
 
 // MAIN
