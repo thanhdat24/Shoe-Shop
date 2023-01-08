@@ -1,51 +1,18 @@
-import { useEffect, useState } from 'react';
-
-// firebase
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import SwipeableViews from 'react-swipeable-views';
-import { useTheme } from '@mui/material/styles';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Box,
-  Stack,
-  Dialog,
-  Button,
-  Divider,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tabs,
-  AppBar,
-  Tab,
-  Typography,
-} from '@mui/material';
+import { Box, Dialog, Button, Divider, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSnackbar } from 'notistack';
 
 import { RHFCheckbox, RHFRadioGroup, RHFSelect, RHFTextField, FormProvider } from '../../components/hook-form';
 import { LoginForm } from '../../sections/auth/login';
 import { RegisterForm } from '../../sections/auth/register';
 import { useDispatch } from '../../redux/store';
 import useAuth from '../../hooks/useAuth';
-import { setSession } from '../../utils/jwt';
-import { auth } from '../../utils/firebase';
-
-// ----------------------------------------------------------------------    
-
-// Configure Firebase.
-const config = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  // ...
-}; 
-firebase.initializeApp(config);
+import { AUTH } from '../../contexts/FirebaseContext';
 
 // ----------------------------------------------------------------------
 
@@ -90,88 +57,28 @@ function a11yProps(index) {
 }
 
 export default function LoginRegisterForm({ open, onClose, onNextStep, onCreateBilling }) {
-  // const [user, setUser] = useState();
-  const { registerUser } = useAuth();
+  const { user, registerUser } = useAuth();
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const dispatch = useDispatch();
   useEffect(() => {
-    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) {
-        return;
-      }
-      console.log('user', user);
-      const accessToken = await user.getIdToken();
-      console.log('accessToken ', accessToken);
-
-      if (user) {
-        const newUser = {
-          fullName: user.displayName,
-          email: user.email,
-          avatar: user.photoURL,
-          googleId: user.uid,
-          dateOfBirth: '',
-          gender: '',
-          phoneNumber: user.phoneNumber,
-        };
-        setSession(accessToken);
-        dispatch({
-          type: 'LOGIN',
-          payload: {
-            user: newUser,
-          },
-        });
-        // setUser(user);
-        await registerUser(newUser);
-      }
-    });
-    return () => unregisterAuthObserver();
-  }, [dispatch]);
-
-
-  const NewAddressSchema = Yup.object().shape({
-    receiver: Yup.string().required('Fullname is required'),
-    phone: Yup.string().required('Phone is required'),
-    address: Yup.string().required('Address is required'),
-    city: Yup.string().required('City is required'),
-    state: Yup.string().required('State is required'),
-  });
-
-  const defaultValues = {
-    addressType: 'Home',
-    receiver: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zipcode: '',
-    isDefault: true,
-  };
-
-  const methods = useForm({
-    resolver: yupResolver(NewAddressSchema),
-    defaultValues,
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  const onSubmit = async (data) => {
+    console.log('userForm', user);
     try {
-      onNextStep();
-      onCreateBilling({
-        receiver: data.receiver,
-        phone: data.phone,
-        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipcode}`,
-        addressType: data.addressType,
-        isDefault: data.isDefault,
-      });
+      if (user.displayName !== undefined) {
+        registerUser(user);
+        setTimeout(() => {
+          onClose();
+          enqueueSnackbar('Đăng nhập thành công!');
+        }, 1000);
+      }
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [dispatch, user]);
 
-  const [signInWithGoogle, _user, _loading, error] = useSignInWithGoogle(auth);
+  // const { user } = useAuth();
+  const [signInWithGoogle, _user, _loading, error] = useSignInWithGoogle(AUTH);
 
   const google = () => {
     signInWithGoogle();

@@ -35,7 +35,7 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
-exports.uploadUserPhoto = upload.single('avatar');
+exports.uploadUserPhoto = upload.single('photoURL');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -86,22 +86,22 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // Get filtered name and email
   const filteredBody = filterObj(
     req.body,
-    'fullName',
+    'displayName',
     'phoneNumber',
     'gender',
     'dateOfBirth',
-    'avatar',
+    'photoURL',
     'address'
   );
   console.log('filteredBody ', filteredBody);
-  if (filteredBody.avatar) {
+  if (filteredBody.photoURL) {
     const uploadedResponse = await cloudinary.uploader.upload(
-      filteredBody.avatar,
+      filteredBody.photoURL,
       {
         upload_preset: 'avatar',
       }
     );
-    filteredBody.avatar = uploadedResponse.secure_url;
+    filteredBody.photoURL = uploadedResponse.secure_url;
   }
 
   //multer

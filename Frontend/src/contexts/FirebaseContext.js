@@ -11,6 +11,8 @@ import {
 import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 //
 import { FIREBASE_API } from '../config';
+import { isValidToken, setSession } from '../utils/jwt';
+import axios from '../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -38,16 +40,22 @@ const reducer = (state, action) => {
       user,
     };
   }
-
-  return state;
+  const { isAuthenticated, user } = action.payload;
+  return {
+    ...state,
+    isAuthenticated,
+    isInitialized: true,
+    user,
+  };
 };
 
 const AuthContext = createContext({
   ...initialState,
   method: 'firebase',
   login: () => Promise.resolve(),
-  register: () => Promise.resolve(),
+  registerUser: () => Promise.resolve(),
   logout: () => Promise.resolve(),
+  logoutAdmin: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -64,43 +72,125 @@ function AuthProvider({ children }) {
   useEffect(
     () =>
       onAuthStateChanged(AUTH, async (user) => {
+        console.log('userAUTH', user);
+
         if (user) {
-          const userRef = doc(DB, 'users', user.uid);
+          const { accessToken } = user;
+          setSession(accessToken);
+          // const userRef = doc(DB, 'users', user.uid);
+          // console.log('userRef', userRef);
 
-          const docSnap = await getDoc(userRef);
+          // const docSnap = await getDoc(userRef);
+          // console.log('docSnap', docSnap);
 
-          if (docSnap.exists()) {
-            setProfile(docSnap.data());
-          }
-
+          // if (docSnap.exists()) {
+          //   setProfile(docSnap.data());
+          // }
+          setProfile(user);
           dispatch({
             type: 'INITIALISE',
             payload: { isAuthenticated: true, user },
           });
-        } else {
-          dispatch({
-            type: 'INITIALISE',
-            payload: { isAuthenticated: false, user: null },
-          });
         }
+        // else {
+        //   dispatch({
+        //     type: 'INITIALISE',
+        //     payload: { isAuthenticated: false, user: null },
+        //   });
+        // }
       }),
+
     [dispatch]
   );
 
-  const login = (email, password) => signInWithEmailAndPassword(AUTH, email, password);
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const accessToken = window.localStorage.getItem('accessToken');
+        if (accessToken && isValidToken(accessToken)) {
+          setSession(accessToken);
 
-  const register = (email, password, firstName, lastName) =>
-    createUserWithEmailAndPassword(AUTH, email, password).then(async (res) => {
-      const userRef = doc(collection(DB, 'users'), res.user?.uid);
+          const response = await axios.get('/api/v1/admin/getMe');
+          const { data } = response.data;
+          dispatch({
+            type: 'INITIALISE',
+            payload: {
+              isAuthenticated: true,
+              user: data,
+            },
+          });
+        } else {
+          dispatch({
+            type: 'INITIALISE',
+            payload: {
+              isAuthenticated: false,
+              user: null,
+            },
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        dispatch({
+          type: 'INITIALISE',
+          payload: {
+            isAuthenticated: false,
+            user: null,
+          },
+        });
+      }
+    };
 
-      await setDoc(userRef, {
-        uid: res.user?.uid,
-        email,
-        displayName: `${firstName} ${lastName}`,
-      });
+    initialize();
+  }, []);
+
+  const login = async (email, password) => {
+    const response = await axios.post('/api/v1/auth/login', {
+      email,
+      password,
     });
+    const { accessToken, user } = response.data;
+    setSession(accessToken);
+    dispatch({
+      type: 'LOGIN',
+      payload: { isAuthenticated: true, user },
+    });
+  };
+
+  // const register = (email, password, firstName, lastName) =>
+  //   createUserWithEmailAndPassword(AUTH, email, password).then(async (res) => {
+  //     const userRef = doc(collection(DB, 'users'), res.user?.uid);
+
+  //     await setDoc(userRef, {
+  //       uid: res.user?.uid,
+  //       email,
+  //       displayName: `${firstName} ${lastName}`,
+  //     });
+  //   });
+
+  const registerUser = async (data) => {
+    console.log('data', data);
+    const response = await axios.post('/api/v1/user/createUser', data);
+    const { user } = response.data;
+
+    dispatch({
+      type: 'REGISTER',
+      payload: {
+        user,
+      },
+    });
+  };
 
   const logout = () => signOut(AUTH);
+  const logoutAdmin = async () => {
+    setSession(null);
+    dispatch({
+      type: 'INITIALISE',
+      payload: {
+        isAuthenticated: false,
+        user: null,
+      },
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -108,23 +198,21 @@ function AuthProvider({ children }) {
         ...state,
         method: 'firebase',
         user: {
-          id: state?.user?.uid,
+          googleId: state?.user?.uid,
           email: state?.user?.email,
           photoURL: state?.user?.photoURL || profile?.photoURL,
           displayName: state?.user?.displayName || profile?.displayName,
-          role: ADMIN_EMAILS.includes(state?.user?.email) ? 'admin' : 'user',
+          role: state?.user?.role || 'khách hàng',
           phoneNumber: state?.user?.phoneNumber || profile?.phoneNumber || '',
           country: profile?.country || '',
           address: profile?.address || '',
-          state: profile?.state || '',
-          city: profile?.city || '',
-          zipCode: profile?.zipCode || '',
           about: profile?.about || '',
           isPublic: profile?.isPublic || false,
         },
         login,
-        register,
+        registerUser,
         logout,
+        logoutAdmin,
       }}
     >
       {children}
@@ -132,4 +220,4 @@ function AuthProvider({ children }) {
   );
 }
 
-export { AuthContext, AuthProvider };
+export { AuthContext, AuthProvider, AUTH };

@@ -11,6 +11,7 @@ const ROOTS = '/';
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
+  home: ROOTS,
   root: ROOTS_AUTH,
   login: path(ROOTS_AUTH, '/login'),
   register: path(ROOTS_AUTH, '/register'),

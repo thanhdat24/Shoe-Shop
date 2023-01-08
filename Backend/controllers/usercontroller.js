@@ -101,20 +101,20 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // Get filtered name and email
   const filteredBody = filterObj(
     req.body,
-    'fullName',
+    'displayName',
     'phoneNumber',
     'gender',
     'dateOfBirth',
-    'avatar'
+    'photoURL'
   );
 
   const uploadedResponse = await cloudinary.uploader.upload(
-    filteredBody.avatar,
+    filteredBody.photoURL,
     {
       upload_preset: 'profile',
     }
   );
-  filteredBody.avatar = uploadedResponse.secure_url;
+  filteredBody.photoURL = uploadedResponse.secure_url;
 
   const user = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,

@@ -43,7 +43,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 
   const newAdmin = await Admin.create({
-    fullName: req.body.fullName,
+    displayName: req.body.displayName,
     phoneNumber: req.body.phoneNumber,
     gender: req.body.gender,
     idRole: req.body.idRole,

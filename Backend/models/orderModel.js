@@ -8,7 +8,7 @@ const orderModelSchema = new mongoose.Schema(
       required: true,
     },
     address: {
-      fullName: {
+      displayName: {
         type: String,
         required: true,
         trim: true,
@@ -95,7 +95,7 @@ const orderModelSchema = new mongoose.Schema(
 orderModelSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'idAdmin',
-    select: 'fullName phoneNumber email avatar',
+    select: 'displayName phoneNumber email avatar',
   }).populate({
     path: 'idPromotion',
   });

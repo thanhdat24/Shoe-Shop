@@ -36,7 +36,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover({ avatarUser }) {
   const navigate = useNavigate();
 
-  const { user, logout } = useAuth();
+  const { user, logout, logoutAdmin } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
@@ -48,21 +48,36 @@ export default function AccountPopover({ avatarUser }) {
     setOpen(event.currentTarget);
   };
 
+
   const handleClose = () => {
     setOpen(null);
   };
-
+  console.log('userAdmin', user);
   const handleLogout = async () => {
-    try {
-      await logout();
-      navigate(PATH_AUTH.login, { replace: true });
+    if (user.googleId !== undefined) {
+      try {
+        await logout();
+        navigate(PATH_AUTH.home, { replace: true });
 
-      if (isMountedRef.current) {
-        handleClose();
+        if (isMountedRef.current) {
+          handleClose();
+        }
+      } catch (error) {
+        console.error(error);
+        enqueueSnackbar('Unable to logout!', { variant: 'error' });
       }
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    } else {
+      try {
+        await logoutAdmin();
+        navigate(PATH_AUTH.login, { replace: true });
+
+        if (isMountedRef.current) {
+          handleClose();
+        }
+      } catch (error) {
+        console.error(error);
+        enqueueSnackbar('Unable to logout!', { variant: 'error' });
+      }
     }
   };
 

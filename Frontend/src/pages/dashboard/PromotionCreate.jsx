@@ -38,7 +38,6 @@ import ModalDialog from '../../components/ModalDialog/DialogTitle';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 export default function PromotionCreate() {
-  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //   const history = useHistory();

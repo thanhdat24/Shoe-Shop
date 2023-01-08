@@ -19,7 +19,7 @@ const filterObj = (obj, ...allowedField) => {
 };
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-  const { _id, fullName, phoneNumber } = req.user;
+  const { _id, displayName, phoneNumber } = req.user;
   console.log('req.user', req.user);
   try {
     req.body.idAdmin = _id;

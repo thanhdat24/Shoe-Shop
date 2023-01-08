@@ -14,12 +14,9 @@ GuestGuard.propTypes = {
 export default function GuestGuard({ children }) {
   const { isAuthenticated, user } = useAuth();
   console.log('isAuthenticated', isAuthenticated);
-  console.log('userêtry', user);
-  if (isAuthenticated && user?.role === 'admin') {
-    return <Navigate to={PATH_DASHBOARD.root} />;
-  }
-  if (isAuthenticated && user?.role === 'khách hàng') {
-    return <Navigate to={PATH_PAGE.root} />;
+  console.log('user', user);
+  if (isAuthenticated && user?.role === 'quản trị') {
+    return <Navigate to={PATH_DASHBOARD.general.analytics} />;
   }
   return <>{children}</>;
 }

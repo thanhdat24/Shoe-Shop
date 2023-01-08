@@ -52,7 +52,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   }, [error, newAccount]);
 
   const NewUserSchema = Yup.object().shape({
-    fullName: Yup.string().required('Name is required'),
+    displayName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
@@ -64,9 +64,9 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      fullName: currentUser?.fullName || '',
+      displayName: currentUser?.displayName || '',
       email: currentUser?.email || '',
-      avatar: currentUser?.avatar || '',
+      photoURL: currentUser?.photoURL || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
       gender: currentUser?.gender || '',

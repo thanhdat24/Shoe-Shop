@@ -6,9 +6,9 @@ var findOrCreate = require('mongoose-findorcreate');
 
 const adminSchema = new mongoose.Schema(
   {
-    fullName: {
+    displayName: {
       type: String,
-      required: [true, 'Please tell us your fullName'],
+      required: [true, 'Please tell us your displayName'],
       trim: true,
     },
     phoneNumber: {

@@ -21,7 +21,6 @@ import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
 import AccountPopover from '../dashboard/header/AccountPopover';
 import useAuth from '../../hooks/useAuth';
-import createAvatar from '../../utils/createAvatar';
 import Avatar from '../../components/Avatar';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import { createBilling, onNextStep } from '../../redux/slices/product';
@@ -61,7 +60,7 @@ export default function MainHeader() {
   const isOffset = useOffSetTop(HEADER.MAIN_DESKTOP_HEIGHT);
 
   const { user } = useAuth();
-
+  console.log('user123', user);
   const theme = useTheme();
 
   const { pathname } = useLocation();
@@ -114,12 +113,12 @@ export default function MainHeader() {
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-          {user ? (
-            <AccountPopover avatarUser="true" />
+          {user.email !== undefined ? (
+            <AccountPopover avatarUser="true"/>
           ) : (
             <button onClick={handleClickOpen}>
-              <Avatar src="" alt={user?.fullName} color={'default'}>
-                {/* {createAvatar(user?.fullName).name} */}
+              <Avatar src="" alt={user?.displayName} color={'default'}>
+                {/* {createAvatar(user?.displayName).name} */}
               </Avatar>
             </button>
           )}

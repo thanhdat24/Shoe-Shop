@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // notistack
 import { useSnackbar } from 'notistack';
 // form
@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { PATH_AUTH } from '../../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -20,7 +20,9 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm({ onClose }) {
+export default function LoginForm() {
+  const navigate = useNavigate();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const { login } = useAuth();
@@ -55,8 +57,8 @@ export default function LoginForm({ onClose }) {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      onClose();
       enqueueSnackbar('Đăng nhập thành công!');
+      // navigate(PATH_DASHBOARD.general.analytics);
     } catch (error) {
       console.error(error);
       reset();
