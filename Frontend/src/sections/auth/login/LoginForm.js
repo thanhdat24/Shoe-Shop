@@ -58,7 +58,7 @@ export default function LoginForm() {
     try {
       await login(data.email, data.password);
       enqueueSnackbar('Đăng nhập thành công!');
-      // navigate(PATH_DASHBOARD.general.analytics);
+      navigate(PATH_DASHBOARD.general.analytics);
     } catch (error) {
       console.error(error);
       reset();

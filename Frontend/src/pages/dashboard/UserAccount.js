@@ -13,44 +13,23 @@ import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import {
-  AccountGeneral,
-  AccountBilling,
-  AccountSocialLinks,
-  AccountNotifications,
-  AccountChangePassword,
-} from '../../sections/@dashboard/user/account';
+import { AccountGeneral, AccountChangePassword } from '../../sections/@dashboard/user/account';
 
 // ----------------------------------------------------------------------
 
 export default function UserAccount() {
   const { themeStretch } = useSettings();
 
-  const { currentTab, onChangeTab } = useTabs('general');
+  const { currentTab, onChangeTab } = useTabs('Thông tin chung');
 
   const ACCOUNT_TABS = [
     {
-      value: 'general',
+      value: 'Thông tin chung',
       icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
       component: <AccountGeneral />,
     },
     {
-      value: 'billing',
-      icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
-      component: <AccountBilling cards={_userPayment} addressBook={_userAddressBook} invoices={_userInvoices} />,
-    },
-    {
-      value: 'notifications',
-      icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
-      component: <AccountNotifications />,
-    },
-    {
-      value: 'social_links',
-      icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
-      component: <AccountSocialLinks myProfile={_userAbout} />,
-    },
-    {
-      value: 'change_password',
+      value: 'Đổi mật khẩu',
       icon: <Iconify icon={'ic:round-vpn-key'} width={20} height={20} />,
       component: <AccountChangePassword />,
     },
@@ -62,9 +41,9 @@ export default function UserAccount() {
         <HeaderBreadcrumbs
           heading="Account"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Account Settings' },
+            { name: 'Quản lý', href: PATH_DASHBOARD.root },
+            { name: 'Người dùng', href: PATH_DASHBOARD.user.root },
+            { name: 'Cài đặt tài khoản' },
           ]}
         />
 
@@ -76,7 +55,7 @@ export default function UserAccount() {
           onChange={onChangeTab}
         >
           {ACCOUNT_TABS.map((tab) => (
-            <Tab disableRipple key={tab.value} label={capitalCase(tab.value)} icon={tab.icon} value={tab.value} />
+            <Tab disableRipple key={tab.value} label={tab.value} icon={tab.icon} value={tab.value} />
           ))}
         </Tabs>
 

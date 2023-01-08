@@ -16,7 +16,7 @@ import { AUTH } from '../../contexts/FirebaseContext';
 
 // ----------------------------------------------------------------------
 
-LoginRegisterForm.propTypes = {
+LoginUserForm.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   onNextStep: PropTypes.func,
@@ -56,7 +56,7 @@ function a11yProps(index) {
   };
 }
 
-export default function LoginRegisterForm({ open, onClose, onNextStep, onCreateBilling }) {
+export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilling }) {
   const { user, registerUser } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -65,11 +65,11 @@ export default function LoginRegisterForm({ open, onClose, onNextStep, onCreateB
   useEffect(() => {
     console.log('userForm', user);
     try {
-      if (user.displayName !== undefined) {
+      if (user.displayName !== undefined && user.googleId !== undefined && user.role === 'khách hàng') {
         registerUser(user);
         setTimeout(() => {
           onClose();
-          enqueueSnackbar('Đăng nhập thành công!');
+          // enqueueSnackbar('Đăng nhập thành công!');
         }, 1000);
       }
     } catch (error) {
