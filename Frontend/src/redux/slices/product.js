@@ -19,6 +19,7 @@ const initialState = {
   productList: null,
   product: null,
   sortBy: null,
+  successCreate: null,
   filters: {
     gender: [],
     category: 'All',
@@ -84,6 +85,13 @@ const slice = createSlice({
       state.filters.rating = action.payload.rating;
     },
 
+    // CREATE PRODUCT
+    createProductSuccess(state, action) {
+      const newProduct = action.payload;
+      state.isLoading = false;
+      state.successCreate = [...state.successCreate, newProduct];
+    },
+
     // CATE
     // getAllCate(){
     getCateSuccess(state, action) {
@@ -98,7 +106,7 @@ const slice = createSlice({
     },
 
     // COLOR
-    getColorsSucess(state, action) {
+    getColorsSuccess(state, action) {
       state.isLoading = false;
       state.colors = action.payload;
     },
@@ -260,6 +268,7 @@ export const {
   sortByProducts,
   filterProducts,
   resetProduct,
+  createProductSuccess,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -327,13 +336,26 @@ export function getAllProduct() {
   };
 }
 
+export function createProduct(newProduct) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    console.log('newProduct', newProduct);
+    try {
+      const response = await axios.post('/api/v1/products', newProduct);
+      console.log('response', response);
+      // dispatch(slice.actions.createProductSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 // Category
 export function getAllCate() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/categories');
-      console.log('response342', response);
       dispatch(slice.actions.getCateSuccess(response.data.data));
     } catch (err) {
       console.log(err);
@@ -347,7 +369,6 @@ export function getAllSize() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/sizes');
-      console.log('response342345', response);
       dispatch(slice.actions.getSizesSucess(response.data.data));
     } catch (err) {
       console.log(err);
@@ -361,8 +382,7 @@ export function getAllColor() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/colors');
-      console.log('resp4et45', response);
-      dispatch(slice.actions.getColorsSucess(response.data.data));
+      dispatch(slice.actions.getColorsSuccess(response.data.data));
     } catch (err) {
       console.log(err);
     }

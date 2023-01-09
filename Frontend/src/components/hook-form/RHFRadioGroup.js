@@ -22,12 +22,12 @@ export default function RHFRadioGroup({ name, options, getOptionLabel, ...other 
       render={({ field, fieldState: { error } }) => (
         <div>
           <RadioGroup {...field} row {...other}>
-            {options.map((option, index) => (
+            {options?.map((option, index) => (
               <FormControlLabel
-                key={option}
-                value={option}
+                key={option._id}
+                value={option._id}
                 control={<Radio />}
-                label={getOptionLabel?.length ? getOptionLabel[index] : option}
+                label={getOptionLabel?.length ? getOptionLabel[index].name : option.name}
               />
             ))}
           </RadioGroup>

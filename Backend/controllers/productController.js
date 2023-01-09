@@ -4,6 +4,7 @@ const ProductDetail = require('../models/productDetailModel');
 const ProductImages = require('../models/productImagesModel');
 const catchAsync = require('../utils/catchAsync');
 const _ = require('lodash');
+const cloudinary = require('../utils/cloudinary');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -38,9 +39,8 @@ exports.getAllProduct = factory.getAll(Product, {
 
 // exports.createProduct = factory.createOne(Product);
 exports.createProduct = catchAsync(async (req, res, next) => {
-  console.log('req.body', req.body);
+  const { productImages } = req.body[0];
   let productItems = [];
-  let productImages = { url: [], idProduct: '' };
   req.body.map((item, index) => {
     productItems.push({
       idSize: item.size._id,
@@ -50,39 +50,37 @@ exports.createProduct = catchAsync(async (req, res, next) => {
       idProduct: '',
     });
   });
-  // let newProduct = new Product({
-  //   name:req.body[0].name,
-  //   desc: req.body[0].desc,
-  //   priceSale: req.body[0].priceSale,
-  //   price: req.body[0].price,
-  //   sku:  req.body[0].sku,
-  //   origin: req.body[0].origin ,
-  //   supplier: req.body[0].supplier ,
-  //   style:req.body[0].style, ,
-  //   material: req.body[0].material, ,
-  //   idCate: req.body[0].name, ,
-  //   idBrand:  req.body[0].name,,
-  //   idObjectUse: req.body[0].name, ,
-  // });
+
   const doc = await Product.create(req.body[0]);
+  let arrayImages = [];
+  let newImages = { url: [], idProduct: '' };
+  if (productImages.length > 0) {
+    productImages.map(async (item) => {
+      const uploadedResponse = await cloudinary.uploader.upload(item, {
+        upload_preset: 'image_product',
+      });
+      arrayImages.push(uploadedResponse.secure_url);
+      if (arrayImages.length === productImages.length) {
+        if (doc) {
+          productItems.map((item, index) => {
+            item.idProduct = doc.id;
+          });
+          newImages = {
+            ...newImages,
+            url: arrayImages,
+            idProduct: doc.id,
+          };
 
-  if (doc) {
-    productItems.map((item, index) => {
-      item.idProduct = doc.id;
+          await ProductDetail.insertMany(productItems);
+          await ProductImages.create(newImages);
+
+          res.status(201).json({
+            status: 'success',
+            result: doc.length,
+            data: doc,
+          });
+        }
+      }
     });
-
-    productImages = {
-      ...productImages,
-      url: req.body[0].productImages,
-      idProduct: doc.id,
-    };
   }
-  // await ProductDetail.insertMany(productItems);
-  // await ProductImages.create(productImages);
-
-  res.status(201).json({
-    status: 'success',
-    result: doc.length,
-    data: doc,
-  });
 });

@@ -55,7 +55,7 @@ export default function PromotionCreate() {
       .matches(codeRegExp, 'Vui lòng nhập tối thiểu 5 ký tự và tối đa 10 ký tự'),
     price: Yup.string().required('*Vui lòng nhập thông tin này'),
     miniPrice: Yup.string().required('*Vui lòng nhập thông tin này'),
-    quality: Yup.string().required('*Vui lòng nhập thông tin này'),
+    quantity: Yup.string().required('*Vui lòng nhập thông tin này'),
   });
   const formik = useFormik({
     initialValues: {
@@ -64,7 +64,7 @@ export default function PromotionCreate() {
       price: '',
       percent: '',
       miniPrice: '',
-      quality: '',
+      quantity: '',
       startDate: '',
       expiryDate: '',
       activeCode: '',
@@ -144,13 +144,13 @@ export default function PromotionCreate() {
       values.code &&
       values.price &&
       values.miniPrice &&
-      values.quality &&
+      values.quantity &&
       values.startDate !== 'Invalid date' &&
       values.expiryDate !== 'Invalid date'
     )
       setIsReadyCreateDiscount(true);
     else setIsReadyCreateDiscount(false);
-  }, [values.title, values.code, values.price, values.miniPrice, values.quality, values.startDate, values.expiryDate]);
+  }, [values.title, values.code, values.price, values.miniPrice, values.quantity, values.startDate, values.expiryDate]);
 
   useEffect(() => {
     if (newDiscount) {
@@ -302,9 +302,9 @@ export default function PromotionCreate() {
                       <TextField
                         fullWidth
                         label="Số lượng mã giảm giá"
-                        {...getFieldProps('quality')}
-                        error={Boolean(touched.quality && errors.quality)}
-                        helperText={touched.quality && errors.quality}
+                        {...getFieldProps('quantity')}
+                        error={Boolean(touched.quantity && errors.quantity)}
+                        helperText={touched.quantity && errors.quantity}
                       />
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box className="mr-28 whitespace-nowrap text-green-600 font-semibold">Thời gian hiệu lực </Box>
@@ -607,7 +607,7 @@ export default function PromotionCreate() {
                         <b className="text-green-600">{`${(values?.miniPrice * 1).toLocaleString('vi-VI')} đ`}</b>
                       </li>
                       <li className={classes.typographyInfo}>
-                        Số lượng mã giảm giá: <b className="text-green-600">{values?.quality}</b>
+                        Số lượng mã giảm giá: <b className="text-green-600">{values?.quantity}</b>
                       </li>
                       {(effectiveTime[0] && effectiveTime[1]) !== null && (
                         <li className={classes.typographyInfo}>

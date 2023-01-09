@@ -24,10 +24,13 @@ import {
   Step,
   StepLabel,
   TableContainer,
+  TableBody,
+  Table,
+  Paper,
 } from '@mui/material';
 import _ from 'lodash';
 import { DataGrid } from '@mui/x-data-grid';
-import { getAllCate, getAllColor, getAllSize, getProducts } from '../../../redux/slices/product';
+import { createProduct, getAllCate, getAllColor, getAllSize, getProducts } from '../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -41,10 +44,14 @@ import {
   RHFRadioGroup,
   RHFUploadMultiFile,
 } from '../../../components/hook-form';
+import { TableEmptyRows, TableHeadCustom, TableSkeleton } from '../../../components/table';
+import { ProductTableRow } from './product-list';
+import ProductDetailTableRow from './ProductDetailTableRow';
+import useTable from '../../../hooks/useTable';
+import { getObjects } from '../../../redux/slices/objectUse';
+import { getBrands } from '../../../redux/slices/brand';
 
 // ----------------------------------------------------------------------
-
-const GENDER_OPTION = ['Nam', 'Nữ'];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -61,7 +68,6 @@ ProductNewEditForm.propTypes = {
 
 const steps = ['Select campaign settings', 'Create an ad group'];
 export default function ProductNewEditForm({ isEdit, currentProduct }) {
-  console.log('currentProduct', currentProduct);
   const [activeStep, setActiveStep] = useState(0);
   const [productUpdate, setNewProductUpdate] = useState({});
   const [arrayNewProduct, setArrayNewProduct] = useState();
@@ -69,13 +75,15 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const isStepOptional = (step) => {
     return step === 1;
   };
-  console.log('step', steps);
-  console.log('activeStep', activeStep);
-  console.log('isEdit', isEdit);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
+  useEffect(() => {
+    if (activeStep === steps.length) {
+      dispatch(createProduct(arrayNewProduct));
+    }
+  }, [activeStep]);
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -102,31 +110,35 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     dispatch(getAllCate());
     dispatch(getAllSize());
     dispatch(getAllColor());
+    dispatch(getObjects());
+    dispatch(getBrands());
   }, [dispatch]);
 
   const { cates, sizes, colors, productSave } = useSelector((state) => state.product);
+  const { objects } = useSelector((state) => state.objectUse);
+  const { brandList } = useSelector((state) => state.brand);
+  console.log('brandList', brandList);
+  const GENDER_OPTION = objects;
+  const BRAND_OPTION = brandList;
+
   // cate
   const cateName = [];
   cates.map((item) => {
     return cateName.push(item.name);
   });
   // size
-  console.log('sizes', sizes);
-  console.log('productSave', productSave);
+
   const nameSize = [];
   sizes.map((item) => {
     return nameSize.push(item.name);
   });
   console.log('sizes', sizes);
 
-  const CATEGORY_OPTION = [{ group: 'Giày', classify: cates }];
+  const CATEGORY_OPTION = cates;
   const SIZE_OPTION = sizes;
 
-  // const SIZE_OPTION = nameSize;
-
-  console.log('SIZE_OPTION', SIZE_OPTION);
-  console.log('colors', colors);
   console.log('CATEGORY_OPTION', CATEGORY_OPTION);
+
   // color
   const colorName = [];
   colors.map((item) => {
@@ -151,8 +163,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     });
   });
 
-  console.log('color', color);
-  console.log('newArrColor', newArrColor);
   const sizesProduct = _(currentProduct?.productDetail)
     .groupBy((x) => x.idSize.name)
     .map((value, key) => ({
@@ -166,11 +176,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     return newArrSize.push({
       name: item.name,
       _id: item.nameSize[0]?.idSize._id,
-    
     });
   });
 
-  console.log('newArrSize', newArrSize);
   const { enqueueSnackbar } = useSnackbar();
 
   const NewProductSchema = Yup.object().shape({
@@ -184,14 +192,15 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     () => ({
       name: currentProduct?.name || '',
       desc: currentProduct?.desc || '',
-      images: currentProduct?.images || [],
+      productImages: currentProduct?.images || [],
       sku: currentProduct?.sku || '',
       price: currentProduct?.price || 0,
       priceSale: currentProduct?.priceSale || 0,
       size: newArrSize || [],
       color: newArrColor || [],
-      gender: currentProduct?.gender || GENDER_OPTION[1],
-      category: currentProduct?.category || '',
+      gender: currentProduct?.gender || '63a727483405383becabeace',
+      brand: currentProduct?.brand || '63a71f26f1922e39c4b6072e',
+      category: currentProduct?.category || '63a7121263850a28288a0449',
       origin: currentProduct?.origin || '',
       material: currentProduct?.material || '',
       supplier: currentProduct?.supplier || '',
@@ -218,7 +227,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   } = methods;
 
   const values = watch();
-
+  console.log('values123', values);
   useEffect(() => {
     if (isEdit && currentProduct) {
       reset(defaultValues);
@@ -243,18 +252,24 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         setActiveStep(1);
         // console.log('productUpdatew3', productUpdate);
         const arrayItemProduct = [];
+        let index = 0;
+
         for (let i = 0; i < newProduct?.size.length; i += 1) {
           for (let j = 0; j < newProduct?.color.length; j += 1) {
+            console.log('index', index);
+            console.log('newProduct', newProduct);
+            index += 1;
             const itemProduct = {
-              id: Math.random() * 5,
               name: newProduct.name,
               desc: newProduct.desc,
-              images: newProduct.images,
-              sku: newProduct.sku,
+              productImages: newProduct.productImages,
+              sku: `${newProduct.sku}-${index}`,
               price: newProduct.price,
               priceSale: newProduct.priceSale,
-              gender: newProduct.gender,
-              category: newProduct.category,
+              idObjectUse: newProduct.gender,
+              objectUseName: objects.find((item) => item._id === newProduct.gender),
+              idCate: newProduct.category,
+              idBrand: newProduct.brand,
               origin: newProduct.origin,
               material: newProduct.material,
               supplier: newProduct.supplier,
@@ -276,82 +291,81 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-  // console.log('productTruoc', productUpdate);
   console.log('arrayNewProduct', arrayNewProduct);
 
-  // const { name } = arrayNewProduct.size;
-  function getFullName(params) {
-    return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-  }
-
-  function setFullName(params) {
-    const [firstName, lastName] = params.value.toString().split(' ');
-    return { ...params.row, firstName, lastName };
-  }
-
-  function parseFullName(value) {
-    return String(value)
-      .split(' ')
-      .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))
-      .join(' ');
-  }
-  const columns = [
-    {
-      field: 'size',
-      headerName: 'Phiên bản/gói',
-      width: 130,
-      editable: true,
-      valueGetter: ({ value }) => value.name,
-      // valueGetter: getFullName,
-      // valueSetter: setFullName,
-      // valueParser: parseFullName,
-    },
-    { field: 'sku', headerName: 'Sku', width: 130, editable: true },
-    {
-      field: 'priceSale',
-      headerName: 'Giá bán',
-      width: 160,
-      editable: true,
-    },
-    {
-      field: 'price',
-      headerName: 'Giá so sánh',
-      width: 160,
-      editable: true,
-
-      sortComparator: (v1, v2) => v1.toString().localeCompare(v2.toString()),
-    },
-    {
-      field: 'quantity',
-      headerName: 'Số lượng',
-      width: 130,
-      editable: true,
-    },
-  ];
-
-  console.log('columns', columns);
+  const [images, setImages] = useState([]);
+  const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      setValue(
-        'images',
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+      const file = acceptedFiles;
+      const gallery = [];
+      const imageGallery = [];
+      console.log('file', file);
+      file.forEach((item, index) => {
+        if (item.type.match(imageTypeRegex)) {
+          gallery.push(item);
+        }
+      });
+      if (gallery.length) {
+        gallery.forEach((file) => {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+
+          fileReader.onload = (e) => {
+            //  const { result } = e.target;
+            if (e.target.result) {
+              imageGallery.push(e.target.result);
+            }
+            if (imageGallery.length === gallery.length) {
+              setImages(imageGallery);
+            }
+
+            setValue('productImages', imageGallery);
+          };
+        });
+      }
     },
     [setValue]
   );
 
   const handleRemoveAll = () => {
-    setValue('images', []);
+    setValue('productImages', []);
   };
 
   const handleRemove = (file) => {
     const filteredItems = values.images?.filter((_file) => _file !== file);
-    setValue('images', filteredItems);
+    setValue('productImages', filteredItems);
   };
+
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    setPage,
+    //
+    selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
+    //
+    onSort,
+    onChangeDense,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTable({
+    defaultOrderBy: 'createdAt',
+  });
+
+  const TABLE_HEAD = [
+    { id: 'sku', label: 'Sku', align: 'left' },
+    { id: 'version', label: 'Phiên bản/gói', align: 'left' },
+    { id: 'quantity', label: 'Số lượng', align: 'left' },
+    { id: 'price', label: 'Giá bán', align: 'left' },
+    { id: 'priceSale', label: 'Giá so sánh', align: 'left' },
+    // { id: 'price', label: 'Giá', align: 'right' },
+  ];
 
   return (
     <Box>
@@ -370,7 +384,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   </div>
                   <Grid container rowSpacing={1} columns={17}>
                     <Grid xs={8} mr={5}>
-                      <RHFTextField disabled={isEdit ? 'true' : 'false'} name="sku" label="SKU" />
+                      <RHFTextField disabled={isEdit && true} name="sku" label="SKU" />
                       <RHFTextField name="origin" label="Xuất sứ" sx={{ margin: '10px 0' }} />
                       <RHFTextField name="material" label="Chất liệu" />
                     </Grid>
@@ -392,7 +406,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   <div>
                     <LabelStyle>Hình ảnh</LabelStyle>
                     <RHFUploadMultiFile
-                      name="images"
+                      name="productImages"
                       showPreview
                       accept="image/*"
                       maxSize={3145728}
@@ -419,21 +433,20 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                         }}
                       />
                     </div>
-
-                   
-
-                    <RHFSelect name="category" label="Loại">
+                    <RHFSelect name="category" label="Loại giày">
                       {CATEGORY_OPTION?.map((category) => (
-                        <optgroup key={category.group} label={category.group}>
-                          {category?.classify.map((classify) => (
-                            <option key={classify} value={classify.id}>
-                              {classify.name}
-                            </option>
-                          ))}
-                        </optgroup>
+                        <option key={category._id} value={category._id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </RHFSelect>{' '}
+                    <RHFSelect name="brand" label="Thương hiệu">
+                      {BRAND_OPTION?.map((category) => (
+                        <option key={category.id} value={category._id}>
+                          {category.name}
+                        </option>
                       ))}
                     </RHFSelect>
-
                     <Controller
                       name="size"
                       control={control}
@@ -525,29 +538,64 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
           <Card>
             <TableContainer sx={{ minWidth: 800 }}>
               {' '}
-              <Typography variant="h4" className="text-green-500 uppercase " ml={2} mt={2}>
+              <Typography variant="h4" className="text-green-500 uppercase " ml={2} mt={2} mb={2}>
                 Nhập liệu
               </Typography>
               {/* {productUpdate.name} */}
-              <div style={{ height: 400, width: '100%' }}>
+              {/* <div style={{ height: 400, width: '100%' }}>
                 <DataGrid rows={arrayNewProduct} columns={columns} />
-              </div>
+              </div> */}
+              <Table size={dense ? 'small' : 'medium'}>
+                <TableHeadCustom
+                  // order={order}
+                  // orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={arrayNewProduct?.length}
+                  // numSelected={selected.length}
+                  // onSort={onSort}
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row.id)
+                  //   )
+                  // }
+                />
+
+                <TableBody>
+                  {arrayNewProduct?.map((row, index) => (
+                    <ProductDetailTableRow
+                      key={row.id}
+                      row={row}
+                      selected={selected.includes(row.id)}
+                      // onSelectRow={() => onSelectRow(row.id)}
+                      // onDeleteRow={() => handleDeleteRow(row.id)}
+                      // onEditRow={() => handleEditRow(row.name)}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
             </TableContainer>{' '}
           </Card>
         </Box>
       )}
       <Box className="absolute top-32 right-24">
-        {activeStep !== 0 && (
+        {activeStep !== 0 && activeStep !== steps.length && (
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button variant="contained" color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
+              Trở về
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button variant="contained" onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {activeStep === steps.length - 1 ? 'Hoàn tất' : 'Trở về'}
             </Button>
           </Box>
         )}
+        {/* {activeStep === steps.length && (
+          <Paper square elevation={0} sx={{ p: 3 }}>
+            <Typography>All steps completed - you&apos;re finished</Typography>
+            <Button sx={{ mt: 1, mr: 1 }}>Reset</Button>
+          </Paper>
+        )} */}
       </Box>
     </Box>
   );

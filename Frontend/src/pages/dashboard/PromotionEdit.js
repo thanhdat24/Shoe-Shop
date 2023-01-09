@@ -59,7 +59,7 @@ export default function PromotionEdit() {
       .matches(codeRegExp, 'Vui lòng nhập tối thiểu 5 ký tự và tối đa 10 ký tự'),
     price: Yup.string().required('*Vui lòng nhập thông tin này'),
     miniPrice: Yup.string().required('*Vui lòng nhập thông tin này'),
-    quality: Yup.string().required('*Vui lòng nhập thông tin này'),
+    quantity: Yup.string().required('*Vui lòng nhập thông tin này'),
   });
   const formik = useFormik({
     enableReinitialize: true,
@@ -69,7 +69,7 @@ export default function PromotionEdit() {
       price: promotionDetail?.price,
       percent: promotionDetail?.percent,
       miniPrice: promotionDetail?.miniPrice,
-      quality: promotionDetail?.quality,
+      quantity: promotionDetail?.quantity,
       startDate:
         moment(effectiveTime[0])?.format('YYYY-MM-DD') !== 'Invalid date'
           ? moment(effectiveTime[0])?.format('YYYY-MM-DD')
@@ -153,13 +153,13 @@ export default function PromotionEdit() {
       values.code &&
       values.price &&
       values.miniPrice &&
-      values.quality &&
+      values.quantity &&
       values.startDate !== 'Invalid date' &&
       values.expiryDate !== 'Invalid date'
     )
       setIsReadyCreateDiscount(true);
     else setIsReadyCreateDiscount(false);
-  }, [values.title, values.code, values.price, values.miniPrice, values.quality, values.startDate, values.expiryDate]);
+  }, [values.title, values.code, values.price, values.miniPrice, values.quantity, values.startDate, values.expiryDate]);
 
   useEffect(() => {
     dispatch(getPromotionDetail(id));

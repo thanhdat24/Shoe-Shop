@@ -57,8 +57,6 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   console.log('product56', product);
   const alreadyProduct = cart?.map((item) => item.id).includes(id);
 
-  // const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
-
   const defaultValues = {
     id,
     name,
@@ -66,7 +64,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     price,
     color: colors[0]?.color,
     size: sizes[0].size,
-    quantity: detailColorSize.quality < 1 ? 0 : 1,
+    quantity: detailColorSize.quantity < 1 ? 0 : 1,
   };
   const methods = useForm({
     defaultValues,
@@ -75,16 +73,14 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   const { watch, control, setValue, handleSubmit } = methods;
 
   const values = watch();
+
   useEffect(() => {
     const idColorAndSize = product.productDetail.filter(
       (item) => item.idColor.color === values.color && item.idSize.name === Number(values.size)
     );
     setDetailColorSize(idColorAndSize[0]);
   }, [values.color, values.size]);
-
-  console.log('values123', values);
   console.log('detailColorSize', detailColorSize);
-
   const onSubmit = async (data) => {
     try {
       if (!alreadyProduct) {
@@ -105,7 +101,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
       onAddCart({
         ...values,
         subtotal: values.price * values.quantity,
-        available: detailColorSize.quality,
+        available: detailColorSize.quantity,
         idColor: detailColorSize.idColor._id,
         idSize: detailColorSize.idSize._id,
         productId: detailColorSize.idProduct._id,
@@ -218,12 +214,12 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             <Incrementer
               name="quantity"
               quantity={values.quantity}
-              available={detailColorSize.quality}
+              available={detailColorSize.quantity}
               onIncrementQuantity={() => setValue('quantity', values.quantity + 1)}
               onDecrementQuantity={() => setValue('quantity', values.quantity - 1)}
             />
             <Typography variant="caption" component="div" sx={{ mt: 1, textAlign: 'right', color: 'text.secondary' }}>
-              Có sẵn: {detailColorSize ? detailColorSize.quality : 0}
+              Có sẵn: {detailColorSize ? detailColorSize.quantity : 0}
             </Typography>
           </div>
         </Stack>
@@ -233,7 +229,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
           <Button
             fullWidth
-            // disabled={isMaxQuantity}
+            disabled={detailColorSize.quantity === 0 && true}
             size="large"
             color="warning"
             variant="contained"
@@ -244,7 +240,13 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             Thêm giỏ hàng
           </Button>
 
-          <Button fullWidth size="large" type="submit" variant="contained">
+          <Button
+            disabled={detailColorSize.quantity === 0 && true}
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+          >
             Mua ngay
           </Button>
         </Stack>
