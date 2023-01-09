@@ -14,6 +14,6 @@ router
   .get(shipperController.getDetailShipper)
   .put(shipperController.updateShipper);
 
-module.exports = router;
-
 router.post('/login-shipper', shipperController.login);
+
+module.exports = router;

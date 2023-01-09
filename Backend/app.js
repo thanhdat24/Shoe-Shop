@@ -5,6 +5,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+
 const app = express();
 
 const authRouters = require('./routers/authRouters');
@@ -21,6 +22,7 @@ const productDetailRouters = require('./routers/productDetailRouters');
 const promotionRouters = require('./routers/promotionRouters');
 const orderRouters = require('./routers/orderRouters');
 const orderDetailRouters = require('./routers/orderDetailRouters');
+const addressRouters = require('./routers/addressRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -63,6 +65,7 @@ app.use('/api/v1/productDetail', productDetailRouters);
 app.use('/api/v1/promotions', promotionRouters);
 app.use('/api/v1/orders', orderRouters);
 app.use('/api/v1/order-details', orderDetailRouters);
+app.use('/api/v1/address', addressRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {

@@ -6,6 +6,7 @@ const AppError = require('../utils/appError');
 
 const gravatarUrl = require('gravatar');
 const Admin = require('../models/adminModel');
+const User = require('../models/userModel');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -123,41 +124,55 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.protectUser = catchAsync(async (req, res, next) => {
-  // 1) Getting token and check of it's there
+  var admin = require('firebase-admin');
+
+  var serviceAccount = require('../shoes-firebase.json');
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
   let accessToken;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     accessToken = req.headers.authorization.split(' ')[1];
   }
+
   if (!accessToken) {
     return next(
       new AppError('You are not logged in! Please log in to get access', 401)
     );
+  } else {
+    const { getAuth } = require('firebase-admin/auth');
+    getAuth()
+      .verifyIdToken(accessToken)
+      .then(async (decodedToken) => {
+        const uid = decodedToken.uid;
+
+        const currentUser = await User.find({ googleId: uid });
+        console.log('currentUser', currentUser);
+
+        if (!currentUser) {
+          return next(
+            new AppError(
+              'The user belonging to this accessToken  does no longer exist',
+              401
+            )
+          );
+        }
+        // 4) Check if user changed password after the accessToken  was issued
+
+        // GRANT ACCESS TO PROTECTED ROUTER
+        req.user = currentUser[0];
+        next();
+        // ...
+      })
+      .catch((error) => {
+        // Handle error
+      });
   }
-
-  // 2) Verification token
-  const decoded = await promisify(jwt.verify)(
-    accessToken,
-    process.env.JWT_SECRET
-  );
-
-  // 3) Check if user still exists
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError(
-        'The user belonging to this accessToken  does no longer exist',
-        401
-      )
-    );
-  }
-  // 4) Check if user changed password after the accessToken  was issued
-
-  // GRANT ACCESS TO PROTECTED ROUTER
-  req.user = currentUser;
-  next();
 });
 
 exports.sendOtp = catchAsync(async (req, res, next) => {
@@ -350,7 +365,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 4) Log the user in, send JWT
   createSendToken(user, 200, res);
 });
-
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection

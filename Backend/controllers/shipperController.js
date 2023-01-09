@@ -47,8 +47,6 @@ exports.login = catchAsync(async (req, res, next) => {
   // 2) Check if user exists && password is correct
   const admin = await Shipper.findOne({ email }).select('+password');
   // console.log("email", email)
-  console.log('password', password);
-  console.log('admin', admin);
 
   if (!admin || !(await admin.correctPassword(password, admin.password))) {
     return next(new AppError('Email hoặc mật khẩu không chính xác!', 401));
