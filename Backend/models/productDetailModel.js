@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const productDetailSchema = new mongoose.Schema(
   {
-    quality: {
+    quantity: {
       type: Number,
-      // required: [true, 'Please tell us your quality'],
+      // required: [true, 'Please tell us your quantity'],
     },
     sku: {
       type: String,

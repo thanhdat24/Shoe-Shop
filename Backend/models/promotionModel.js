@@ -16,7 +16,7 @@ const promotionSchema = new mongoose.Schema(
     miniPrice: {
       type: Number,
     },
-    quality: {
+    quantity: {
       type: Number,
       default: 0,
     },

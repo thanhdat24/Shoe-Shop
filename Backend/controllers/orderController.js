@@ -68,7 +68,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
               idSize: item.idSize,
             });
             if (idColorAndSize) {
-              idColorAndSize[0].quality -= item.quantity;
+              idColorAndSize[0].quantity -= item.quantity;
 
               await idColorAndSize[0].save();
             } else {
