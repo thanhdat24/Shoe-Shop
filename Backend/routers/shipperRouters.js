@@ -15,3 +15,5 @@ router
   .put(shipperController.updateShipper);
 
 module.exports = router;
+
+router.post('/login-shipper', shipperController.login);
