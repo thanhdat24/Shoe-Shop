@@ -123,14 +123,18 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+let firebaseApp = null;
 exports.protectUser = catchAsync(async (req, res, next) => {
   var admin = require('firebase-admin');
 
   var serviceAccount = require('../shoes-firebase.json');
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+  if (!firebaseApp) {
+    firebaseApp = admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  }
+
   let accessToken;
 
   if (

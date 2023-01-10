@@ -15,6 +15,7 @@ import sizeReducer from './slices/size';
 import shipperReducer from './slices/shipper';
 import cateReducer from './slices/cate';
 import objectUseReducer from './slices/objectUse';
+import addressReducer from './slices/address';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   shipper: shipperReducer,
   cate: cateReducer,
   objectUse: objectUseReducer,
+  address: addressReducer,
 });
 
 export { rootPersistConfig, rootReducer };

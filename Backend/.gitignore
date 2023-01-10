@@ -106,4 +106,4 @@ dist
 
 *.env
 
-*shoes-firebase.json
+# *shoes-firebase.json

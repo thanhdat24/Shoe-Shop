@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import { Box, Grid, Card, Button, Typography } from '@mui/material';
 // redux
@@ -13,6 +13,7 @@ import Iconify from '../../../../components/Iconify';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutNewAddressForm from './CheckoutNewAddressForm';
+import { getAddress } from '../../../../redux/slices/address';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,13 @@ export default function CheckoutBillingAddress() {
   const dispatch = useDispatch();
   const { checkout } = useSelector((state) => state.product);
   const { total, discount, subtotal } = checkout;
+  const { address } = useSelector((state) => state.address);
+  console.log('address', address);
+  //
+  useEffect(() => {
+    dispatch(getAddress());
+  }, [dispatch]);
+
   //
   const [open, setOpen] = useState(false);
 
@@ -48,7 +56,16 @@ export default function CheckoutBillingAddress() {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {_addressBooks.map((address, index) => (
+          {/* {_addressBooks.map((address, index) => (
+            <AddressItem
+              key={index}
+              address={address}
+              onNextStep={handleNextStep}
+              onCreateBilling={handleCreateBilling}
+            />
+          ))} */}
+
+          {address?.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
@@ -63,10 +80,10 @@ export default function CheckoutBillingAddress() {
               onClick={handleBackStep}
               startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
             >
-              Back
+              Quay lại
             </Button>
             <Button size="small" onClick={handleClickOpen} startIcon={<Iconify icon={'eva:plus-fill'} />}>
-              Add new address
+              Thêm địa chỉ mới
             </Button>
           </Box>
         </Grid>
@@ -95,7 +112,7 @@ AddressItem.propTypes = {
 };
 
 function AddressItem({ address, onNextStep, onCreateBilling }) {
-  const { receiver, fullAddress, addressType, phone, isDefault } = address;
+  const { fullName, fullAddress, addressType, phoneNumber, isDefault } = address;
 
   const handleCreateBilling = () => {
     onCreateBilling(address);
@@ -105,13 +122,13 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
   return (
     <Card sx={{ p: 3, mb: 3, position: 'relative' }}>
       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-        <Typography variant="subtitle1">{receiver}</Typography>
+        <Typography variant="subtitle1">{fullName}</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           &nbsp;({addressType})
         </Typography>
         {isDefault && (
           <Label color="info" sx={{ ml: 1 }}>
-            Default
+            Mặt định
           </Label>
         )}
       </Box>
@@ -119,7 +136,7 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
         {fullAddress}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {phone}
+        {phoneNumber}
       </Typography>
 
       <Box

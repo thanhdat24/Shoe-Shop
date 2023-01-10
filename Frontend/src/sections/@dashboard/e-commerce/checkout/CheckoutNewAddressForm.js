@@ -67,12 +67,12 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <DialogTitle>Add new address</DialogTitle>
+      <DialogTitle>Thêm địa chỉ mới</DialogTitle>
 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Stack spacing={3}>
-            <RHFRadioGroup name="addressType" options={['Home', 'Office']} />
+            <RHFRadioGroup name="addressType" options={['Nhà', 'Văn phòng']} />
 
             <Box
               sx={{

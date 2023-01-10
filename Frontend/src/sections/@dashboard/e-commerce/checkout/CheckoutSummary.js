@@ -31,7 +31,6 @@ CheckoutSummary.propTypes = {
   onEdit: PropTypes.func,
   enableEdit: PropTypes.bool,
   onApplyDiscount: PropTypes.func,
-  enableDiscount: PropTypes.bool,
 };
 
 export default function CheckoutSummary({
@@ -42,13 +41,15 @@ export default function CheckoutSummary({
   shipping,
   onApplyDiscount,
   enableEdit = false,
-  enableDiscount = false,
 }) {
   const dispatch = useDispatch();
 
+  const { checkout } = useSelector((state) => state.product);
+
   const displayShipping = shipping !== null ? 'Free' : '-';
+  
   const { promotions } = useSelector((state) => state.promotion);
-  console.log('promotions', promotions);
+
   useEffect(() => {
     dispatch(getPromotions());
   }, [dispatch]);
@@ -66,32 +67,35 @@ export default function CheckoutSummary({
 
   return (
     <>
-      <Card sx={{ mb: 3 }}>
-        <CardHeader
-          title="Mã khuyến mãi"
-          action={
-            enableEdit && (
-              <Button size="small" onClick={onEdit} startIcon={<Iconify icon={'eva:edit-fill'} />}>
-                Edit
-              </Button>
-            )
-          }
-        />
+      {checkout.activeStep === 0 && (
+        <Card sx={{ mb: 3 }}>
+          <CardHeader
+            title="Mã khuyến mãi"
+            action={
+              enableEdit && (
+                <Button size="small" onClick={onEdit} startIcon={<Iconify icon={'eva:edit-fill'} />}>
+                  Edit
+                </Button>
+              )
+            }
+          />
 
-        <CardContent>
-          <Stack spacing={2}>
-            <button
-              className="flex align-center cursor-pointer leading-6 mt-2"
-              style={{ color: 'rgb(11, 116, 229)' }}
-              onClick={handleClickOpen}
-            >
-              <img className="mr-2" src="./icons/ic_discount.svg" alt="ic_discount" />
-              <span>Chọn hoặc nhập Khuyến mãi khác</span>
-            </button>
-            <Discount open={open} onClose={handleClose} promotions={promotions} onApplyDiscount={onApplyDiscount} />
-          </Stack>
-        </CardContent>
-      </Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <button
+                className="flex align-center cursor-pointer leading-6 mt-2"
+                style={{ color: 'rgb(11, 116, 229)' }}
+                onClick={handleClickOpen}
+              >
+                <img className="mr-2" src="./icons/ic_discount.svg" alt="ic_discount" />
+                <span>Chọn hoặc nhập Khuyến mãi khác</span>
+              </button>
+              <Discount open={open} onClose={handleClose} promotions={promotions} onApplyDiscount={onApplyDiscount} />
+            </Stack>
+          </CardContent>
+        </Card>
+      )}
+
       <Card sx={{ mb: 3 }}>
         <CardHeader
           title="Tóm tắt đơn hàng"
@@ -140,23 +144,6 @@ export default function CheckoutSummary({
                 </Typography>
               </Box>
             </Stack>
-
-            {enableDiscount && onApplyDiscount && (
-              <TextField
-                fullWidth
-                placeholder="Discount codes / Gifts"
-                value="DISCOUNT5"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Button onClick={() => onApplyDiscount(5)} sx={{ mr: -0.5 }}>
-                        Áp dụng
-                      </Button>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
           </Stack>
         </CardContent>
       </Card>

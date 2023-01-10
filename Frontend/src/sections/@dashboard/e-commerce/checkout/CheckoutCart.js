@@ -110,7 +110,7 @@ export default function CheckoutCart() {
           disabled={cart.length === 0}
           onClick={handleNextStep}
         >
-          Check Out
+          Thanh toán
         </Button>
       </Grid>
     </Grid>

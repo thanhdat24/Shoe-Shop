@@ -17,7 +17,7 @@ const addressModelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    address: {
+    fullAddress: {
       type: String,
       required: true,
       trim: true,
@@ -41,11 +41,17 @@ const addressModelSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    addressType: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     idUser: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
   },
+  { timestamps: true },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },

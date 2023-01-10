@@ -35,9 +35,17 @@ exports.getMeAddress = catchAsync(async (req, res, next) => {
   const doc = await query;
   let filterDoc = doc.filter((item) => item.idUser.id === req.user.id);
 
+  filterDoc.sort((a, b) => b.createdAt - a.createdAt);
+
+  for (let i = 1; i < filterDoc.length - 1; i++) {
+    filterDoc[i].isDefault = false;
+  }
+
+  filterDoc[0].isDefault = true;
+
   res.status(200).json({
     status: 'success',
-    length: 1,
+    length: filterDoc.length,
     data: filterDoc,
   });
 });
