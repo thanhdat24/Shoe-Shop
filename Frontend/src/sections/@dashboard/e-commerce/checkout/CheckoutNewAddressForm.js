@@ -117,7 +117,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
         <DialogActions>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Deliver to this Address
+            Giao đến địa chỉ này
           </LoadingButton>
           <Button color="inherit" variant="outlined" onClick={onClose}>
             Cancel

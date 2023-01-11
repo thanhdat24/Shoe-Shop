@@ -23,6 +23,8 @@ import useResponsive from '../../../../hooks/useResponsive';
 // components
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
+import { createPaymentMethod } from '../../../../redux/slices/product';
+import { useDispatch } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -40,17 +42,18 @@ const OptionStyle = styled('div')(({ theme }) => ({
 
 CheckoutPaymentMethods.propTypes = {
   paymentOptions: PropTypes.array,
-  cardOptions: PropTypes.array,
 };
 
-export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }) {
+export default function CheckoutPaymentMethods({ paymentOptions }) {
   const { control } = useFormContext();
+
+  const dispatch = useDispatch();
 
   const isDesktop = useResponsive('up', 'sm');
 
   return (
     <Card sx={{ my: 3 }}>
-      <CardHeader title="Payment options" />
+      <CardHeader title="Phương thức thanh toán" />
       <CardContent>
         <Controller
           name="payment"
@@ -59,31 +62,31 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }) 
             <>
               <RadioGroup row {...field}>
                 <Stack spacing={2}>
-                  {paymentOptions.map((method) => {
-                    const { value, title, icons, description } = method;
+                  {paymentOptions?.map((method) => {
+                    const { _id, name, icon, desc } = method;
 
-                    const hasChildren = value === 'credit_card';
-
-                    const selected = field.value === value;
+                    const selected = field.value === name;
+                    if (selected && name) {
+                      dispatch(createPaymentMethod(name));
+                    }
 
                     return (
                       <OptionStyle
-                        key={title}
+                        key={_id}
                         sx={{
                           ...(selected && {
                             boxShadow: (theme) => theme.customShadows.z20,
                           }),
-                          ...(hasChildren && { flexWrap: 'wrap' }),
                         }}
                       >
                         <FormControlLabel
-                          value={value}
+                          value={name}
                           control={<Radio checkedIcon={<Iconify icon={'eva:checkmark-circle-2-fill'} />} />}
                           label={
                             <Box sx={{ ml: 1 }}>
-                              <Typography variant="subtitle2">{title}</Typography>
+                              <Typography variant="subtitle2">{name}</Typography>
                               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                {description}
+                                {desc}
                               </Typography>
                             </Box>
                           }
@@ -92,30 +95,8 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }) 
 
                         {isDesktop && (
                           <Stack direction="row" spacing={1} flexShrink={0}>
-                            {icons.map((icon) => (
-                              <Image key={icon} alt="logo card" src={icon} />
-                            ))}
+                            <Image key={icon} alt="logo card" src={icon} sx={{ width: '30px', height: '30px' }} />
                           </Stack>
-                        )}
-
-                        {hasChildren && (
-                          <Collapse in={field.value === 'credit_card'} sx={{ width: 1 }}>
-                            <TextField select fullWidth label="Cards" SelectProps={{ native: true }}>
-                              {cardOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </TextField>
-
-                            <Button
-                              size="small"
-                              startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
-                              sx={{ my: 3 }}
-                            >
-                              Add new card
-                            </Button>
-                          </Collapse>
                         )}
                       </OptionStyle>
                     );

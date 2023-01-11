@@ -117,9 +117,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const { cates, sizes, colors, productSave } = useSelector((state) => state.product);
   const { objects } = useSelector((state) => state.objectUse);
   const { brandList } = useSelector((state) => state.brand);
-  console.log('brandList', brandList);
   const GENDER_OPTION = objects;
   const BRAND_OPTION = brandList;
+  console.log('GENDER_OPTION', GENDER_OPTION);
 
   // cate
   const cateName = [];
@@ -294,7 +294,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   console.log('arrayNewProduct', arrayNewProduct);
 
   const [images, setImages] = useState([]);
-  const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
+  const imageTypeRegex = /image\/(png|jpg|jpeg|svg)/gm;
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles;

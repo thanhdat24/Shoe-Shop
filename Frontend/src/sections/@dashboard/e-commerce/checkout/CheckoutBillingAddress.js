@@ -56,15 +56,6 @@ export default function CheckoutBillingAddress() {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {/* {_addressBooks.map((address, index) => (
-            <AddressItem
-              key={index}
-              address={address}
-              onNextStep={handleNextStep}
-              onCreateBilling={handleCreateBilling}
-            />
-          ))} */}
-
           {address?.map((address, index) => (
             <AddressItem
               key={index}
@@ -155,7 +146,7 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
         )}
         <Box sx={{ mx: 0.5 }} />
         <Button variant="outlined" size="small" onClick={handleCreateBilling}>
-          Deliver to this Address
+          Giao đến địa chỉ này
         </Button>
       </Box>
     </Card>

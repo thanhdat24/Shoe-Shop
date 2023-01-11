@@ -54,7 +54,7 @@ export default function InvoiceDetails({ invoice }) {
     discount,
     invoiceTo,
     createDate,
-    totalPrice,
+    total,
     invoiceFrom,
     invoiceNumber,
     subTotalPrice,
@@ -201,7 +201,7 @@ export default function InvoiceDetails({ invoice }) {
                     <Typography variant="h6">Total</Typography>
                   </TableCell>
                   <TableCell align="right" width={140}>
-                    <Typography variant="h6">{fCurrency(totalPrice)}</Typography>
+                    <Typography variant="h6">{fCurrency(total)}</Typography>
                   </TableCell>
                 </RowResultStyle>
               </TableBody>

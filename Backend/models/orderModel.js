@@ -3,12 +3,12 @@ const { paymentModelSchema } = require('./paymentModel');
 
 const orderModelSchema = new mongoose.Schema(
   {
-    totalPrice: {
+    total: {
       type: Number,
       required: true,
     },
     address: {
-      displayName: {
+      fullName: {
         type: String,
         required: true,
         trim: true,
@@ -23,7 +23,7 @@ const orderModelSchema = new mongoose.Schema(
         required: true,
         trim: true,
       },
-      address: {
+      fullAddress: {
         type: String,
         required: true,
         trim: true,
@@ -54,9 +54,9 @@ const orderModelSchema = new mongoose.Schema(
       default: 'Đang xử lý',
     },
     paymentMethod: paymentModelSchema,
-    idAdmin: {
+    idUser: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Admin',
+      ref: 'User',
     },
     idPromotion: {
       type: mongoose.Schema.ObjectId,
@@ -94,8 +94,7 @@ const orderModelSchema = new mongoose.Schema(
 
 orderModelSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'idAdmin',
-    select: 'displayName phoneNumber email avatar',
+    path: 'idUser',
   }).populate({
     path: 'idPromotion',
   });

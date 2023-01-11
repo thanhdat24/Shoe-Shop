@@ -16,6 +16,7 @@ DialogAnimate.propTypes = {
   variants: PropTypes.object,
   title: PropTypes.string.isRequired,
   isEdit: PropTypes.bool,
+  isInvoice: PropTypes.string,
 };
 
 export default function DialogAnimate({
@@ -27,6 +28,7 @@ export default function DialogAnimate({
   title,
   onClickSubmit,
   isEdit,
+  isInvoice,
   ...other
 }) {
   return (
@@ -64,15 +66,16 @@ export default function DialogAnimate({
                   {title}
                 </DialogTitle>
                 {props.children}
-
-                <DialogActions>
-                  <Button onClick={onClose} variant="contained" color="error">
-                    Hủy{' '}
-                  </Button>
-                  <Button type="submit" onClick={onClickSubmit} variant="outlined">
-                    {isEdit}
-                  </Button>
-                </DialogActions>
+                {!isInvoice === 'yes' && (
+                  <DialogActions>
+                    <Button onClick={onClose} variant="contained" color="error">
+                      Hủy{' '}
+                    </Button>
+                    <Button type="submit" onClick={onClickSubmit} variant="outlined">
+                      {isEdit}
+                    </Button>
+                  </DialogActions>
+                )}
               </Paper>
             </Box>
           )}

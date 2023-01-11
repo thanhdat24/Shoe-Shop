@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+//
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
@@ -13,24 +15,12 @@ import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
 //
 import CheckoutSummary from './CheckoutSummary';
-import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import { getPayments } from '../../../../redux/slices/payment';
+import { createOrder } from '../../../../redux/slices/order';
 
 // ----------------------------------------------------------------------
-
-const DELIVERY_OPTIONS = [
-  {
-    value: 0,
-    title: 'Standard delivery (Free)',
-    description: 'Delivered on Monday, August 12',
-  },
-  {
-    value: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Monday, August 5',
-  },
-];
 
 const PAYMENT_OPTIONS = [
   {
@@ -56,16 +46,12 @@ const PAYMENT_OPTIONS = [
   },
 ];
 
-const CARDS_OPTIONS = [
-  { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
-  { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
-  { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' },
-];
-
 export default function CheckoutPayment() {
   const dispatch = useDispatch();
 
   const { checkout } = useSelector((state) => state.product);
+
+  const { payments } = useSelector((state) => state.payment);
 
   const { total, discount, subtotal, shipping } = checkout;
 
@@ -81,9 +67,13 @@ export default function CheckoutPayment() {
     dispatch(onGotoStep(step));
   };
 
-  const handleApplyShipping = (value) => {
-    dispatch(applyShipping(value));
-  };
+  // const handleApplyShipping = (value) => {
+  //   dispatch(applyShipping(value));
+  // };
+
+  useEffect(() => {
+    dispatch(getPayments());
+  }, [dispatch]);
 
   const PaymentSchema = Yup.object().shape({
     payment: Yup.string().required('Payment is required!'),
@@ -104,8 +94,20 @@ export default function CheckoutPayment() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     try {
+      const paymentMethod = {
+        name: data.payment,
+        resultCode: 1000,
+        message: 'Giao dịch đã được khởi tạo, chờ người dùng xác nhận thanh toán.',
+        orderId: '',
+      };
+      let cartCheckout = {};
+      cartCheckout = { ...checkout, paymentMethod };
+      // checkout = { ...checkout, newPayment };
+
+      console.log('cartCheckout', cartCheckout);
+      dispatch(createOrder(cartCheckout));
       handleNextStep();
     } catch (error) {
       console.error(error);
@@ -116,8 +118,7 @@ export default function CheckoutPayment() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <CheckoutDelivery onApplyShipping={handleApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
-          <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} />
+          <CheckoutPaymentMethods paymentOptions={payments} />
           <Button
             size="small"
             color="inherit"

@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Divider, Typography, Stack } from '@mui/material';
 // redux
-import { useDispatch } from '../../../../redux/store';
+import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_AUTH } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
@@ -30,31 +30,32 @@ const DialogStyle = styled(DialogAnimate)(({ theme }) => ({
 export default function CheckoutOrderComplete({ ...other }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { createOrderSuccess } = useSelector((state) => state.order);
+  console.log('createOrderSuccess', createOrderSuccess);
   const handleResetStep = () => {
     dispatch(resetCart());
-    navigate(PATH_DASHBOARD.eCommerce.shop);
+    navigate(PATH_AUTH.home);
   };
 
   return (
-    <DialogStyle fullScreen {...other}>
+    <DialogStyle fullScreen {...other} isInvoice={'yes'}>
       <Box sx={{ p: 4, maxWidth: 480, margin: 'auto' }}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h4" paragraph>
-            Thank you for your purchase!
+            Cám ơn vì đã mua hàng!
           </Typography>
 
           <OrderCompleteIllustration sx={{ height: 260, my: 10 }} />
 
           <Typography align="left" paragraph>
-            Thanks for placing order &nbsp;
-            <Link href="#">01dc1370-3df6-11eb-b378-0242ac130002</Link>
+            Cảm ơn đã đặt hàng &nbsp;
+            <Link href="#">#{createOrderSuccess?._id}</Link>
           </Typography>
 
           <Typography align="left" sx={{ color: 'text.secondary' }}>
-            We will send you a notification within 5 days when it ships.
-            <br /> <br /> If you have any question or queries then fell to get in contact us. <br /> <br /> All the
-            best,
+            Chúng tôi sẽ gửi thông báo cho bạn khi hàng được giao.
+            <br /> <br /> Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào thì hãy liên hệ với chúng tôi. <br /> <br /> Tất
+            cả những điều tốt nhất,
           </Typography>
         </Box>
 
@@ -62,14 +63,14 @@ export default function CheckoutOrderComplete({ ...other }) {
 
         <Stack direction={{ xs: 'column-reverse', sm: 'row' }} justifyContent="space-between" spacing={2}>
           <Button color="inherit" onClick={handleResetStep} startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}>
-            Continue Shopping
+            Tiếp tục mua sắm
           </Button>
           <Button
             variant="contained"
             startIcon={<Iconify icon={'ant-design:file-pdf-filled'} />}
             onClick={handleResetStep}
           >
-            Download as PDF
+            Tải xuống PDF
           </Button>
         </Stack>
       </Box>

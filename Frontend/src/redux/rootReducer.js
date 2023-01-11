@@ -16,6 +16,8 @@ import shipperReducer from './slices/shipper';
 import cateReducer from './slices/cate';
 import objectUseReducer from './slices/objectUse';
 import addressReducer from './slices/address';
+import paymentReducer from './slices/payment';
+import orderReducer from './slices/order';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +50,8 @@ const rootReducer = combineReducers({
   cate: cateReducer,
   objectUse: objectUseReducer,
   address: addressReducer,
+  payment: paymentReducer,
+  order: orderReducer,
 });
 
 export { rootPersistConfig, rootReducer };

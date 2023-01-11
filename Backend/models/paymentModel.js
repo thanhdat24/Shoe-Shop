@@ -5,6 +5,12 @@ const paymentModelSchema = new mongoose.Schema(
     name: {
       type: String,
     },
+    desc: {
+      type: String,
+    },
+    icon: {
+      type: String,
+    },
     resultCode: {
       type: Number,
     },

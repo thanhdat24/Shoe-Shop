@@ -34,8 +34,9 @@ const initialState = {
     total: 0,
     discount: 0,
     shipping: 0,
-    billing: null,
+    address: null,
     idPromotion: null,
+    payment: null,
   },
 };
 
@@ -118,12 +119,14 @@ const slice = createSlice({
       const subtotal = sum(cart.map((cartItem) => cartItem.price * cartItem.quantity));
       const discount = cart.length === 0 ? 0 : state.checkout.discount;
       const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
-      const billing = cart.length === 0 ? null : state.checkout.billing;
+      const address = cart.length === 0 ? null : state.checkout.address;
+      const payment = cart.length === 0 ? null : state.checkout.payment;
 
       state.checkout.cart = cart;
       state.checkout.discount = discount;
       state.checkout.shipping = shipping;
-      state.checkout.billing = billing;
+      state.checkout.address = address;
+      state.checkout.payment = payment;
       state.checkout.subtotal = subtotal;
       state.checkout.total = subtotal - discount;
     },
@@ -179,7 +182,8 @@ const slice = createSlice({
       state.checkout.subtotal = 0;
       state.checkout.discount = 0;
       state.checkout.shipping = 0;
-      state.checkout.billing = null;
+      state.checkout.address = null;
+      state.checkout.payment = null;
     },
 
     resetProduct(state) {
@@ -230,7 +234,12 @@ const slice = createSlice({
     },
 
     createBilling(state, action) {
-      state.checkout.billing = action.payload;
+      state.checkout.address = action.payload;
+    },
+
+    createPaymentMethod(state, action) {
+      console.log(' action.payload', action.payload);
+      state.checkout.payment = action.payload;
     },
 
     applyDiscount(state, action) {
@@ -269,6 +278,7 @@ export const {
   filterProducts,
   resetProduct,
   createProductSuccess,
+  createPaymentMethod,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

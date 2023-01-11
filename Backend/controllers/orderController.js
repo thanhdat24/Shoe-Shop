@@ -19,16 +19,16 @@ const filterObj = (obj, ...allowedField) => {
 };
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-  const { _id, displayName, phoneNumber } = req.user;
+  const { _id } = req.user;
   console.log('req.user', req.user);
   try {
-    req.body.idAdmin = _id;
+    req.body.idUser = _id;
     const objOrder = filterObj(
       req.body,
       'address',
-      'totalPrice',
+      'total',
       'paymentMethod',
-      'idAdmin',
+      'idUser',
       'shipper',
       'idPromotion',
       'status'
@@ -43,7 +43,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     let totalQuality = 0;
 
     if (order._id) {
-      await req.body.items.map(async (item, index) => {
+      await req.body.cart.map(async (item, index) => {
         let product = await Product.findById(item.productId);
         // console.log('product', product);
         if (product) {
@@ -51,7 +51,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
             let itemProduct = {
               quantity: item.quantity,
               price: product.price,
-              totalPrice: item.quantity * product.price,
+              total: item.quantity * product.price,
               idColor: item.idColor,
               idSize: item.idSize,
               idOrder: order._id,
@@ -78,7 +78,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
             let itemProduct = {
               quantity: item.quantity,
               price: product.price,
-              totalPrice: item.quantity * product.price,
+              total: item.quantity * product.price,
               idColor: item.idColor,
               idSize: item.idSize,
               idOrder: order._id,
@@ -89,7 +89,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         } else {
           return next(new AppError('Không tồn tại sản phảm nào!', 404));
         }
-        if (arrayItems.length === req.body.items.length) {
+        if (arrayItems.length === req.body.cart.length) {
           await OrderDetail.insertMany(arrayItems);
         }
       });

@@ -15,7 +15,7 @@ CheckoutBillingInfo.propTypes = {
 export default function CheckoutBillingInfo({ onBackStep }) {
   const { checkout } = useSelector((state) => state.product);
 
-  const { billing } = checkout;
+  const { address } = checkout;
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -29,17 +29,17 @@ export default function CheckoutBillingInfo({ onBackStep }) {
       />
       <CardContent>
         <Typography variant="subtitle2" gutterBottom>
-          {billing?.receiver}&nbsp;
+          {address?.receiver}&nbsp;
           <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-            ({billing?.addressType})
+            ({address?.addressType})
           </Typography>
         </Typography>
 
         <Typography variant="body2" gutterBottom>
-          {billing?.fullAddress}
+          {address?.fullAddress}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {billing?.phone}
+          {address?.phone}
         </Typography>
       </CardContent>
     </Card>

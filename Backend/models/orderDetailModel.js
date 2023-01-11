@@ -4,7 +4,7 @@ const orderDetailModelSchema = new mongoose.Schema(
   {
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
-    totalPrice: { type: Number, required: true },
+    total: { type: Number, required: true },
     idSize: {
       type: mongoose.Schema.ObjectId,
       ref: 'Size',

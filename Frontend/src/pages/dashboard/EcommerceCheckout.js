@@ -81,7 +81,7 @@ export default function EcommerceCheckout() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.product);
-  const { cart, billing, activeStep } = checkout;
+  const { cart, address, activeStep } = checkout;
   const isComplete = activeStep === STEPS.length;
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export default function EcommerceCheckout() {
           <>
             {activeStep === 0 && <CheckoutCart />}
             {activeStep === 1 && <CheckoutBillingAddress />}
-            {activeStep === 2 && billing && <CheckoutPayment />}
+            {activeStep === 2 && address && <CheckoutPayment />}
           </>
         ) : (
           <CheckoutOrderComplete open={isComplete} />
