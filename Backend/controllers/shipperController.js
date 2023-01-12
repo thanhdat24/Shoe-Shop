@@ -2,6 +2,7 @@ const factory = require('./handlerFactory');
 const Shipper = require('../models/shipperModel');
 const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
+const AppError = require('../utils/appError');
 
 exports.getDetailShipper = factory.getOne();
 exports.updateShipper = factory.updateOne(Shipper);

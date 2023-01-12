@@ -18,6 +18,7 @@ import objectUseReducer from './slices/objectUse';
 import addressReducer from './slices/address';
 import paymentReducer from './slices/payment';
 import orderReducer from './slices/order';
+import shipperManageReducer from './slices/shipperManage';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ const rootReducer = combineReducers({
   address: addressReducer,
   payment: paymentReducer,
   order: orderReducer,
+  shipperManage: shipperManageReducer,
 });
 
 export { rootPersistConfig, rootReducer };

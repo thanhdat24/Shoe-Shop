@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: 'cate', label: 'Thể loại', align: 'left' },
   { id: 'supplier', label: 'Nhà cung cấp', align: 'left' },
   { id: 'inventoryType', label: 'Trạng thái', align: 'center' },
-  { id: 'price', label: 'Giá', align: 'right' },
+  { id: 'price', label: 'Giá', align: 'center' },
   { id: '' },
 ];
 

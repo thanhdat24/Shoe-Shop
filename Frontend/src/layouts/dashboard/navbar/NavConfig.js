@@ -143,7 +143,7 @@ const navConfig = [
 
       // INVOICE
       {
-        title: 'invoice',
+        title: 'Đơn hàng',
         path: PATH_DASHBOARD.invoice.root,
         icon: ICONS.invoice,
         children: [

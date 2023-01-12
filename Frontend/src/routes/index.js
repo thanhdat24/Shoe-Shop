@@ -14,6 +14,7 @@ import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
+
 // import PromotionCreate from '../pages/dashboard/PromotionCreate';
 // import BrandList from '../pages/dashboard/BrandList';
 // import BrandCreate from '../pages/dashboard/BrandCreate';
@@ -209,6 +210,9 @@ export default function Router() {
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
+    { path: '/shipper/login', element: <LoginShipper /> },
+    { path: '/shipper/orderListShipper', element: <OrderListShipper /> },
+    { path: '/shipper/orderDetailShipper', element: <OrderShipperDetail /> },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
@@ -283,3 +287,10 @@ const Product = Loadable(lazy(() => import('../pages/Product')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+
+
+// shipper
+
+const LoginShipper = Loadable(lazy(() => import('../pages/Shipper/LoginShipper')));
+const OrderListShipper = Loadable(lazy(() => import('../pages/Shipper/OrderListShipper')));
+const OrderShipperDetail = Loadable(lazy(() => import('../pages/Shipper/OrderShipperDetail')));
