@@ -2,13 +2,40 @@ const Order = require('../models/orderModel');
 const OrderDetail = require('../models/orderDetailModel');
 const Product = require('../models/productModel');
 const ProductDetail = require('../models/productDetailModel');
+const ProductImages = require('../models/productImagesModel');
 const Promotion = require('../models/promotionModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllOrder = factory.getAll(Order, { path: 'orderDetail' });
-exports.getDetailOrder = factory.getOne(Order, { path: 'orderDetail' });
+// exports.getDetailOrder = factory.getOne(Order, { path: 'orderDetail' });
+
+exports.getDetailOrder = catchAsync(async (req, res, next) => {
+  let query = Order.findById(req.params.id).populate('orderDetail');
+  // if (populateOptions) query = query.populate(populateOptions);
+  const doc = await query;
+  let productImages = [];
+
+  let queryProductImages = await ProductImages.find({
+    idProduct: doc.orderDetail[0].idProduct.id,
+  }).populate('productDetail queryProductImages');
+
+  if (!doc) {
+    return next(new AppError('No document found with that ID', 404));
+  }
+  if (queryProductImages) {
+    queryProductImages[0].url.map((item) => {
+      productImages.push(item);
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    length: 1,
+    data: doc,
+    productImages,
+  });
+});
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
