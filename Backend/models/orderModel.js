@@ -86,11 +86,11 @@ const orderModelSchema = new mongoose.Schema(
   }
 );
 
-// orderSchema.virtual('orderDetail', {
-//   ref: 'OrderDetail',
-//   foreignField: 'order',
-//   localField: '_id',
-// });
+orderModelSchema.virtual('orderDetail', {
+  ref: 'OrderDetail',
+  foreignField: 'idOrder',
+  localField: '_id',
+});
 
 orderModelSchema.pre(/^find/, function (next) {
   this.populate({

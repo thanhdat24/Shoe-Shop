@@ -45,7 +45,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     if (order._id) {
       await req.body.cart.map(async (item, index) => {
         let product = await Product.findById(item.productId);
-        // console.log('product', product);
         if (product) {
           if (order.paymentMethod.resultCode == 1006) {
             let itemProduct = {
