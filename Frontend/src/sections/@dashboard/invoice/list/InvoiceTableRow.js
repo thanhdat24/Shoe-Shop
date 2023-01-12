@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import moment from 'moment';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Checkbox, TableRow, TableCell, Typography, Stack, Link, MenuItem } from '@mui/material';
@@ -27,7 +28,8 @@ InvoiceTableRow.propTypes = {
 export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { sent, invoiceNumber, createDate, dueDate, status, invoiceTo, totalPrice } = row;
+  const { address, _id, createdAt, status, total, paymentMethod, idUser } = row;
+  console.log('row', row);
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -44,40 +46,33 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={invoiceTo.name} color={createAvatar(invoiceTo.name).color} sx={{ mr: 2 }}>
-          {createAvatar(invoiceTo.name).name}
-        </Avatar>
-
+        <Avatar src={idUser?.photoURL} alt={idUser.displayName} sx={{ mr: 2 }} />
         <Stack>
           <Typography variant="subtitle2" noWrap>
-            {invoiceTo.name}
+            {address.fullName}
           </Typography>
 
           <Link noWrap variant="body2" onClick={onViewRow} sx={{ color: 'text.disabled', cursor: 'pointer' }}>
-            {invoiceNumber}
+            {_id}
           </Link>
         </Stack>
+        {/* <TableCell align="left">{_id}</TableCell> */}
       </TableCell>
-
-      <TableCell align="left">{fDate(createDate)}</TableCell>
-
-      <TableCell align="left">{fDate(dueDate)}</TableCell>
-
-      <TableCell align="center">{fCurrency(totalPrice)}</TableCell>
-
+      <TableCell align="center">{address.phoneNumber}</TableCell>
       <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
-        {sent}
+        {moment(createdAt).format('DD-MM-YYYY')}
       </TableCell>
-
-      <TableCell align="left">
+      <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
           color={
-            (status === 'paid' && 'success') ||
-            (status === 'unpaid' && 'warning') ||
-            (status === 'overdue' && 'error') ||
+            (status === 'Đã nhận' && 'success') ||
+            (status === 'Đã giao hàng' && 'info') ||
+            (status === 'Đang vận chuyển' && 'warning') ||
+            (status === 'Đã đánh giá' && 'primary') ||
+            (status === 'Đang xử lý' && 'default') ||
+            (status === 'Đã hủy' && 'error') ||
             'default'
           }
           sx={{ textTransform: 'capitalize' }}
@@ -85,7 +80,26 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
           {status}
         </Label>
       </TableCell>
-
+      {/* <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+        {status}
+      </TableCell> */}
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {fCurrency(total)}₫
+      </TableCell>
+      <TableCell align="center">
+        {' '}
+        <Label
+          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+          color={
+            (paymentMethod.resultCode === 0 && 'success') || (paymentMethod.resultCode === 1000 && 'warning') || 'error'
+          }
+          sx={{ textTransform: 'capitalize' }}
+        >
+          {(paymentMethod.resultCode === 0 && 'Đã thanh toán') ||
+            (paymentMethod.resultCode === 1000 && 'Chờ thanh toán') ||
+            'Đã hủy'}
+        </Label>
+      </TableCell>
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}
@@ -126,7 +140,7 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
             </>
           }
         />
-      </TableCell>
+      </TableCell>{' '}
     </TableRow>
   );
 }

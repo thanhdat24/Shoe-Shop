@@ -1,5 +1,5 @@
 import sumBy from 'lodash/sumBy';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -21,11 +21,17 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import moment from 'moment';
+import { useDispatch, useSelector } from '../../redux/store';
+
+import { getOrders } from '../../redux/slices/order';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
+
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
 // _mock_
 import { _invoices } from '../../_mock';
@@ -42,22 +48,16 @@ import { InvoiceTableRow, InvoiceTableToolbar } from '../../sections/@dashboard/
 
 // ----------------------------------------------------------------------
 
-const SERVICE_OPTIONS = [
-  'all',
-  'full stack development',
-  'backend development',
-  'ui design',
-  'ui/ux design',
-  'front end development',
-];
+const SERVICE_OPTIONS = ['all', 'Thông tin khách hàng', 'Mã đơn hàng'];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Client', align: 'left' },
-  { id: 'createDate', label: 'Create', align: 'left' },
-  { id: 'dueDate', label: 'Due', align: 'left' },
-  { id: 'price', label: 'Amount', align: 'center', width: 140 },
-  { id: 'sent', label: 'Sent', align: 'center', width: 140 },
-  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'invoiceNumber', label: 'Khách hàng', align: 'left' },
+
+  { id: 'phone', label: 'Số điện thoại', align: 'center' },
+  { id: 'createDay', label: 'Ngày đặt ', align: 'center', width: 140 },
+  { id: 'status', label: 'Trạng thái', align: 'center', width: 140 },
+  { id: 'price', label: 'Giá tiền', align: 'left' },
+  { id: 'payment', label: 'Thanh toán', align: 'center' },
   { id: '' },
 ];
 
@@ -65,9 +65,10 @@ const TABLE_HEAD = [
 
 export default function InvoiceList() {
   const theme = useTheme();
-
+  const dispatch = useDispatch();
   const { themeStretch } = useSettings();
-
+  const { orders } = useSelector((state) => state.order);
+  console.log('orders', orders);
   const navigate = useNavigate();
 
   const {
@@ -89,7 +90,12 @@ export default function InvoiceList() {
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'createDate' });
 
-  const [tableData, setTableData] = useState(_invoices);
+  // Ds đơn hàng
+  useEffect(() => {
+    dispatch(getOrders());
+  }, [dispatch]);
+
+  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
@@ -102,11 +108,17 @@ export default function InvoiceList() {
   const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
 
   const handleFilterName = (filterName) => {
+    console.log('filterName', filterName);
     setFilterName(filterName);
     setPage(0);
   };
-
+  useEffect(() => {
+    if (orders?.length) {
+      setTableData(orders);
+    }
+  }, [orders]);
   const handleFilterService = (event) => {
+    console.log('filterService', event.target.value);
     setFilterService(event.target.value);
   };
 
@@ -154,39 +166,44 @@ export default function InvoiceList() {
   const getTotalPriceByStatus = (status) =>
     sumBy(
       tableData.filter((item) => item.status === status),
-      'totalPrice'
+      'total'
     );
 
   const getPercentByStatus = (status) => (getLengthByStatus(status) / tableData.length) * 100;
 
   const TABS = [
-    { value: 'all', label: 'All', color: 'info', count: tableData.length },
-    { value: 'paid', label: 'Paid', color: 'success', count: getLengthByStatus('paid') },
-    { value: 'unpaid', label: 'Unpaid', color: 'warning', count: getLengthByStatus('unpaid') },
-    { value: 'overdue', label: 'Overdue', color: 'error', count: getLengthByStatus('overdue') },
-    { value: 'draft', label: 'Draft', color: 'default', count: getLengthByStatus('draft') },
+    { value: 'all', label: 'Tất cả', color: 'primary', count: tableData.length },
+    { value: 'Đang xử lý', label: 'Đang xử lý', color: 'default', count: getLengthByStatus('Đang xử lý') },
+    {
+      value: 'Đang vận chuyển',
+      label: 'Đang vận chuyển',
+      color: 'warning',
+      count: getLengthByStatus('Đang vận chuyển'),
+    },
+    { value: 'Đã giao hàng', label: 'Đã giao hàng', color: 'info', count: getLengthByStatus('Đã giao hàng') },
+    { value: 'Đã hủy', label: 'Đã hủy', color: 'error', count: getLengthByStatus('Đã hủy') },
   ];
 
   return (
-    <Page title="Invoice: List">
+    <Page title="Đơn hàng: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Invoice List"
+          heading="Danh sách đơn hàng "
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Invoices', href: PATH_DASHBOARD.invoice.root },
-            { name: 'List' },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Đơn hàng', href: PATH_DASHBOARD.invoice.root },
+            { name: 'Danh sách' },
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.invoice.new}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
-              New Invoice
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     variant="contained"
+          //     component={RouterLink}
+          //     to={PATH_DASHBOARD.invoice.new}
+          //     startIcon={<Iconify icon={'eva:plus-fill'} />}
+          //   >
+          //     New Invoice
+          //   </Button>
+          // }
         />
 
         <Card sx={{ mb: 5 }}>
@@ -197,44 +214,60 @@ export default function InvoiceList() {
               sx={{ py: 2 }}
             >
               <InvoiceAnalytic
-                title="Total"
+                title="Tất cả"
                 total={tableData.length}
                 percent={100}
-                price={sumBy(tableData, 'totalPrice')}
+                price={sumBy(tableData, 'total') }
                 icon="ic:round-receipt"
-                color={theme.palette.info.main}
+                color={theme.palette.primary.main}
               />
               <InvoiceAnalytic
-                title="Paid"
-                total={getLengthByStatus('paid')}
-                percent={getPercentByStatus('paid')}
-                price={getTotalPriceByStatus('paid')}
+                title="Đang xử lý"
+                total={getLengthByStatus('Đang xử lý')}
+                percent={getPercentByStatus('Đang xử lý')}
+                price={getTotalPriceByStatus('Đang xử lý')}
                 icon="eva:checkmark-circle-2-fill"
-                color={theme.palette.success.main}
+                color={theme.palette.text.secondary}
               />
               <InvoiceAnalytic
-                title="Unpaid"
-                total={getLengthByStatus('unpaid')}
-                percent={getPercentByStatus('unpaid')}
-                price={getTotalPriceByStatus('unpaid')}
+                title="Đang vận chuyển"
+                total={getLengthByStatus('Đang vận chuyển')}
+                percent={getPercentByStatus('Đang vận chuyển')}
+                price={getTotalPriceByStatus('Đang vận chuyển')}
                 icon="eva:clock-fill"
                 color={theme.palette.warning.main}
               />
               <InvoiceAnalytic
-                title="Overdue"
-                total={getLengthByStatus('overdue')}
-                percent={getPercentByStatus('overdue')}
-                price={getTotalPriceByStatus('overdue')}
-                icon="eva:bell-fill"
-                color={theme.palette.error.main}
+                title="Đã giao hàng"
+                total={getLengthByStatus('Đã giao hàng')}
+                percent={getPercentByStatus('Đã giao hàng')}
+                price={getTotalPriceByStatus('Đã giao hàng')}
+                icon="eva:car-fill"
+                color={theme.palette.info.main}
               />
               <InvoiceAnalytic
-                title="Draft"
-                total={getLengthByStatus('draft')}
-                percent={getPercentByStatus('draft')}
-                price={getTotalPriceByStatus('draft')}
+                title="Đã nhận"
+                total={getLengthByStatus('Đã nhận')}
+                percent={getPercentByStatus('Đã nhận')}
+                price={getTotalPriceByStatus('Đã nhận')}
+                icon="eva:cube-fill"
+                color={theme.palette.success.main}
+              />
+              <InvoiceAnalytic
+                title="Đã đánh giá"
+                total={getLengthByStatus('Đã đánh giá')}
+                percent={getPercentByStatus('Đã đánh giá')}
+                price={getTotalPriceByStatus('Đã đánh giá')}
+                icon="eva:bell-fill"
+                color={theme.palette.primary.main}
+              />
+              <InvoiceAnalytic
+                title="Đã hủy"
+                total={getLengthByStatus('Đã hủy')}
+                percent={getPercentByStatus('Đã hủy')}
+                price={getTotalPriceByStatus('Đã hủy')}
                 icon="eva:file-fill"
-                color={theme.palette.text.secondary}
+                color={theme.palette.error.main}
               />
             </Stack>
           </Scrollbar>
@@ -276,6 +309,7 @@ export default function InvoiceList() {
               setFilterStartDate(newValue);
             }}
             onFilterEndDate={(newValue) => {
+              console.log('Enđate', newValue);
               setFilterEndDate(newValue);
             }}
             optionsService={SERVICE_OPTIONS}
@@ -371,8 +405,6 @@ export default function InvoiceList() {
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
-
-          
           </Box>
         </Card>
       </Container>
@@ -400,12 +432,14 @@ function applySortFilter({
   });
 
   tableData = stabilizedThis.map((el) => el[0]);
+  // Lọc theo filter
 
   if (filterName) {
     tableData = tableData.filter(
       (item) =>
-        item.invoiceNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        item.invoiceTo.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+        item.id.indexOf(filterName) !== -1 ||
+        item.address.phoneNumber.indexOf(filterName.toLowerCase()) !== -1 ||
+        item.address.fullName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
@@ -413,14 +447,38 @@ function applySortFilter({
     tableData = tableData.filter((item) => item.status === filterStatus);
   }
 
-  if (filterService !== 'all') {
-    tableData = tableData.filter((item) => item.items.some((c) => c.service === filterService));
+  // if (filterService !== 'all') {
+  //   tableData = tableData.filter((item) => item.items.some((c) => c.service === filterService));
+  // }
+
+  // Lọc theo service
+
+  if (filterService === 'Mã đơn hàng') {
+    if (filterName) {
+      console.log('filterName354', filterName);
+      console.log('tableData', tableData);
+      // tableData = tableData.filter((item) => item.id === filterName);
+    }
+    // tableData = tableData.filter((item) => item.address.fullName === filterService);
   }
 
+  if (filterService === 'Thông tin khách hàng') {
+    console.log('tableData', tableData);
+    if (filterName) {
+      tableData = tableData.filter(
+        (item) =>
+          item.address.phoneNumber.indexOf(filterName.toLowerCase()) !== -1 ||
+          item.address.fullName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      );
+    }
+    // tableData = tableData.filter((item) => item.address.fullName === filterService);
+  }
+  // filter theo ngày
   if (filterStartDate && filterEndDate) {
     tableData = tableData.filter(
       (item) =>
-        item.createDate.getTime() >= filterStartDate.getTime() && item.createDate.getTime() <= filterEndDate.getTime()
+        moment(item.createdAt).format('DD/MM/YYYY') >= moment(filterStartDate).format('DD/MM/YYYY') &&
+        moment(item.createdAt).format('DD/MM/YYYY') <= moment(filterEndDate).format('DD/MM/YYYY')
     );
   }
 

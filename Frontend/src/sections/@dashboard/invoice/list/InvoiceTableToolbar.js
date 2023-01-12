@@ -31,12 +31,13 @@ export default function InvoiceTableToolbar({
   onFilterStartDate,
   onFilterEndDate,
 }) {
+  console.log('filterService4354', filterService);
   return (
     <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} sx={{ py: 2.5, px: 3 }}>
       <TextField
         fullWidth
         select
-        label="Service type"
+        label="Lọc"
         value={filterService}
         onChange={onFilterService}
         SelectProps={{
@@ -67,7 +68,8 @@ export default function InvoiceTableToolbar({
       </TextField>
 
       <DatePicker
-        label="Start date"
+        label="Ngày đặt"
+        inputFormat="dd/MM/yyyy"
         value={filterStartDate}
         onChange={onFilterStartDate}
         renderInput={(params) => (
@@ -82,7 +84,8 @@ export default function InvoiceTableToolbar({
       />
 
       <DatePicker
-        label="End date"
+        label="Ngày giao"
+        inputFormat="dd/MM/yyyy"
         value={filterEndDate}
         onChange={onFilterEndDate}
         renderInput={(params) => (
@@ -100,7 +103,11 @@ export default function InvoiceTableToolbar({
         fullWidth
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Search client or invoice number..."
+        placeholder={
+          (filterService === 'Thông tin khách hàng' && 'Tìm kiếm theo tên hoặc số điện thoại') ||
+          (filterService === 'Mã đơn hàng' && 'Tìm kiếm theo mã đơn hàng') ||
+          'Tìm kiếm ...'
+        }
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

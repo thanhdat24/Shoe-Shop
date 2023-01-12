@@ -11,6 +11,7 @@ const initialState = {
   createOrderSuccess: null,
   error: null,
   success: '',
+  orders: null,
 };
 
 const slice = createSlice({
@@ -33,7 +34,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.createOrderSuccess = action.payload;
     },
-
+    // GET ALL ORDER
+    getOrdersSuccess(state, action) {
+      state.isLoading = false;
+      state.orders = action.payload;
+    },
     // OPEN MODAL
     openModal(state) {
       state.isOpenModal = true;
@@ -68,6 +73,20 @@ export function createOrder(newProduct) {
       const response = await axios.post('/api/v1/orders', newProduct);
       console.log('response', response);
       dispatch(slice.actions.createOrderSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getOrders() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+
+    try {
+      const response = await axios.get('/api/v1/orders');
+      console.log('response', response);
+      dispatch(slice.actions.getOrdersSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
