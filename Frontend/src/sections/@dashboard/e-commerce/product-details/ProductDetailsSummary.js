@@ -87,6 +87,10 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         onAddCart({
           ...data,
           subtotal: data.price * data.quantity,
+          available: detailColorSize.quantity,
+          idColor: detailColorSize.idColor._id,
+          idSize: detailColorSize.idSize._id,
+          productId: detailColorSize.idProduct._id,
         });
       }
       onGotoStep(0);

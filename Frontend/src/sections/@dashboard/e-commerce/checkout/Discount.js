@@ -66,7 +66,7 @@ const DiscountInfo = styled(({ className, ...props }) => (
 
 export default function Discount({ open, onClose, onNextStep, onCreateBilling, promotions, onApplyDiscount }) {
   const [coupon, setCoupon] = React.useState('');
-  const [discountIsChoose, setDiscountIsChoose] = React.useState('');
+  const [discountIsChoose, setDiscountIsChoose] = React.useState(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const { checkout } = useSelector((state) => state.product);
@@ -91,9 +91,7 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
   const handleDiscount = (item, index) => {
     const { id, price, miniPrice, code } = item;
     setDiscountIsChoose(index);
-    // discountIsChoose = index;
-    console.log('discountIsChoose', discountIsChoose);
-    console.log('item', item);
+
     // if (discountIsChoose === index) {
     setTimeout(() => {
       enqueueSnackbar(`Mã khuyến mãi "${code}" được áp dụng thành công`, {
@@ -102,42 +100,13 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
     }, 100);
     onApplyDiscount(item);
     onClose();
-
-    // }
-    if (discountIsChoose === index) {
-      if (subtotal >= miniPrice) {
-        // let newValues = {
-        //   ...dataSubmit.values,
-        //   discount: price,
-        //   miniPrice: miniPrice,
-        // };
-        // let newErrors = makeObjError(discount, price, dataSubmit);
-        // setdataSubmit((dataSubmit) => ({
-        //   ...dataSubmit,
-        //   values: newValues,
-        //   errors: newErrors,
-        // }));
-      }
-    } else {
-      //   let newValues = {
-      //     ...dataSubmit.values,
-      //     discount: 0,
-      //     miniPrice: 0,
-      //   };
-      //   let newErrors = makeObjError(discount, price, dataSubmit);
-      //   setdataSubmit((dataSubmit) => ({
-      //     ...dataSubmit,
-      //     values: newValues,
-      //     errors: newErrors,
-      //   }));
-    }
   };
 
   const handleRemoveDiscount = (item, index) => {
     const { price } = item;
-    setDiscountIsChoose('');
+    setDiscountIsChoose(null);
 
-    onApplyDiscount({ price: 0, _id: '' });
+    onApplyDiscount({ price: 0, _id: null });
 
     // let newValues = {
     //   ...dataSubmit.values,

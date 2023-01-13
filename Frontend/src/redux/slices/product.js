@@ -184,6 +184,8 @@ const slice = createSlice({
       state.checkout.shipping = 0;
       state.checkout.address = null;
       state.checkout.payment = null;
+      state.checkout.idPromotion = null;
+      ;
     },
 
     resetProduct(state) {

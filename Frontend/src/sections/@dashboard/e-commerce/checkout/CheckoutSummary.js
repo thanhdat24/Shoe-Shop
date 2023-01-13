@@ -47,7 +47,7 @@ export default function CheckoutSummary({
   const { checkout } = useSelector((state) => state.product);
 
   const displayShipping = shipping !== null ? 'Free' : '-';
-  
+
   const { promotions } = useSelector((state) => state.promotion);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function CheckoutSummary({
 
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Shipping
+                Phí vận chuyển
               </Typography>
               <Typography variant="subtitle2">{shipping ? fCurrency(shipping) : displayShipping}</Typography>
             </Stack>

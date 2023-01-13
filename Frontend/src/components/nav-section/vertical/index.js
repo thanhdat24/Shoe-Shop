@@ -27,20 +27,22 @@ NavSectionVertical.propTypes = {
   navConfig: PropTypes.array,
 };
 
-export default function NavSectionVertical({ navConfig, isCollapse = false, ...other }) {
+export default function NavSectionVertical({ isNavUser, navConfig, isCollapse = false, ...other }) {
   return (
-    <Box {...other}>
+    <Box {...other} sx={isNavUser === 'yes' && { marginTop: 2 }}>
       {navConfig.map((group) => (
-        <List key={group.subheader} disablePadding sx={{ px: 2 }}>
-          <ListSubheaderStyle
-            sx={{
-              ...(isCollapse && {
-                opacity: 0,
-              }),
-            }}
-          >
-            {group.subheader}
-          </ListSubheaderStyle>
+        <List key={group.subheader} disablePadding sx={isNavUser !== 'yes' && { px: 2 }}>
+          {isNavUser !== 'yes' && (
+            <ListSubheaderStyle
+              sx={{
+                ...(isCollapse && {
+                  opacity: 0,
+                }),
+              }}
+            >
+              {group.subheader}
+            </ListSubheaderStyle>
+          )}
 
           {group.items.map((list) => (
             <NavListRoot key={list.title} list={list} isCollapse={isCollapse} />

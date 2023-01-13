@@ -14,11 +14,11 @@ NavListRoot.propTypes = {
   list: PropTypes.object,
 };
 
-export function NavListRoot({ list, isCollapse }) {
+export function NavListRoot({ isNavUser, list, isCollapse }) {
   const { pathname } = useLocation();
 
   const active = getActive(list.path, pathname);
-
+  
   const [open, setOpen] = useState(active);
 
   const hasChildren = list.children;
@@ -41,7 +41,7 @@ export function NavListRoot({ list, isCollapse }) {
     );
   }
 
-  return <NavItemRoot item={list} active={active} isCollapse={isCollapse} />;
+  return <NavItemRoot isNavUser={isNavUser} item={list} active={active} isCollapse={isCollapse} />;
 }
 
 // ----------------------------------------------------------------------

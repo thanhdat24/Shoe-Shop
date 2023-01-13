@@ -13,7 +13,7 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-
+import AccountLayoutLayout from '../layouts/account';
 
 // import PromotionCreate from '../pages/dashboard/PromotionCreate';
 // import BrandList from '../pages/dashboard/BrandList';
@@ -207,6 +207,22 @@ export default function Router() {
             { path: ':name', element: <Product /> },
           ],
         },
+        {
+          path: 'account',
+          element: <AccountLayoutLayout />,
+          children: [
+            { element: <Account />, index: true },
+            // { path: 'order', element: <Order /> },
+          ],
+        },
+        {
+          path: 'order',
+          element: <AccountLayoutLayout />,
+          children: [
+            { element: <Order />, index: true },
+            { path: 'view/:id', element: <OrderView /> },
+          ],
+        },
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
@@ -280,6 +296,9 @@ const ObjectUseList = Loadable(lazy(() => import('../pages/dashboard/ObjectUseLi
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const About = Loadable(lazy(() => import('../pages/About')));
 const Contact = Loadable(lazy(() => import('../pages/Contact')));
+const Account = Loadable(lazy(() => import('../pages/Account')));
+const OrderView = Loadable(lazy(() => import('../pages/OrderView')));
+const Order = Loadable(lazy(() => import('../pages/Order')));
 const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
@@ -287,7 +306,6 @@ const Product = Loadable(lazy(() => import('../pages/Product')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
-
 
 // shipper
 

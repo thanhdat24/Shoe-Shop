@@ -111,7 +111,7 @@ exports.getAll = (Model, populateOptions, isSort) =>
     // const doc = await features.query;
     let query;
     if (isSort) query = Model.find(req.query).sort([['name', 1]]);
-    else query = Model.find(req.query);
+    else query = Model.find(req.query).sort({ createdAt: -1 });
     // let query = Model.find(req.query).sort([['name', 1]]);
     if (populateOptions) query = query.populate(populateOptions);
     const doc = await query;

@@ -26,6 +26,11 @@ export const PATH_HOME = {
     root: path(ROOTS, '/product'),
     view: (name) => path(ROOTS, `product/${name}`),
   },
+  user: {
+    root: path(ROOTS, 'account'),
+    order: path(ROOTS, 'order'),
+    view: (id) => path(ROOTS, `order/view/${id}`),
+  },
 };
 
 export const PATH_PAGE = {
@@ -87,14 +92,14 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/size/new'),
     edit: (id) => path(ROOTS_DASHBOARD, `/size/edit/${id}`),
   },
- 
+
   shipper: {
     root: path(ROOTS_DASHBOARD, '/shipper'),
     list: path(ROOTS_DASHBOARD, '/shipper/list'),
     new: path(ROOTS_DASHBOARD, '/shipper/new'),
     edit: (id) => path(ROOTS_DASHBOARD, `/shipper/edit/${id}`),
   },
- 
+
   brand: {
     root: path(ROOTS_DASHBOARD, '/brand'),
     list: path(ROOTS_DASHBOARD, '/brand/list'),

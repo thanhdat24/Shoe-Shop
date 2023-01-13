@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_HOME } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -16,7 +16,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
+const MENU_OPTIONS_ADMIN = [
   {
     label: 'Trang chủ',
     linkTo: PATH_DASHBOARD.general.analytics,
@@ -24,6 +24,21 @@ const MENU_OPTIONS = [
   {
     label: 'Tài khoản',
     linkTo: PATH_DASHBOARD.user.account,
+  },
+  // {
+  //   label: 'Settings',
+  //   linkTo: PATH_DASHBOARD.user.account,
+  // },
+];
+
+const MENU_OPTIONS_USER = [
+  {
+    label: 'Thông tin tài khoản',
+    linkTo: PATH_HOME.user.root,
+  },
+  {
+    label: 'Đơn hàng của tôi',
+    linkTo: PATH_HOME.user.order,
   },
   // {
   //   label: 'Settings',
@@ -123,11 +138,19 @@ export default function AccountPopover() {
             {user?.email}
           </Typography>
         </Box>
-
         <Divider sx={{ borderStyle: 'dashed' }} />
         {user.role === 'quản trị' && (
           <Stack sx={{ p: 1 }}>
-            {MENU_OPTIONS.map((option) => (
+            {MENU_OPTIONS_ADMIN.map((option) => (
+              <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Stack>
+        )}
+        {user.role === 'khách hàng' && (
+          <Stack sx={{ p: 1 }}>
+            {MENU_OPTIONS_USER.map((option) => (
               <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
                 {option.label}
               </MenuItem>
@@ -136,9 +159,8 @@ export default function AccountPopover() {
         )}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          Đăng xuất
         </MenuItem>
       </MenuPopover>
     </>

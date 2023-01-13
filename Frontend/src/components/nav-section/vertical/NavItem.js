@@ -119,6 +119,7 @@ export function DotIcon({ active }) {
           height: 4,
           borderRadius: '50%',
           bgcolor: 'text.disabled',
+
           transition: (theme) =>
             theme.transitions.create('transform', {
               duration: theme.transitions.duration.shorter,

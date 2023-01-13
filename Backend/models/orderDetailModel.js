@@ -21,7 +21,7 @@ const orderDetailModelSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Product',
     },
-    productImage: { type: String, required: true },
+    productImage: { type: String },
   },
   {
     timestamps: true,

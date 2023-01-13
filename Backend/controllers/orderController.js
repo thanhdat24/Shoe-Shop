@@ -88,6 +88,8 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     );
     const order = await Order.create(objOrder);
     req.order = order;
+
+    console.log('req.order', req.order);
     let arrayItems = [];
     if (req.order.idPromotion !== null) {
       const promotion = await Promotion.find(req.order.idPromotion);
@@ -108,6 +110,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
               idSize: item.idSize,
               idOrder: order._id,
               idProduct: product._id,
+              productImage: item.cover,
             };
             arrayItems.push(itemProduct);
           } else {
@@ -135,6 +138,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
               idSize: item.idSize,
               idOrder: order._id,
               idProduct: product._id,
+              productImage: item.cover,
             };
             arrayItems.push(itemProduct);
           }

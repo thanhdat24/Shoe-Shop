@@ -27,7 +27,7 @@ export default function OrderShipperDetail() {
     //   paymentMethod: {
     //     resultCode: 0,
     //     message: "Giao dịch thành công.",
-    //     name: "Thanh toán tiền mặt khi nhận hàng",
+    //     name: "Thanh toán tiền mặt khi nhận hàng.",
     //   },
     // })
     // );

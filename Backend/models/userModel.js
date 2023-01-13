@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       allowNull: true,
     },
-    avatar: {
+    photoURL: {
       type: String,
     },
     googleId: {

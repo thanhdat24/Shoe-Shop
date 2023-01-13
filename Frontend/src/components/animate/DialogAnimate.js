@@ -66,7 +66,7 @@ export default function DialogAnimate({
                   {title}
                 </DialogTitle>
                 {props.children}
-                {!isInvoice === 'yes' && (
+                {isInvoice !== 'yes' && (
                   <DialogActions>
                     <Button onClick={onClose} variant="contained" color="error">
                       Hủy{' '}
