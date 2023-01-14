@@ -13,6 +13,7 @@ const initialState = {
   success: '',
   orders: null,
   orderDetail: null,
+  orderUpdate: null,
 };
 
 const slice = createSlice({
@@ -45,6 +46,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.orderDetail = action.payload;
     },
+    updateOrderSuccess(state, action) {
+      state.isLoading = false;
+      state.orderUpdate = action.payload;
+    },
+
     // OPEN MODAL
     openModal(state) {
       state.isOpenModal = true;
@@ -107,6 +113,21 @@ export function getOrderDetail(id) {
       const response = await axios.get(`/api/v1/orders/${id}`);
       console.log('response', response);
       dispatch(slice.actions.getOrderDetailSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateOrder(id, updateorder) {
+  console.log("hi")
+  return async () => {
+    dispatch(slice.actions.startLoading());
+
+    try {
+      const response = await axios.put(`/api/v1/orders/${id}`, updateorder);
+      console.log('response455', response);
+      dispatch(slice.actions.updateOrderSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
