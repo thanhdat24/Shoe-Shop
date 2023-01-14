@@ -160,3 +160,65 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     res.status(400).json({ message: err });
   }
 });
+
+exports.updateOrder = catchAsync(async (req, res, next) => {
+  const _id = req.params.id;
+  if (req.body.status === 'Đã hủy') {
+    let doc = await Order.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+    const orderDetail = await OrderDetail.find({ idOrder: _id });
+    if (orderDetail) {
+      await orderDetail.map(async (item) => {
+        let idColorAndSize = await ProductDetail.find({
+          idColor: item.idColor,
+          idSize: item.idSize,
+        });
+        if (idColorAndSize) {
+          idColorAndSize[0].quantity += item.quantity;
+
+          await idColorAndSize[0].save();
+        }
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      result: doc.length,
+      data: doc,
+    });
+  } else if (req.body.status === 'Đã giao hàng') {
+    const doc = await Order.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      result: doc.length,
+      data: doc,
+    });
+  } else {
+    const doc = await Order.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+    res.status(200).json({
+      status: 'success',
+      result: doc.length,
+      data: doc,
+    });
+  }
+});

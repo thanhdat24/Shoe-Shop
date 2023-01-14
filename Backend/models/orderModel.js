@@ -48,6 +48,10 @@ const orderModelSchema = new mongoose.Schema(
         default: true,
       },
     },
+    idShipper: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Shipper',
+    },
     receiveDay: { type: Date },
     status: {
       type: String,
@@ -95,9 +99,13 @@ orderModelSchema.virtual('orderDetail', {
 orderModelSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'idUser',
-  }).populate({
-    path: 'idPromotion',
-  });
+  })
+    .populate({
+      path: 'idPromotion',
+    })
+    .populate({
+      path: 'idShipper',
+    });
 
   next();
 });
