@@ -185,7 +185,6 @@ const slice = createSlice({
       state.checkout.address = null;
       state.checkout.payment = null;
       state.checkout.idPromotion = null;
-      ;
     },
 
     resetProduct(state) {
@@ -246,9 +245,16 @@ const slice = createSlice({
 
     applyDiscount(state, action) {
       const { price, _id } = action.payload;
-      state.checkout.discount = price;
-      state.checkout.total = state.checkout.subtotal - price;
-      state.checkout.idPromotion = _id;
+
+      if (state.checkout.subtotal > price) {
+        state.checkout.discount = price;
+        state.checkout.total = state.checkout.subtotal - price;
+        state.checkout.idPromotion = _id;
+      } else {
+        state.checkout.discount = state.checkout.subtotal;
+        state.checkout.total = 10000;
+        state.checkout.idPromotion = _id;
+      }
     },
 
     applyShipping(state, action) {

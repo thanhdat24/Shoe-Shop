@@ -30,11 +30,11 @@ const slice = createSlice({
       console.log('action', action);
     },
 
-    // CRREATE ADMIN
-    createBrandSuccess(state, action) {
-      console.log('action', action.payload);
+    // CREATE PRODUCT
+    createPaymentSuccess(state, action) {
+      const newProduct = action.payload;
       state.isLoading = false;
-      state.newBrand = action.payload;
+      state.successCreate = [...state.successCreate, newProduct];
     },
 
     getPaymentSuccess(state, action) {
@@ -78,4 +78,12 @@ export function getPayments() {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export function createMoMoPayment(data) {
+  return axios.post('/api/v1/payments/create', data);
+}
+
+export function refundMoMoPayment(data) {
+  return axios.post('/api/v1/payments/refund', data);
 }

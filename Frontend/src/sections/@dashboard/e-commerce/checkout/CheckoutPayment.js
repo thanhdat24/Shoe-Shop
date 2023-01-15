@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 //
 import * as Yup from 'yup';
 // form
@@ -17,8 +18,9 @@ import { FormProvider } from '../../../../components/hook-form';
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
-import { getPayments } from '../../../../redux/slices/payment';
+import { createMoMoPayment, getPayments } from '../../../../redux/slices/payment';
 import { createOrder } from '../../../../redux/slices/order';
+import { fCurrency } from '../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +49,14 @@ const PAYMENT_OPTIONS = [
 ];
 
 export default function CheckoutPayment() {
+  // const { orderId = '', requestId } = useParams();
+  const search = useLocation().search;
+
+  const orderId = new URLSearchParams(search).get('orderId');
+  const requestId = new URLSearchParams(search).get('requestId');
+  console.log('orderId', orderId);
+  console.log('requestId', requestId);
+
   const dispatch = useDispatch();
 
   const { checkout } = useSelector((state) => state.product);
@@ -54,6 +64,10 @@ export default function CheckoutPayment() {
   const { payments } = useSelector((state) => state.payment);
 
   const { total, discount, subtotal, shipping } = checkout;
+
+  const [linkMoMo, setLinkMoMo] = useState('');
+
+  const checkoutLinkRef = useRef();
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -76,7 +90,7 @@ export default function CheckoutPayment() {
   }, [dispatch]);
 
   const PaymentSchema = Yup.object().shape({
-    payment: Yup.string().required('Payment is required!'),
+    payment: Yup.string().required('Vui lòng chọn phương thức thanh toán phù hợp!'),
   });
 
   const defaultValues = {
@@ -91,8 +105,11 @@ export default function CheckoutPayment() {
 
   const {
     handleSubmit,
+    watch,
     formState: { isSubmitting },
   } = methods;
+
+  const values = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -104,16 +121,38 @@ export default function CheckoutPayment() {
       };
       let cartCheckout = {};
       cartCheckout = { ...checkout, paymentMethod };
-      // checkout = { ...checkout, newPayment };
-
       console.log('cartCheckout', cartCheckout);
-      dispatch(createOrder(cartCheckout));
-      handleNextStep();
+
+      if (data.payment === 'Thanh toán qua ví Momo') {
+        const data = await createMoMoPayment({
+          // _id: idShowtime,
+          total: cartCheckout.total,
+          extraData: { cartCheckout },
+          orderInfo: `${cartCheckout.address.fullName} - ${cartCheckout.address.phoneNumber} - ${
+            cartCheckout.address.fullAddress
+          } - Tổng tiền ${fCurrency(cartCheckout.total)}đ`,
+        });
+
+        console.log('dataMomo', data.data.qrCodeUrl);
+
+        setLinkMoMo(data.data.qrCodeUrl);
+        checkoutLinkRef.current.click();
+      } else {
+        dispatch(createOrder(cartCheckout));
+        handleNextStep();
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
+  useEffect(() => {
+    if (orderId) {
+      handleNextStep();
+    }
+  }, [orderId]);
+
+  console.log('values', values.payment);
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -125,7 +164,7 @@ export default function CheckoutPayment() {
             onClick={handleBackStep}
             startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
           >
-            Back
+            Trở lại
           </Button>
         </Grid>
 
@@ -140,9 +179,20 @@ export default function CheckoutPayment() {
             shipping={shipping}
             onEdit={() => handleGotoStep(0)}
           />
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-            Complete Order
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            disabled={!values.payment && 1}
+          >
+            Đặt hàng
           </LoadingButton>
+
+          <a ref={checkoutLinkRef} style={{ display: 'none' }} href={linkMoMo}>
+            checkout momo
+          </a>
         </Grid>
       </Grid>
     </FormProvider>

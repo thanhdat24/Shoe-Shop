@@ -17,6 +17,10 @@ const addressModelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    address: {
+      type: String,
+      trim: true,
+    },
     fullAddress: {
       type: String,
       required: true,

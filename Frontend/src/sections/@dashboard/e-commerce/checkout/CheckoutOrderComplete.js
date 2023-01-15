@@ -1,4 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Divider, Typography, Stack } from '@mui/material';
@@ -12,6 +13,7 @@ import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
 // assets
 import { OrderCompleteIllustration } from '../../../../assets';
+import { createOrder } from '../../../../redux/slices/order';
 
 // ----------------------------------------------------------------------
 
@@ -30,12 +32,43 @@ const DialogStyle = styled(DialogAnimate)(({ theme }) => ({
 export default function CheckoutOrderComplete({ ...other }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const search = useLocation().search;
+
+  const orderId = new URLSearchParams(search).get('orderId');
+  const requestId = new URLSearchParams(search).get('requestId');
+  const resultCode = new URLSearchParams(search).get('resultCode');
+  const message = new URLSearchParams(search).get('message');
+  const transId = new URLSearchParams(search).get('transId');
+
   const { createOrderSuccess } = useSelector((state) => state.order);
-  console.log('createOrderSuccess', createOrderSuccess);
+
+  const { checkout } = useSelector((state) => state.product);
+  console.log('checkout123', checkout);
+
   const handleResetStep = () => {
     dispatch(resetCart());
     navigate(PATH_AUTH.home);
   };
+
+  useEffect(() => {
+    let cartCheckout = {};
+    if (resultCode && checkout) {
+      const paymentMethod = {
+        name: checkout.payment,
+        resultCode,
+        message,
+        orderId,
+        transId,
+      };
+      cartCheckout = {
+        ...checkout,
+        status: Number(resultCode) === 1006 ? 'Đã hủy' : 'Đang xử lý',
+        paymentMethod,
+      };
+
+      dispatch(createOrder(cartCheckout));
+    }
+  }, [checkout]);
 
   return (
     <DialogStyle fullScreen {...other} isInvoice={'yes'}>

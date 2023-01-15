@@ -203,7 +203,7 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
             subtotal >= item.miniPrice ? (
               <div className="grid  gap-4 truncate py-1 px-2 max-h-80" key={index}>
                 <div className="relative">
-                  <div className="relative w-full z-10 flex">
+                  <div className="relative w-full z-10 flex justify-around">
                     <div className="relative opacity-100 h-36">
                       {discountIsChoose !== index && discountIsChoose !== item.code ? (
                         <img
@@ -369,7 +369,7 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
             ) : (
               <div className="grid  gap-4 truncate py-1 px-2 max-h-80" key={index}>
                 <div className="relative">
-                  <div className="relative w-full z-10 flex">
+                  <div className="relative w-full z-10 flex ">
                     <div className="relative opacity-100 h-36">
                       <img
                         className="w-full h-36"

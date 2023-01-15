@@ -71,7 +71,7 @@ export default function CheckoutBillingAddress() {
               onClick={handleBackStep}
               startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
             >
-              Quay lại
+              Trở lại
             </Button>
             <Button size="small" onClick={handleClickOpen} startIcon={<Iconify icon={'eva:plus-fill'} />}>
               Thêm địa chỉ mới

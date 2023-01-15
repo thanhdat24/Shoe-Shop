@@ -1,22 +1,8 @@
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Link,
-  Stack,
-  Tab,
-  Table,
-  TableBody,
-  TableContainer,
-  Tabs,
-  Typography,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { sumBy } from 'lodash';
+import { Box, Button, Card, Container, DialogContent, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { DialogAnimate } from '../components/animate';
 import Iconify from '../components/Iconify';
 import Label from '../components/Label';
 import StatusOrder from '../components/order-status';
@@ -25,24 +11,30 @@ import { TableEmptyRows, TableHeadCustom } from '../components/table';
 import useSettings from '../hooks/useSettings';
 import useTable from '../hooks/useTable';
 import useTabs from '../hooks/useTabs';
-import { getOrders } from '../redux/slices/order';
+import { getOrders, updateOrder } from '../redux/slices/order';
 import { useDispatch, useSelector } from '../redux/store';
 import { PATH_HOME } from '../routes/paths';
-import { InvoiceTableRow } from '../sections/@dashboard/invoice/list';
+import { refundMoMoPayment } from '../redux/slices/payment';
 
 export default function Order() {
-  const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   const { themeStretch } = useSettings();
 
-  const { orders } = useSelector((state) => state.order);
+  const { orders, orderUpdate } = useSelector((state) => state.order);
+
+  const [orderItem, setOrderItem] = useState('');
+
+  const [tableData, setTableData] = useState([]);
 
   // Ds đơn hàng
   useEffect(() => {
     dispatch(getOrders());
-  }, [dispatch]);
+  }, [dispatch, orderUpdate]);
 
   useEffect(() => {
     if (orders?.length) {
@@ -50,7 +42,41 @@ export default function Order() {
     }
   }, [orders]);
 
-  const [tableData, setTableData] = useState([]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = (item) => {
+    setOpen(true);
+    console.log('orderItem', orderItem);
+    setOrderItem(item);
+  };
+  const handleSubmit = async (e) => {
+    if (orderItem.paymentMethod.name === 'Thanh toán qua ví Momo') {
+      const data = await refundMoMoPayment({
+        amount: orderItem.total,
+        transId: Number(orderItem.paymentMethod.transId),
+      });
+      console.log('data?.data', data?.data);
+      if (data?.data.resultCode === 0) {
+        dispatch(updateOrder(orderItem._id, { status: 'Đã hủy' }));
+        setOpen(false);
+        setTimeout(() => {
+          onFilterStatus(e, 'Đã hủy');
+          enqueueSnackbar('Hủy đơn hàng thành công!');
+        }, 500);
+      } else {
+        setOpen(false);
+        enqueueSnackbar(data?.data.message, { variant: 'error' });
+      }
+    } else {
+      dispatch(updateOrder(orderItem._id, { status: 'Đã hủy' }));
+      setOpen(false);
+      setTimeout(() => {
+        onFilterStatus(e, 'Đã hủy');
+        enqueueSnackbar('Hủy đơn hàng thành công!');
+      }, 500);
+    }
+  };
 
   const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
 
@@ -221,11 +247,9 @@ export default function Order() {
                           color="error"
                           variant="outlined"
                           style={{ marginLeft: '10px' }}
-                          // onClick={
-                          //   () => handleClickOpenDelete(order)
-                          // }
+                          onClick={() => handleOpen(order)}
                         >
-                          Hủy
+                          Hủy đơn hàng
                         </Button>
                       </>
                     ) : (
@@ -236,6 +260,18 @@ export default function Order() {
               );
             })}
           </Card>
+
+          <DialogAnimate
+            open={open}
+            onClose={handleClose}
+            onClickSubmit={(e) => handleSubmit(e)}
+            isCancel={'Không phải bây giờ'}
+            isEdit={'Huỷ đơn hàng'}
+          >
+            <DialogContent>
+              <Box>Bạn chắc chắn muốn hủy đơn hàng này?</Box>
+            </DialogContent>
+          </DialogAnimate>
         </Grid>
       </Container>
     </Box>

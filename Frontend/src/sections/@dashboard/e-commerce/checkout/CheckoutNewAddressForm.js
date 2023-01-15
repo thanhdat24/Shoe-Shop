@@ -4,10 +4,20 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Dialog, Button, Divider, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import {
+  Box,
+  Stack,
+  Dialog,
+  Button,
+  Divider,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // _mock
-import { countries } from '../../../../_mock';
+import { province } from '../../../../_mock';
 import { FormProvider, RHFCheckbox, RHFSelect, RHFTextField, RHFRadioGroup } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -21,22 +31,23 @@ CheckoutNewAddressForm.propTypes = {
 
 export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCreateBilling }) {
   const NewAddressSchema = Yup.object().shape({
-    receiver: Yup.string().required('displayName is required'),
-    phone: Yup.string().required('Phone is required'),
+    fullName: Yup.string().required('displayName is required'),
+    phoneNumber: Yup.string().required('Phone is required'),
     address: Yup.string().required('Address is required'),
     city: Yup.string().required('City is required'),
     state: Yup.string().required('State is required'),
   });
 
   const defaultValues = {
-    addressType: 'Home',
-    receiver: '',
+    // fullName,
+    // email,
+    addressType: 'Nhà',
+    fullName: '',
     phone: '',
     address: '',
     city: '',
     state: '',
-    country: countries[0].label,
-    zipcode: '',
+    country: province[0].label,
     isDefault: true,
   };
 
@@ -54,9 +65,9 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
     try {
       onNextStep();
       onCreateBilling({
-        receiver: data.receiver,
-        phone: data.phone,
-        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipcode}`,
+        fullName: data.fullName,
+        phoneNumber: data.phoneNumber,
+        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}`,
         addressType: data.addressType,
         isDefault: data.isDefault,
       });
@@ -67,12 +78,14 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <DialogTitle>Thêm địa chỉ mới</DialogTitle>
-
+      <DialogTitle> Thông tin người nhận hàng</DialogTitle>
+      {/* <Typography variant="h5" gutterBottom>
+        Thông tin người nhận hàng
+      </Typography> */}
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Stack spacing={3}>
-            <RHFRadioGroup name="addressType" options={['Nhà', 'Văn phòng']} />
+            {/* <RHFRadioGroup name="addressType" options={['Nhà', 'Văn phòng']} /> */}
 
             <Box
               sx={{
@@ -82,13 +95,32 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="receiver" label="Full Name" />
-              <RHFTextField name="phone" label="Phone Number" />
+              <RHFTextField name="fullName" label="Họ và tên" />
+              <RHFTextField name="phoneNumber" label="Số điện thoại" />
             </Box>
-
-            <RHFTextField name="address" label="Address" />
+            <Typography variant="h6">Địa chỉ nhận hàng</Typography>
 
             <Box
+              sx={{
+                display: 'grid',
+                rowGap: 3,
+                columnGap: 2,
+                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+              }}
+            >
+              <RHFSelect name="country" label="Tỉnh / Thành phố">
+                {province.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+              <RHFTextField name="phoneNumber" label="Số điện thoại" />
+            </Box>
+
+            {/* <RHFTextField name="address" label="Address" /> */}
+
+            {/* <Box
               sx={{
                 display: 'grid',
                 rowGap: 3,
@@ -98,16 +130,15 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
             >
               <RHFTextField name="city" label="Town / City" />
               <RHFTextField name="state" label="State" />
-              <RHFTextField name="zipcode" label="Zip / Postal Code" />
             </Box>
 
             <RHFSelect name="country" label="Country">
-              {countries.map((option) => (
+              {province.map((option) => (
                 <option key={option.code} value={option.label}>
                   {option.label}
                 </option>
               ))}
-            </RHFSelect>
+            </RHFSelect> */}
 
             <RHFCheckbox name="isDefault" label="Use this address as default." sx={{ mt: 3 }} />
           </Stack>
