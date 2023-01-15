@@ -176,7 +176,12 @@ export default function OrderView() {
                       <TableCell rowSpan={4} />
                       <TableCell>{''}</TableCell>
                       <TableCell>Tạm tính </TableCell>
-                      <TableCell>{fCurrency(orderDetail?.total + orderDetail?.idPromotion.price)} ₫</TableCell>
+                      <TableCell>
+                        {orderDetail?.idPromotion
+                          ? fCurrency(orderDetail?.total + orderDetail?.idPromotion?.price)
+                          : fCurrency(orderDetail?.total)}{' '}
+                        ₫
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>{''}</TableCell>

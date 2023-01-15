@@ -24,7 +24,7 @@ exports.createMoMoPayment = (request, response) => {
   var requestId = partnerCode + new Date().getTime();
   var orderId = requestId;
   var orderInfo = request.body.orderInfo;
-  var redirectUrl = `http://localhost:3000/confirmOrder/${orderId}`;
+  var redirectUrl = `http://localhost:3030/checkout`;
   var ipnUrl = 'https://callback.url/notify';
   // var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
   var amount = request.body.total;

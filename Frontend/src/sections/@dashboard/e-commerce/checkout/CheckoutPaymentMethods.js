@@ -64,7 +64,6 @@ export default function CheckoutPaymentMethods({ paymentOptions }) {
                 <Stack spacing={2}>
                   {paymentOptions?.map((method) => {
                     const { _id, name, icon, desc } = method;
-
                     const selected = field.value === name;
                     if (selected && name) {
                       dispatch(createPaymentMethod(name));

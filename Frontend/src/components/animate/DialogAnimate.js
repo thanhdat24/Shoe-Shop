@@ -16,6 +16,7 @@ DialogAnimate.propTypes = {
   variants: PropTypes.object,
   title: PropTypes.string.isRequired,
   isEdit: PropTypes.bool,
+  isCancel: PropTypes.string,
   isInvoice: PropTypes.string,
 };
 
@@ -28,6 +29,7 @@ export default function DialogAnimate({
   title,
   onClickSubmit,
   isEdit,
+  isCancel = 'Hủy',
   isInvoice,
   ...other
 }) {
@@ -69,7 +71,7 @@ export default function DialogAnimate({
                 {isInvoice !== 'yes' && (
                   <DialogActions>
                     <Button onClick={onClose} variant="contained" color="error">
-                      Hủy{' '}
+                      {isCancel}
                     </Button>
                     <Button type="submit" onClick={onClickSubmit} variant="outlined">
                       {isEdit}

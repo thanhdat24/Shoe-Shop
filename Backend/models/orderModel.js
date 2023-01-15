@@ -99,12 +99,16 @@ orderModelSchema.virtual('orderDetail', {
 orderModelSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'idUser',
+    select: 'googleId email displayName phoneNumber photoURL',
   })
     .populate({
       path: 'idPromotion',
+      select: 'title code price miniPrice activePublic quantity',
     })
     .populate({
       path: 'idShipper',
+      select:
+        'dateOfBirth gender address phoneNumber email fullName avatar licensePlates',
     });
 
   next();
