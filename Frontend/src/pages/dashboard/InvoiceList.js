@@ -181,6 +181,8 @@ export default function InvoiceList() {
       count: getLengthByStatus('Đang vận chuyển'),
     },
     { value: 'Đã giao hàng', label: 'Đã giao hàng', color: 'info', count: getLengthByStatus('Đã giao hàng') },
+    { value: 'Đã nhận', label: 'Đã nhận', color: 'success', count: getLengthByStatus('Đã nhận') },
+    { value: 'Đã đánh giá', label: 'Đã đánh giá', color: 'primary', count: getLengthByStatus('Đã đánh giá') },
     { value: 'Đã hủy', label: 'Đã hủy', color: 'error', count: getLengthByStatus('Đã hủy') },
   ];
 
@@ -217,7 +219,7 @@ export default function InvoiceList() {
                 title="Tất cả"
                 total={tableData.length}
                 percent={100}
-                price={sumBy(tableData, 'total') }
+                price={sumBy(tableData, 'total')}
                 icon="ic:round-receipt"
                 color={theme.palette.primary.main}
               />
@@ -227,9 +229,9 @@ export default function InvoiceList() {
                 percent={getPercentByStatus('Đang xử lý')}
                 price={getTotalPriceByStatus('Đang xử lý')}
                 icon="eva:checkmark-circle-2-fill"
-                color={theme.palette.text.secondary}
+                color={theme.palette.text.main}
               />
-              <InvoiceAnalytic
+              <InvoiceAnalytic sx={{padding:2}}
                 title="Đang vận chuyển"
                 total={getLengthByStatus('Đang vận chuyển')}
                 percent={getPercentByStatus('Đang vận chuyển')}
@@ -237,6 +239,7 @@ export default function InvoiceList() {
                 icon="eva:clock-fill"
                 color={theme.palette.warning.main}
               />
+             
               <InvoiceAnalytic
                 title="Đã giao hàng"
                 total={getLengthByStatus('Đã giao hàng')}

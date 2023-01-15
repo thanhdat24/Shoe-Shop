@@ -14,6 +14,7 @@ const initialState = {
   shippers: null,
   newAccount: null,
   newShipper: null,
+  shipperDetail: null,
   promotionDetail: null,
 };
 
@@ -48,6 +49,10 @@ const slice = createSlice({
     getShippersSuccess(state, action) {
       state.isLoading = false;
       state.shippers = action.payload;
+    },
+    getShipperDetailSuccess(state, action) {
+      state.isLoading = false;
+      state.shipperDetail = action.payload;
     },
 
     getPromotionDetailSuccess(state, action) {
@@ -118,6 +123,18 @@ export function getShippers() {
       const response = await axios.get('/api/v1/shippers');
       console.log('response', response);
       dispatch(slice.actions.getShippersSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getShipperDetail(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/v1/shippers/${id}`);
+      console.log('response', response);
+      dispatch(slice.actions.getShipperDetailSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

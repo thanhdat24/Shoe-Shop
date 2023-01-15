@@ -9,7 +9,7 @@ router
   .get(shipperController.getAllShipper);
 
 router
-  .route('/:shipperId')
+  .route('/:id')
   .delete(shipperController.deleteShipper)
   .get(shipperController.getDetailShipper)
   .put(shipperController.updateShipper);

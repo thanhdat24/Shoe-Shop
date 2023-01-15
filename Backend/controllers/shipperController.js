@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError');
 
-exports.getDetailShipper = factory.getOne();
+exports.getDetailShipper = factory.getOne(Shipper);
 exports.updateShipper = factory.updateOne(Shipper);
 exports.deleteShipper = factory.deleteOne(Shipper);
 exports.createShipper = factory.createOne(Shipper);

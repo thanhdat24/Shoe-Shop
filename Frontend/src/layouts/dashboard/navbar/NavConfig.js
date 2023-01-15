@@ -148,7 +148,7 @@ const navConfig = [
         icon: ICONS.invoice,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.invoice.list },
-          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
+          // { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
           { title: 'Tạo', path: PATH_DASHBOARD.invoice.new },
           { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
         ],

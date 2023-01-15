@@ -19,7 +19,7 @@ InvoiceAnalytic.propTypes = {
 
 export default function InvoiceAnalytic({ title, total, icon, color, percent, price }) {
   return (
-    <Stack direction="row" alignItems="center" justifyContent="center" sx={{ width: 1, minWidth: 200 }}>
+    <Stack direction="row" alignItems="center" justifyContent="center" sx={{ width: 1, minWidth: 240 }}>
       <Stack alignItems="center" justifyContent="center" sx={{ position: 'relative' }}>
         <Iconify icon={icon} sx={{ color, width: 24, height: 24, position: 'absolute' }} />
 
