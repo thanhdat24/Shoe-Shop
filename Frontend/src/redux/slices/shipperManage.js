@@ -16,7 +16,6 @@ const initialState = {
   accountList: null,
   adminUpdate: null,
   accessToken: null,
-
 };
 
 const slice = createSlice({
@@ -135,16 +134,20 @@ export function updateAdmin(updateAdmin, id) {
   };
 }
 
-export function login(value) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.post('/api/v1/shippers/login-shipper', value);
-      console.log('response', response);
-      dispatch(slice.actions.loginSuccess(response.data));
-    } catch (error) {
-      console.log('error', error);
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+// export function login(value) {
+//   return async () => {
+//     dispatch(slice.actions.startLoading());
+//     try {
+//       const response = await axios.post('/api/v1/shippers/login-shipper', value);
+//       console.log('response', response);
+//       dispatch(slice.actions.loginSuccess(response.data));
+//     } catch (error) {
+//       console.log('error', error);
+//       dispatch(slice.actions.hasError(error));
+//     }
+//   };
+// }
+
+export function login(data) {
+  return axios.post('api/v1/shippers/login-shipper', data);
 }

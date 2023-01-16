@@ -9,15 +9,11 @@ import Tab from '@mui/material/Tab';
 // import PersonIcon from "@mui/icons-material/Person";
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-// import RestoreIcon from "@mui/icons-material/Restore";
-// import FavoriteIcon from "@mui/icons-material/Favorite";
-// import LocationOnIcon from "@mui/icons-material/LocationOn";
-// import ListAltIcon from '@mui/icons-material/ListAlt';
-// import PhoneIcon from '@mui/icons-material/Phone';
+import HomeIcon from '@mui/icons-material/Home';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { NavLink } from 'react-router-dom';
-// import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { NavLink as RouterLink } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import moment from 'moment';
 // import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -28,6 +24,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Label from '../../components/Label';
 import OrderShipperDetail from './OrderShipperDetail';
+import { PATH_SHIPPER } from '../../routes/paths';
 // import { getOrderList, resetOrder } from '../../redux/action/orderAction';
 function stringToColor(string) {
   let hash = 0;
@@ -594,10 +591,24 @@ export default function OrderListShipper() {
               setValueBottom(newValue);
             }}
           >
-            <BottomNavigationAction label="Đơn hàng" />
-            {/* icon={<ListAltIcon />} */}
-            <BottomNavigationAction label="Cá nhân" />
-            {/* icon={<PersonIcon />} */}
+            <BottomNavigationAction
+              component={RouterLink}
+              to={PATH_SHIPPER.shipper.root}
+              label="Home"
+              icon={<HomeIcon />}
+            />
+            <BottomNavigationAction
+              component={RouterLink}
+              to={PATH_SHIPPER.shipper.order}
+              label="Đơn hàng"
+              icon={<LocalShippingIcon />}
+            />
+            <BottomNavigationAction
+              // component={RouterLink}
+              // to={PATH_SHIPPER.shipper.account}
+              label="Cá nhân"
+              icon={<AccountCircleIcon />}
+            />
           </BottomNavigation>
         </Box>
       </div>

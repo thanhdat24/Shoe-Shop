@@ -227,8 +227,8 @@ export default function Router() {
       ],
     },
     { path: '/shipper/login', element: <LoginShipper /> },
-    { path: '/shipper/orderListShipper', element: <OrderListShipper /> },
-    { path: '/shipper/orderDetailShipper', element: <OrderShipperDetail /> },
+    { path: '/shipper/dashboard', element: <OrderListShipper /> },
+    { path: '/shipper/order', element: <OrderShipperDetail /> },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
@@ -309,6 +309,6 @@ const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 
 // shipper
 
-const LoginShipper = Loadable(lazy(() => import('../pages/Shipper/LoginShipper')));
+const LoginShipper = Loadable(lazy(() => import('../pages/Shipper/login/LoginShipper')));
 const OrderListShipper = Loadable(lazy(() => import('../pages/Shipper/OrderListShipper')));
 const OrderShipperDetail = Loadable(lazy(() => import('../pages/Shipper/OrderShipperDetail')));

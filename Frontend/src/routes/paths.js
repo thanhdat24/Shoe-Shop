@@ -33,6 +33,14 @@ export const PATH_HOME = {
   },
 };
 
+export const PATH_SHIPPER = {
+  shipper: {
+    root: path(ROOTS, 'shipper/dashboard'),
+    order: path(ROOTS, 'shipper/order'),
+    // view: (name) => path(ROOTS, `product/${name}`),
+  },
+};
+
 export const PATH_PAGE = {
   root: '/',
   comingSoon: '/coming-soon',
