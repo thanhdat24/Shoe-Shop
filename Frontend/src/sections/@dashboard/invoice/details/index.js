@@ -25,12 +25,16 @@ import {
   TextareaAutosize,
   DialogContent,
 } from '@mui/material';
+
+import { useSnackbar } from 'notistack';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
+
 import { useParams } from 'react-router';
+import { refundMoMoPayment } from '../../../../redux/slices/payment';
 import { DialogAnimate } from '../../../../components/animate';
-import { getOrderDetail, updateOrder } from '../../../../redux/slices/order';
+import { getOrderDetail, resetOrder, updateOrder } from '../../../../redux/slices/order';
 import { dispatch } from '../../../../redux/store';
 import { getShipperDetail } from '../../../../redux/slices/shipper';
 // utils
@@ -69,7 +73,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
   const { orderUpdate } = useSelector((state) => state.order);
   console.log('shipperDetail', shipperDetail);
   console.log('orderUpdate', orderUpdate);
-
+  const { enqueueSnackbar } = useSnackbar();
   const handleChange = (event) => {
     // dispatch(getShipperDetail(shipper));
     const shipperNew = shippers.filter((item) => item._id === event.target.value);
@@ -103,6 +107,14 @@ export default function InvoiceDetails({ invoice, shippers }) {
   if (!invoice) {
     return null;
   }
+  useEffect(() => {
+    if (orderUpdate) {
+      enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+    }
+    setTimeout(() => {
+      dispatch(resetOrder());
+    }, 5000);
+  }, [orderUpdate]);
 
   // mở khung chọn shipper
 
@@ -121,9 +133,26 @@ export default function InvoiceDetails({ invoice, shippers }) {
     setOpeDialog(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setOpeDialog(false);
-    dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
+    if (invoice?.paymentMethod.name === 'Thanh toán qua ví Momo') {
+      console.log('invoice.total', invoice.total);
+      console.log('invoice.paymentMethod.transId', typeof invoice.paymentMethod.transId);
+      const data = await refundMoMoPayment({
+        amount: invoice.total,
+        transId: Number(invoice.paymentMethod.transId),
+      });
+      console.log('data',  data);
+      if (data?.data.resultCode === 0) {
+        dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
+        enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+      } else {
+        enqueueSnackbar(data?.data.message, { variant: 'error' });
+      }
+    } else {
+      dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
+      enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+    }
   };
   const { orderDetail, address, status, paymentMethod, idUser, idShipper } = invoice;
 
@@ -290,7 +319,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                         <Box sx={{ mt: 2 }} />
                         <Typography>Tạm tính</Typography>
                       </TableCell>
-                      <TableCell align="right" width={120}>
+                      <TableCell align="right" width={140}>
                         <Box sx={{ mt: 2 }} />
                         <Typography>{fCurrency(subtotal)} ₫</Typography>
                       </TableCell>
@@ -301,7 +330,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                         <TableCell align="right">
                           <Typography>Giảm giá</Typography>
                         </TableCell>
-                        <TableCell align="right" width={120}>
+                        <TableCell align="right" width={140}>
                           <Typography sx={{ color: 'error.main' }}>
                             - {fCurrency(invoice.idPromotion?.price)} ₫
                           </Typography>
@@ -314,7 +343,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                       <TableCell align="right">
                         <Typography sx={{ fontWeight: 'bold' }}>Tổng cộng</Typography>
                       </TableCell>
-                      <TableCell align="right" width={120}>
+                      <TableCell align="right" width={140}>
                         <Typography sx={{ fontWeight: 'bold' }}>
                           {fCurrency(subtotal - (invoice.idPromotion?.price ? invoice.idPromotion?.price : 0))} ₫
                         </Typography>

@@ -62,9 +62,9 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
-    resetBrand(state) {
+    resetOrder(state) {
       state.error = null;
-      state.newBrand = '';
+      state.orderUpdate = '';
     },
   },
 });
@@ -73,7 +73,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, resetBrand } = slice.actions;
+export const { openModal, closeModal, selectEvent, resetOrder } = slice.actions;
 
 // ----------------------------------------------------------------------
 
