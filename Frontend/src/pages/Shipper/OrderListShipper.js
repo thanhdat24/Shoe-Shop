@@ -1,10 +1,12 @@
 import { Box, Button, Card, Grid, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
-
+import PlaceIcon from '@mui/icons-material/Place';
+import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 // import SearchIcon from "@mui/icons-material/Search";
 import Tabs from '@mui/material/Tabs';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Tab from '@mui/material/Tab';
 // import PersonIcon from "@mui/icons-material/Person";
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -14,7 +16,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink as RouterLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import moment from 'moment';
 // import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 // import EmailIcon from '@mui/icons-material/Email';
@@ -119,38 +121,258 @@ export default function OrderListShipper() {
   return (
     <div className="h-full">
       <div
-        className=" mx-auto text-center bg-white md:w-96 relative "
+        className=" mx-auto text-center bg-white relative"
         style={{
           boxShadow: 'rgb(0 0 0 / 10%) 0px 0px 5px 2px',
-          borderRadius: '15px',
+          position: 'relative',
           border: '1px solid white',
+          maxWidth: '475px',
+          margin: { xs: 2.5, md: 3 },
+          '& > *': {
+            flexGrow: 1,
+            flexBasis: '50%',
+          },
         }}
       >
-        <Box>
-          {' '}
-          <Box sx={{ backgroundColor: '#57b159', height: '160px' }}>
-            {' '}
-            <Typography
-              sx={{
-                color: 'white',
-                padding: '50px 0 20px 0',
-                fontSize: '25px',
-                fontWeight: 'bold',
-              }}
-            >
-              My Shipments
-            </Typography>
-          </Box>
-        </Box>
         {valueBottom === 0 && (
-          <Box
-            sx={{
-              width: '100%',
-              margin: '10px 0px',
-              height: '560px',
-            }}
-          >
-            <Box sx={{ width: '100%' }}>111111</Box>
+          <Box>
+            <Card className="m-8">
+              {' '}
+              <Grid container sx={{ p: '15px' }} spacing={2}>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Box
+                    style={{ backgroundColor: '#effbf9', padding: '15px 10px', borderRadius: '15px', lineHeight: 2.5 }}
+                  >
+                    <CheckCircleIcon
+                      sx={{ color: '#90e9d5', width: '30px', height: '30px' }}
+                      style={{ fontSize: '36px !important' }}
+                    />
+                    <Typography variant="subtitle2">Đã giao </Typography>
+                    <Typography variant="h4">26</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Box
+                    style={{ backgroundColor: '#fdf9ee', padding: '15px 10px', borderRadius: '15px', lineHeight: 2.5 }}
+                  >
+                    <DeliveryDiningIcon
+                      sx={{
+                        color: '#ddb840',
+                        width: '30px',
+                        height: '30px',
+                      }}
+                      style={{ fontSize: '50px !important' }}
+                    />
+                    <Typography variant="subtitle2">Đang vận chuyển</Typography>
+                    <Typography variant="h4">26</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Box
+                    style={{ backgroundColor: '#fcebf1', padding: '15px 10px', borderRadius: '15px', lineHeight: 2.5 }}
+                  >
+                    <CheckCircleIcon
+                      sx={{ color: '#f0588c', width: '30px', height: '30px' }}
+                      style={{ fontSize: '36px !important' }}
+                    />
+                    <Typography variant="subtitle2">Đã giao </Typography>
+                    <Typography variant="h4">26</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Box
+                    style={{ backgroundColor: '#f0f5fb', padding: '15px 10px', borderRadius: '15px', lineHeight: 2.5 }}
+                  >
+                    <CheckCircleIcon
+                      sx={{ color: '#66a6dd', width: '30px', height: '30px' }}
+                      style={{ fontSize: '36px !important' }}
+                    />
+                    <Typography variant="subtitle2">Đã giao </Typography>
+                    <Typography variant="h4">26</Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Card>
+            <Typography align="left" variant="h6" sx={{ marginLeft: '32px' }}>
+              Đơn hàng mới
+            </Typography>
+            <Box sx={{ maxHeight: 255, overflow: 'auto', marginBottom: '50px' }}>
+              {' '}
+              <Card className="mx-8 my-3">
+                <Box>
+                  <Grid container>
+                    <Grid item xs={4} md={4} sx={{ padding: '10px' }}>
+                      <Box>
+                        {' '}
+                        <img
+                          style={{ borderRadius: '10px', height: '115px' }}
+                          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1099&q=80"
+                          alt="35"
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={8}
+                      md={8}
+                      sx={{
+                        padding: '10px 5px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
+                      }}
+                    >
+                      <Typography align="left" variant="subtitle2">
+                        Teen khach
+                      </Typography>
+                      <Box className="flex ">
+                        {' '}
+                        <PlaceIcon color="primary" />
+                        <Typography align="left" variant="body2">
+                          DDiaj chi
+                        </Typography>
+                      </Box>
+                      <Box className="flex">
+                        <QueryBuilderIcon color="primary" />
+                        <Typography align="left" variant="body2">
+                          time
+                        </Typography>
+                      </Box>
+                      <Box className="flex ">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className="mr-2"
+                          sx={{ marginRight: '10px' }}
+                        >
+                          <Typography variant="body2"> Đồng ý</Typography>
+                        </Button>
+                        <Button variant="contained" color="error" size="small">
+                          <Typography variant="body2"> Từ chối</Typography>
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Card>
+              <Card className="mx-8 my-3">
+                <Box>
+                  <Grid container>
+                    <Grid item xs={4} md={4} sx={{ padding: '10px' }}>
+                      <Box>
+                        {' '}
+                        <img
+                          style={{ borderRadius: '10px', height: '115px' }}
+                          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1099&q=80"
+                          alt="35"
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={8}
+                      md={8}
+                      sx={{
+                        padding: '10px 5px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
+                      }}
+                    >
+                      <Typography align="left" variant="subtitle2">
+                        Teen khach
+                      </Typography>
+                      <Box className="flex ">
+                        {' '}
+                        <PlaceIcon color="primary" />
+                        <Typography align="left" variant="body2">
+                          DDiaj chi
+                        </Typography>
+                      </Box>
+                      <Box className="flex">
+                        <QueryBuilderIcon color="primary" />
+                        <Typography align="left" variant="body2">
+                          time
+                        </Typography>
+                      </Box>
+                      <Box className="flex ">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className="mr-2"
+                          sx={{ marginRight: '10px' }}
+                        >
+                          <Typography variant="body2"> Đồng ý</Typography>
+                        </Button>
+                        <Button variant="contained" color="error" size="small">
+                          <Typography variant="body2"> Từ chối</Typography>
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Card>
+              <Card className="mx-8 my-3">
+                <Box>
+                  <Grid container>
+                    <Grid item xs={4} md={4} sx={{ padding: '10px' }}>
+                      <Box>
+                        {' '}
+                        <img
+                          style={{ borderRadius: '10px', height: '115px' }}
+                          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1099&q=80"
+                          alt="35"
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={8}
+                      md={8}
+                      sx={{
+                        padding: '10px 5px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
+                      }}
+                    >
+                      <Typography align="left" variant="subtitle2">
+                        Teen khach
+                      </Typography>
+                      <Box className="flex ">
+                        {' '}
+                        <PlaceIcon color="primary" />
+                        <Typography align="left" variant="body2">
+                          DDiaj chi
+                        </Typography>
+                      </Box>
+                      <Box className="flex">
+                        <QueryBuilderIcon color="primary" />
+                        <Typography align="left" variant="body2">
+                          time
+                        </Typography>
+                      </Box>
+                      <Box className="flex ">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className="mr-2"
+                          sx={{ marginRight: '10px' }}
+                        >
+                          <Typography variant="body2"> Đồng ý</Typography>
+                        </Button>
+                        <Button variant="contained" color="error" size="small">
+                          <Typography variant="body2"> Từ chối</Typography>
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Card>
+            </Box>
           </Box>
         )}
         {valueBottom === 1 && (
@@ -159,7 +381,7 @@ export default function OrderListShipper() {
               sx={{
                 width: '100%',
                 margin: '10px 0px',
-                height: '560px',
+             
               }}
             >
               <Box sx={{ width: '100%' }}>
@@ -230,7 +452,8 @@ export default function OrderListShipper() {
             overflow: 'hidden',
             position: 'absolute',
             bottom: 0,
-
+            left: 0,
+            right: 0,
             width: '100%',
             boxShadow: 'rgb(100 100 111 / 18%) 1px -2px 8px 4px',
           }}

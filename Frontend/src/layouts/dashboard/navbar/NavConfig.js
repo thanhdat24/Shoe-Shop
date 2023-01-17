@@ -54,7 +54,7 @@ const navConfig = [
       },
       // PROMOTION
       {
-        title: 'promotion',
+        title: 'Khuyến mãi',
         path: PATH_DASHBOARD.promotion.root,
         icon: ICONS.promotion,
         children: [
@@ -135,9 +135,8 @@ const navConfig = [
           { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
           { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
           { title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.eCommerce.new },
+
           { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
 

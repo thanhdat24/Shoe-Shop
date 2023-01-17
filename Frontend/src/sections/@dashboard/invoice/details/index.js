@@ -107,14 +107,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
   if (!invoice) {
     return null;
   }
-  useEffect(() => {
-    if (orderUpdate) {
-      enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
-    }
-    setTimeout(() => {
-      dispatch(resetOrder());
-    }, 5000);
-  }, [orderUpdate]);
+
 
   // mở khung chọn shipper
 
@@ -125,6 +118,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
   const hanldeUpdate = () => {
     setOpenInfo(true);
     dispatch(updateOrder(id, { ...invoice, status: 'Đang vận chuyển', idShipper: shipper._id }));
+    enqueueSnackbar('Cập nhật shipper cho đơn hàng thành công!');
   };
   const handleCancel = () => {
     setOpeDialog(true);
@@ -145,13 +139,13 @@ export default function InvoiceDetails({ invoice, shippers }) {
       console.log('data',  data);
       if (data?.data.resultCode === 0) {
         dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
-        enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+        enqueueSnackbar('Hủy đơn hàng thành công!');
       } else {
         enqueueSnackbar(data?.data.message, { variant: 'error' });
       }
     } else {
       dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
-      enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+      enqueueSnackbar('Hủy đơn hàng thành công!');
     }
   };
   const { orderDetail, address, status, paymentMethod, idUser, idShipper } = invoice;

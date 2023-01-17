@@ -14,6 +14,7 @@ import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+
 //
 
 // ----------------------------------------------------------------------
@@ -37,7 +38,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function ShipperTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, fullName, email, role, gender, active, avatar, status } = row;
+  const { name, displayName, email, role, gender, active, avatar, status } = row;
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -56,9 +57,9 @@ export default function ShipperTableRow({ row, selected, onEditRow, onSelectRow,
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         {/* <Avatar alt={name} src={avatar} sx={{ mr: 2 }} /> */}
-        
+
         <Typography variant="subtitle2" noWrap>
-          {fullName}
+          {displayName}
         </Typography>
       </TableCell>
 
@@ -90,26 +91,17 @@ export default function ShipperTableRow({ row, selected, onEditRow, onSelectRow,
             <>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
                   onEditRow();
                   handleCloseMenu();
                 }}
               >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
+                <Iconify icon={'eva:eye-fill'} />
+                Danh sách đơn
               </MenuItem>
             </>
           }
         />
+        
       </TableCell>
     </TableRow>
   );

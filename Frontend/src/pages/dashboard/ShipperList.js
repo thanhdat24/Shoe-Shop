@@ -20,17 +20,26 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  Stack,
+  Tabs,
+  Tab,
 } from '@mui/material';
+
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
+import sumBy from 'lodash/sumBy';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 // import { RHFTextField } from '../../components/hook-form';
+import useTabs from '../../hooks/useTabs';
+import { InvoiceTableRow } from '../../sections/@dashboard/invoice/list';
 import ShipperTableRow from '../../sections/@dashboard/shipper/list/ShipperTableRow';
+
 import ShipperTableToolBar from '../../sections/@dashboard/shipper/list/ShipperTableToolBar';
 import { DialogAnimate } from '../../components/animate';
 import { FormProvider } from '../../components/hook-form';
+import Label from '../../components/Label';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
@@ -53,11 +62,10 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-
+import { getOrders } from '../../redux/slices/order';
 import { getBrands } from '../../redux/slices/brand';
 import { getShippers, resetShipper } from '../../redux/slices/shipper';
-
-
+import InvoiceList from './InvoiceList';
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
@@ -68,10 +76,21 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Trạng thái', align: 'left' },
   { id: '' },
 ];
+const TABLE_HEAD_ORDER = [
+  { id: 'invoiceNumber', label: 'Khách hàng', align: 'left' },
+
+  { id: 'phone', label: 'Số điện thoại', align: 'center' },
+  { id: 'createDay', label: 'Ngày đặt ', align: 'center', width: 140 },
+  { id: 'status', label: 'Trạng thái', align: 'center', width: 140 },
+  { id: 'price', label: 'Giá tiền', align: 'left' },
+  { id: 'payment', label: 'Thanh toán', align: 'center' },
+  { id: '' },
+];
 
 // ----------------------------------------------------------------------
 
 export default function ShipperList() {
+  const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
   const {
     dense,
     page,
@@ -93,12 +112,48 @@ export default function ShipperList() {
     defaultOrderBy: 'createdAt',
   });
   const { enqueueSnackbar } = useSnackbar();
-  const { shippers,newShipper, isLoading, error } = useSelector((state) => state.shipper);
+  const { shippers, newShipper, isLoading, error } = useSelector((state) => state.shipper);
   const { themeStretch } = useSettings();
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const valueRef = useRef('');
+  const [getIdShipper, setIdShipper] = useState('');
+  const [orderShipper, setorderShipper] = useState();
+
+  useEffect(() => {
+    dispatch(getOrders());
+  }, [dispatch]);
+  console.log('orders', orders);
+  useEffect(() => {
+    if (orders && getIdShipper) {
+      const shipperOrder = orders?.filter((item) => item?.idShipper?._id === getIdShipper);
+      setorderShipper(shipperOrder);
+    }
+  }, [orders, getIdShipper]);
+
+  console.log('orderShipper', orderShipper);
+  const getLengthByStatus = (status) => orderShipper?.filter((item) => item.status === status).length;
+
+  const TABS = [
+    { value: 'all', label: 'Tất cả', color: 'primary', count: orderShipper?.length },
+
+    {
+      value: 'Đang vận chuyển',
+      label: 'Đang vận chuyển',
+      color: 'warning',
+      count: getLengthByStatus('Đang vận chuyển'),
+    },
+    { value: 'Đã giao hàng', label: 'Đã giao hàng', color: 'info', count: getLengthByStatus('Đã giao hàng') },
+    { value: 'Đã nhận', label: 'Đã nhận', color: 'success', count: getLengthByStatus('Đã nhận') },
+    { value: 'Đã đánh giá', label: 'Đã đánh giá', color: 'primary', count: getLengthByStatus('Đã đánh giá') },
+  ];
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
   const ChangePassWordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Old Password is required'),
     newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
@@ -121,7 +176,7 @@ export default function ShipperList() {
 
   const onSubmit = async (data) => {
     try {
-    //   dispatch(createSize(data));
+      //   dispatch(createSize(data));
       console.log(data);
       setOpen(false);
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -132,26 +187,17 @@ export default function ShipperList() {
     }
   };
 
-
-    // useEffect(() => {
-    //   if (error) {
-    //     enqueueSnackbar('Thêm shipper không thành công!', { variant: 'error' });
-    //   } else if (newShipper) {
-    //     console.log('234', newShipper);
-    //     dispatch(getShippers());
-    //     enqueueSnackbar('Thêm shipper thành công!');
-    //     // navigate(PATH_DASHBOARD.user.list);
-    //   }
-    //   setTimeout(() => {
-    //     dispatch(resetShipper());
-    //   }, 3000);
-    // }, [error, newShipper]);
-
-
-
-
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleSubmitDialog = () => {
+    console.log('#54');
+  };
+
+  const handleViewRow = (id) => {
+    console.log('iddd', id);
+    setIdShipper(id);
+    // navigate(PATH_DASHBOARD.invoice.view(id));
   };
 
   const handleCreate = () => {
@@ -159,7 +205,6 @@ export default function ShipperList() {
     // dispatch(createBrand({ name: valueRef.current.value }));
   };
 
-  const dispatch = useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -197,13 +242,16 @@ export default function ShipperList() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    console.log('id435', id);
+    setIdShipper(id);
+    setOpenDialog(true);
   };
-
+  console.log('getIdShipper', getIdShipper);
   const dataFiltered = applySortFilter({
     tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    filterStatus,
   });
 
   const denseHeight = dense ? 60 : 80;
@@ -255,41 +303,119 @@ export default function ShipperList() {
             </DialogContent>
           </FormProvider>
         </DialogAnimate>
-
-        {/* <Dialog open={open}> */}
-        {/* <FormProvider
-          methods={methods}
-          onSubmit={handleSubmit(onSubmit)}
-         
+        <DialogAnimate
+          maxWidth="lg"
+          open={openDialog}
+          isEdit={'Tạo'}
+          isInvoice={'yes'}
+          onClose={handleCloseDialog}
+          title={'Danh sách đơn hàng'}
+          onClickSubmit={handleSubmitDialog}
         >
-         
-        
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Tên kích thước"
-            type="text"
-            fullWidth
-            name="name"
-            id="outlined-basic"
-            variant="outlined"
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Mã màu"
-            type="text"
-            fullWidth
-            name="color"
-            id="outlined-basic"
-            variant="outlined"
-          />
-          
-          <Button type="submit" variant="outlined">
-            Tạo{' '}
-          </Button>
-        </FormProvider> */}
-        {/* </Dialog> */}
+          <DialogContent>
+            <Tabs
+              allowScrollButtonsMobile
+              variant="scrollable"
+              scrollButtons="auto"
+              value={filterStatus}
+              onChange={onFilterStatus}
+              sx={{ px: 2, bgcolor: 'background.neutral' }}
+            >
+              {TABS.map((tab) => (
+                <Tab
+                  disableRipple
+                  key={tab.value}
+                  value={tab.value}
+                  label={
+                    <Stack spacing={1} direction="row" alignItems="center">
+                      <div>{tab.label}</div> <Label color={tab.color}> {tab.count} </Label>
+                    </Stack>
+                  }
+                />
+              ))}
+            </Tabs>
+            <Card sx={{ mb: 5 }}>
+              <Scrollbar>
+                <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+                  {selected.length > 0 && (
+                    <TableSelectedActions
+                      dense={dense}
+                      numSelected={selected.length}
+                      rowCount={tableData.length}
+                      onSelectAllRows={(checked) =>
+                        onSelectAllRows(
+                          checked,
+                          tableData.map((row) => row.id)
+                        )
+                      }
+                      actions={
+                        <Stack spacing={1} direction="row">
+                          <Tooltip title="Sent">
+                            <IconButton color="primary">
+                              <Iconify icon={'ic:round-send'} />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip title="Download">
+                            <IconButton color="primary">
+                              <Iconify icon={'eva:download-outline'} />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip title="Print">
+                            <IconButton color="primary">
+                              <Iconify icon={'eva:printer-fill'} />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip title="Delete">
+                            <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
+                              <Iconify icon={'eva:trash-2-outline'} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      }
+                    />
+                  )}
+
+                  <Table size={dense ? 'small' : 'medium'}>
+                    <TableHeadCustom
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD_ORDER}
+                      rowCount={tableData.length}
+                      numSelected={selected.length}
+                      onSort={onSort}
+                      onSelectAllRows={(checked) =>
+                        onSelectAllRows(
+                          checked,
+                          tableData.map((row) => row.id)
+                        )
+                      }
+                    />
+
+                    <TableBody>
+                      {orderShipper?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        <InvoiceTableRow
+                          key={row.id}
+                          setIdShipper={getIdShipper}
+                          row={row}
+                          selected={selected.includes(row.id)}
+                          onSelectRow={() => onSelectRow(row.id)}
+                          onViewRow={() => handleViewRow(row._id)}
+                        />
+                      ))}
+
+                      <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+
+                      <TableNoData isNotFound={isNotFound} />
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Scrollbar>
+            </Card>
+          </DialogContent>
+        </DialogAnimate>
         <Card>
           <ShipperTableToolBar filterName={filterName} onFilterName={handleFilterName} />
 
@@ -343,7 +469,7 @@ export default function ShipperList() {
                           selected={selected.includes(row.id)}
                           onSelectRow={() => onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
+                          onEditRow={() => handleEditRow(row._id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -377,7 +503,10 @@ export default function ShipperList() {
 
 // ----------------------------------------------------------------------
 
-function applySortFilter({ tableData, comparator, filterName }) {
+function applySortFilter({ tableData, comparator, filterName, filterStatus }) {
+  // if(orders !== null) tableData = orders;
+  // console.log('orders', orders);
+  console.log('tableData', tableData);
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -390,6 +519,9 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) => item.displayName.toString().indexOf(filterName) !== -1);
+  }
+  if (filterStatus !== 'all') {
+    tableData = tableData.filter((item) => item.status === filterStatus);
   }
 
   return tableData;

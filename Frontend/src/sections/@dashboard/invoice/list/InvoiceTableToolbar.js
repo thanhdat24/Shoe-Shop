@@ -68,7 +68,7 @@ export default function InvoiceTableToolbar({
       </TextField>
 
       <DatePicker
-        label="Ngày đặt"
+        label="Ngày bắt đầu"
         inputFormat="dd/MM/yyyy"
         value={filterStartDate}
         onChange={onFilterStartDate}
@@ -84,7 +84,7 @@ export default function InvoiceTableToolbar({
       />
 
       <DatePicker
-        label="Ngày giao"
+        label="Ngày kết thúc"
         inputFormat="dd/MM/yyyy"
         value={filterEndDate}
         onChange={onFilterEndDate}

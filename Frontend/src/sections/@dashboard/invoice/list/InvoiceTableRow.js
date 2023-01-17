@@ -23,13 +23,26 @@ InvoiceTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  setIdShipper: PropTypes.func,
 };
 
-export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }) {
+export default function InvoiceTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onViewRow,
+  onEditRow,
+  onDeleteRow,
+  setIdShipper,
+}) {
   const theme = useTheme();
 
-  const { address, _id, createdAt, status, total, paymentMethod, idUser } = row;
+  const { address, _id, createdAt, status, total, paymentMethod, idUser, idShipper } = row;
+  console.log('csdg', _id);
   console.log('row', row);
+
+  // setIdShipper === _id;
+  // setIdShipper(_id);
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -109,33 +122,14 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
             <>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Delete
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
                   onViewRow();
                   handleCloseMenu();
+
+                  //  setIdShipper(row?.idShipper._id);
                 }}
               >
                 <Iconify icon={'eva:eye-fill'} />
-                View
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  onEditRow();
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
+                Chi tiết
               </MenuItem>
             </>
           }

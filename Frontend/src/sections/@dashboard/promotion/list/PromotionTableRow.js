@@ -154,34 +154,7 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
           <Button variant="outlined" color="error" onClick={handleClickButtonEnd}>
             Kết thúc
           </Button>
-          {/* <TableMoreMenu
-          open={openMenu}
-          onOpen={handleOpenMenu}
-          onClose={handleCloseMenu}
-          actions={
-            <>
-             <MenuItem
-                onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onEditRow();
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
-              </MenuItem> 
-            </>
-          }
-        /> */}
+
         </TableCell>
       ) : (
         <TableCell align="center">{''}</TableCell>

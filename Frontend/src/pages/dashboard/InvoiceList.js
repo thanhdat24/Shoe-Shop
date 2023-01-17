@@ -135,6 +135,7 @@ export default function InvoiceList() {
   };
 
   const handleEditRow = (id) => {
+    console.log('iddfff', id);
     navigate(PATH_DASHBOARD.invoice.edit(id));
   };
 
@@ -229,9 +230,10 @@ export default function InvoiceList() {
                 percent={getPercentByStatus('Đang xử lý')}
                 price={getTotalPriceByStatus('Đang xử lý')}
                 icon="eva:checkmark-circle-2-fill"
-                color={theme.palette.text.main}
+                color={theme.palette.text.secondary}
               />
-              <InvoiceAnalytic sx={{padding:2}}
+              <InvoiceAnalytic
+                sx={{ padding: 2 }}
                 title="Đang vận chuyển"
                 total={getLengthByStatus('Đang vận chuyển')}
                 percent={getPercentByStatus('Đang vận chuyển')}
@@ -239,7 +241,7 @@ export default function InvoiceList() {
                 icon="eva:clock-fill"
                 color={theme.palette.warning.main}
               />
-             
+
               <InvoiceAnalytic
                 title="Đã giao hàng"
                 total={getLengthByStatus('Đã giao hàng')}
