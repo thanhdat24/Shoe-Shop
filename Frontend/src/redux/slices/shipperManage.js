@@ -37,7 +37,7 @@ const slice = createSlice({
     loginSuccess(state, action) {
       state.isLoading = false;
       state.accessToken = action.payload.accessToken;
-      localStorage.setItem('accessTokenShipper', state.accessToken);
+      localStorage.setItem('accessToken', state.accessToken);
     },
     // CRREATE ADMIN
     createAdminSuccess(state, action) {
@@ -134,20 +134,15 @@ export function updateAdmin(updateAdmin, id) {
   };
 }
 
-// export function login(value) {
-//   return async () => {
-//     dispatch(slice.actions.startLoading());
-//     try {
-//       const response = await axios.post('/api/v1/shippers/login-shipper', value);
-//       console.log('response', response);
-//       dispatch(slice.actions.loginSuccess(response.data));
-//     } catch (error) {
-//       console.log('error', error);
-//       dispatch(slice.actions.hasError(error));
-//     }
-//   };
-// }
-
-export function login(data) {
-  return axios.post('api/v1/shippers/login-shipper', data);
+export function login(value) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/v1/shippers/login-shipper', value);
+      dispatch(slice.actions.loginSuccess(response.data));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
 }

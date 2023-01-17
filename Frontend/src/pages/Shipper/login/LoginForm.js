@@ -31,11 +31,15 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 
-import { login } from '../../../redux/slices/shipperManage';
+import { useDispatch } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
+  const { loginShipper, user } = useAuth();
+  
+  const dispatch = useDispatch();
+
   const theme = useTheme();
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
@@ -71,10 +75,10 @@ export default function LoginForm() {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async (value) => {
+  const onSubmit = async (data) => {
     try {
-      const data = await login(value);
-      console.log('data', data);
+      await loginShipper(data.email, data.password);
+
       enqueueSnackbar('Đăng nhập thành công!');
       navigate(PATH_SHIPPER.shipper.root);
     } catch (error) {

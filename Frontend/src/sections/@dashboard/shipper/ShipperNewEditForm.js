@@ -17,7 +17,7 @@ import { fData } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // _mock
-import { countries } from '../../../_mock';
+import { province } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
@@ -37,7 +37,7 @@ export default function ShipperNewEditForm({ isEdit, currentUser }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { newShipper, error } = useSelector((state) => state.shipper);
-console.log("new",newShipper)
+  console.log('new', newShipper);
   useEffect(() => {
     if (error) {
       enqueueSnackbar('Thêm shipper không thành công!', { variant: 'error' });
@@ -52,7 +52,7 @@ console.log("new",newShipper)
   }, [error, newShipper]);
 
   const NewUserSchema = Yup.object().shape({
-    fullName: Yup.string().required('Name is required'),
+    displayName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
@@ -64,9 +64,9 @@ console.log("new",newShipper)
 
   const defaultValues = useMemo(
     () => ({
-      fullName: currentUser?.fullName || '',
+      displayName: currentUser?.displayName || '',
       email: currentUser?.email || '',
-      avatar: currentUser?.avatar || '',
+      photoURL: currentUser?.photoURL || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
       gender: currentUser?.gender || '',
@@ -124,11 +124,11 @@ console.log("new",newShipper)
       reader.readAsDataURL(file);
       reader.onload = function (e) {
         // sau khi thực hiên xong lênh trên thì set giá trị có được
-        setValue('avatar', e.target.result);
+        setValue('photoURL', e.target.result);
       };
       // if (file) {
       //   setValue(
-      //     'avatarUrl',
+      //     'photoURLUrl',
       //     Object.assign(file, {
       //       preview: URL.createObjectURL(file),
       //     })
@@ -154,7 +154,7 @@ console.log("new",newShipper)
 
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
-                name="avatar"
+                name="photoURL"
                 accept="image/*"
                 maxSize={3145728}
                 onDrop={handleDrop}
@@ -218,7 +218,7 @@ console.log("new",newShipper)
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="fullName" label="Họ tên" />
+              <RHFTextField name="displayName" label="Họ tên" />
               <RHFTextField name="email" label="Email " />
               <RHFTextField name="phoneNumber" label="Số điện thoại" />
 

@@ -83,7 +83,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
   console.log('shipper', shipper);
   const defaultValues = useMemo(
     () => ({
-      fullName: shipperDetail?.fullName || null,
+      displayName: shipperDetail?.displayName || null,
       phoneNumber: shipperDetail?.phoneNumber || null,
       gender: shipperDetail?.gender || '',
       email: shipperDetail?.email || '',
@@ -358,7 +358,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                       <TableRow>
                         <TableCell sx={{ fontSize: '0.875rem', padding: '5px 5px 5px 0' }}>Họ tên</TableCell>
                         <TableCell sx={{ fontSize: '0.875rem', padding: '5px 5px 5px 0' }}>
-                          {idShipper?.fullName}
+                          {idShipper?.displayName}
                         </TableCell>
                         <TableCell sx={{ fontSize: '0.875rem', padding: '5px 5px 5px 0' }}>
                           Trạng thái vận chuyển
@@ -431,7 +431,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                               label="Shipper"
                             >
                               {shippers?.map((item, index) => {
-                                return <MenuItem value={item._id}>{item.fullName}</MenuItem>;
+                                return <MenuItem value={item._id}>{item.displayName}</MenuItem>;
                               })}
                             </Select>
                           </FormControl>
@@ -443,9 +443,9 @@ export default function InvoiceDetails({ invoice, shippers }) {
                               fullWidth
                               disabled="true"
                               margin="dense"
-                              name="fullName"
+                              name="displayName"
                               label="Họ tên"
-                              value={shipper ? shipper?.fullName : ''}
+                              value={shipper ? shipper?.displayName : ''}
                             />
                           </TableCell>
                           <TableCell sx={{ padding: '5px 5px 5px 0' }}>
@@ -574,7 +574,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                         <p>Họ tên</p>
                       </Grid>
                       <Grid item xs={12} sm={6} md={8}>
-                        <p> {invoice.address.fullName}</p>
+                        <p> {invoice.address.displayName}</p>
                       </Grid>
                     </Grid>
                     <Grid container sx={{ marginBottom: '5px' }}>
@@ -617,7 +617,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                     margin="dense"
                     name="note"
                     label="Ghi chú"
-                    value={shipperDetail ? shipperDetail?.fullName : ''}
+                    value={shipperDetail ? shipperDetail?.displayName : ''}
                   />
                 </Table>
               </TableContainer>

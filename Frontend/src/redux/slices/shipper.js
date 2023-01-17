@@ -16,6 +16,7 @@ const initialState = {
   newShipper: null,
   shipperDetail: null,
   promotionDetail: null,
+  orderShipper: null,
 };
 
 const slice = createSlice({
@@ -41,11 +42,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.newShipper = action.payload;
     },
-    // UPDATE ADMIN
-    updatePromotionSuccess(state, action) {
-      state.isLoading = false;
-      state.success = action.payload;
-    },
+
     getShippersSuccess(state, action) {
       state.isLoading = false;
       state.shippers = action.payload;
@@ -55,9 +52,9 @@ const slice = createSlice({
       state.shipperDetail = action.payload;
     },
 
-    getPromotionDetailSuccess(state, action) {
+    getOrderShipperSuccess(state, action) {
       state.isLoading = false;
-      state.promotionDetail = action.payload;
+      state.orderShipper = action.payload;
     },
 
     // OPEN MODAL
@@ -101,21 +98,6 @@ export function createShipper(color) {
   };
 }
 
-export function updatePromotion(updateDiscount, id) {
-  console.log('updateDiscount', updateDiscount);
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.put(`/api/v1/promotions/${id}`, updateDiscount);
-      console.log('response', response);
-      dispatch(slice.actions.updatePromotionSuccess(response.data.data));
-    } catch (error) {
-      console.log('error', error);
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
 export function getShippers() {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -140,14 +122,15 @@ export function getShipperDetail(id) {
     }
   };
 }
-export function getPromotionDetail(id) {
+
+export function getOrderByShipper() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/v1/promotions/${id}`);
-      console.log('response', response);
-      dispatch(slice.actions.getPromotionDetailSuccess(response.data.data));
+      const response = await axios.get('/api/v1/shippers/order-shipper');
+      dispatch(slice.actions.getOrderShipperSuccess(response.data.data));
     } catch (error) {
+      console.log('error', error);
       dispatch(slice.actions.hasError(error));
     }
   };

@@ -389,7 +389,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((item) => item.fullName.toString().indexOf(filterName) !== -1);
+    tableData = tableData.filter((item) => item.displayName.toString().indexOf(filterName) !== -1);
   }
 
   return tableData;

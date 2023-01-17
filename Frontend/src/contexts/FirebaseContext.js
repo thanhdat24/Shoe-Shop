@@ -53,6 +53,7 @@ const AuthContext = createContext({
   ...initialState,
   method: 'firebase',
   login: () => Promise.resolve(),
+  loginShipper: () => Promise.resolve(),
   registerUser: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   logoutAdmin: () => Promise.resolve(),
@@ -112,6 +113,7 @@ function AuthProvider({ children }) {
 
           const response = await axios.get('/api/v1/admin/getMe');
           const { data } = response.data;
+
           dispatch({
             type: 'INITIALISE',
             payload: {
@@ -145,6 +147,19 @@ function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await axios.post('/api/v1/auth/login', {
+      email,
+      password,
+    });
+    const { accessToken, user } = response.data;
+    setSession(accessToken);
+    dispatch({
+      type: 'LOGIN',
+      payload: { isAuthenticated: true, user },
+    });
+  };
+
+  const loginShipper = async (email, password) => {
+    const response = await axios.post('/api/v1/shippers/login-shipper', {
       email,
       password,
     });
@@ -210,12 +225,15 @@ function AuthProvider({ children }) {
           country: profile?.country || '',
           address: profile?.address || '',
           about: profile?.about || '',
+          licensePlates: state?.user?.licensePlates,
           isPublic: profile?.isPublic || false,
+          _id: state?.user?._id,
         },
         login,
         registerUser,
         logout,
         logoutAdmin,
+        loginShipper,
       }}
     >
       {children}

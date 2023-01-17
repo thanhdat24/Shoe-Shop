@@ -64,7 +64,7 @@ export default function CheckoutCart() {
               <Typography variant="h6">
                 Tất cả
                 <Typography component="span" sx={{ color: 'text.secondary' }}>
-                  &nbsp;({totalItems} item)
+                  &nbsp;({totalItems} sản phẩm)
                 </Typography>
               </Typography>
             }
