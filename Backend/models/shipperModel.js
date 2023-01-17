@@ -6,9 +6,9 @@ var findOrCreate = require('mongoose-findorcreate');
 
 const shipperSchema = new mongoose.Schema(
   {
-    fullName: {
+    displayName: {
       type: String,
-      required: [true, 'Please tell us your fullName'],
+      required: [true, 'Please tell us your displayName'],
       trim: true,
     },
     phoneNumber: {
@@ -45,7 +45,7 @@ const shipperSchema = new mongoose.Schema(
       required: [true, 'Please provide your date of birth'],
       allowNull: true,
     },
-    avatar: {
+    photoURL: {
       type: String,
     },
     role: {

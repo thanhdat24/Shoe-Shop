@@ -11,6 +11,13 @@ exports.createAdmin = factory.createOne(Admin);
 exports.updateAdmin = factory.updateOne(Admin);
 exports.deleteAdmin = factory.deleteOne(Admin);
 exports.getDetailAdmin = factory.getOne(Admin);
+exports.getDetail = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    length: 1,
+    data: req.params.user,
+  });
+});
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {

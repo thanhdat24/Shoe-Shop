@@ -1,7 +1,14 @@
 const express = require('express');
 const shipperController = require('../controllers/shipperController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
+
+router.get(
+  '/order-shipper',
+  authController.protect,
+  shipperController.getOrderByShipper
+);
 
 router
   .route('/')

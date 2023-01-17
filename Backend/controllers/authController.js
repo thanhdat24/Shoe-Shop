@@ -6,6 +6,7 @@ const AppError = require('../utils/appError');
 
 const gravatarUrl = require('gravatar');
 const Admin = require('../models/adminModel');
+const Shipper = require('../models/shipperModel');
 const User = require('../models/userModel');
 
 const signToken = (id) => {
@@ -53,7 +54,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     passwordChangeAt: req.body.passwordChangeAt,
-    avatar: avatarUrl,
+    photoURL: avatarUrl,
     address: req.body.address,
   });
 
@@ -81,7 +82,8 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.getMe = (req, res, next) => {
-  req.params.id = req.user._id;
+  req.params.user = req.user;
+  // console.log('req.params.id', req.params.id);
   next();
 };
 
@@ -105,21 +107,26 @@ exports.protect = catchAsync(async (req, res, next) => {
     accessToken,
     process.env.JWT_SECRET
   );
-
+  console.log('decoded', decoded);
   // 3) Check if user still exists
-  const currentUser = await Admin.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError(
-        'The user belonging to this accessToken  does no longer exist',
-        401
-      )
-    );
+  const currentUserAdmin = await Admin.findById(decoded.id);
+  const currentUserShipper = await Shipper.findById(decoded.id);
+  // if (!currentUserAdmin) {
+  //   return next(
+  //     new AppError(
+  //       'The user belonging to this accessToken  does no longer exist',
+  //       401
+  //     )
+  //   );
+  // }
+  if (currentUserAdmin) {
+    req.user = currentUserAdmin;
+  } else {
+    req.user = currentUserShipper;
   }
   // 4) Check if user changed password after the accessToken  was issued
 
   // GRANT ACCESS TO PROTECTED ROUTER
-  req.user = currentUser;
   next();
 });
 

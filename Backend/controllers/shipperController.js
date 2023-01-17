@@ -1,5 +1,6 @@
 const factory = require('./handlerFactory');
 const Shipper = require('../models/shipperModel');
+const Order = require('../models/orderModel');
 const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError');
@@ -9,6 +10,18 @@ exports.updateShipper = factory.updateOne(Shipper);
 exports.deleteShipper = factory.deleteOne(Shipper);
 exports.createShipper = factory.createOne(Shipper);
 exports.getAllShipper = factory.getAll(Shipper);
+exports.getOrderByShipper = catchAsync(async (req, res, next) => {
+  console.log('req.user', req.user);
+  let doc = await Order.find({ idShipper: req.user._id }).populate(
+    'orderDetail'
+  );
+
+  res.status(200).json({
+    status: 'success',
+    length: doc.length,
+    data: doc,
+  });
+});
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
