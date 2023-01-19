@@ -15,6 +15,7 @@ import { getOrders, updateOrder } from '../redux/slices/order';
 import { useDispatch, useSelector } from '../redux/store';
 import { PATH_HOME } from '../routes/paths';
 import { refundMoMoPayment } from '../redux/slices/payment';
+import { fCurrency } from '../utils/formatNumber';
 
 export default function Order() {
   const { enqueueSnackbar } = useSnackbar();
@@ -87,7 +88,6 @@ export default function Order() {
     filterStatus,
   });
 
-  
   console.log('dataFiltered', dataFiltered);
   const TABS = [
     { value: 'all', label: 'Tất cả', color: 'primary', count: tableData.length },
@@ -189,7 +189,7 @@ export default function Order() {
                             </div>
                             <div>
                               <span className="line-through text-gray-400">
-                                {item.idProduct.priceSale.toLocaleString()} đ
+                                {fCurrency(item.idProduct.priceSale)} ₫
                               </span>
                               <span className="text-red-500"> {item.idProduct.price.toLocaleString()} ₫</span>
                             </div>

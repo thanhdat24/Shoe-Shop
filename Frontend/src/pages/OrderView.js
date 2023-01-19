@@ -191,7 +191,7 @@ export default function OrderView() {
                     {orderDetail?.idPromotion && (
                       <TableRow>
                         <TableCell>{''}</TableCell>
-                        <TableCell>Vource giảm giá</TableCell>
+                        <TableCell>Vourcher giảm giá</TableCell>
                         <TableCell>- {fCurrency(orderDetail?.idPromotion.price)} ₫</TableCell>
                       </TableRow>
                     )}

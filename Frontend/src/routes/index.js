@@ -14,6 +14,7 @@ import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import AccountLayoutLayout from '../layouts/account';
+import OrderDetail from '../pages/Shipper/OrderDetail';
 
 // import PromotionCreate from '../pages/dashboard/PromotionCreate';
 // import BrandList from '../pages/dashboard/BrandList';
@@ -228,6 +229,10 @@ export default function Router() {
     },
     { path: '/shipper/login', element: <LoginShipper /> },
     { path: '/shipper/dashboard', element: <OrderListShipper /> },
+    {
+      path: 'shipper',
+      children: [{ path: 'order/view/:id', element: <OrderDetail /> }],
+    },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }

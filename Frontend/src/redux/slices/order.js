@@ -120,13 +120,11 @@ export function getOrderDetail(id) {
 }
 
 export function updateOrder(id, updateOrder) {
-  console.log("hi")
   return async () => {
     dispatch(slice.actions.startLoading());
 
     try {
       const response = await axios.put(`/api/v1/orders/${id}`, updateOrder);
-      console.log('response455', response);
       dispatch(slice.actions.updateOrderSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

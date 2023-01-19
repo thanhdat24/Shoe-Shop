@@ -66,9 +66,9 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function CateList() {
-  const [open, setOpen] = useState(false);
   const valueRef = useRef('');
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };

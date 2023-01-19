@@ -1,8 +1,7 @@
-import { Box, Button, Card, Grid, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import PlaceIcon from '@mui/icons-material/Place';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
-import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 // import SearchIcon from "@mui/icons-material/Search";
 import Tabs from '@mui/material/Tabs';
@@ -14,7 +13,8 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import { Link, NavLink as RouterLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import moment from 'moment';
@@ -28,6 +28,9 @@ import Label from '../../components/Label';
 import { PATH_SHIPPER } from '../../routes/paths';
 import { getShippers, getOrderByShipper } from '../../redux/slices/shipper';
 import useAuth from '../../hooks/useAuth';
+import useTabs from '../../hooks/useTabs';
+import { fCurrency } from '../../utils/formatNumber';
+import Iconify from '../../components/Iconify';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -62,8 +65,12 @@ function a11yProps(index) {
   };
 }
 export default function OrderListShipper() {
+  const theme = useTheme();
+
+  const [tableData, setTableData] = useState([]);
+
   const { user } = useAuth();
-  console.log('user123', user);
+
   const [value, setValue] = React.useState(0);
 
   const dispatch = useDispatch();
@@ -80,6 +87,12 @@ export default function OrderListShipper() {
     dispatch(getShippers());
     dispatch(getOrderByShipper());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (orderShipper?.length) {
+      setTableData(orderShipper);
+    }
+  }, [orderShipper]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -98,18 +111,7 @@ export default function OrderListShipper() {
   // };
   const shipper = JSON.parse(localStorage.getItem('shipper'));
   console.log('shipper', shipper);
-  // useEffect(() => {
-  //   if (orderList === null) dispatch(getOrderList());
-  //   return () => dispatch(resetOrder());
-  // }, [orderList]);
 
-  // useEffect(() => {
-  //   if (successUpdateOrder) {
-  //     dispatch(getOrderList());
-  //   }
-  // }, [successUpdateOrder]);
-  // const order = orderList?.data?.filter((item) => item.shipper?.id === shipper.user.id);
-  // console.log('order', order);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -117,6 +119,34 @@ export default function OrderListShipper() {
   const handleChangeDetail = (id) => {
     // history.push(`/orderListShipper/${id}`);
   };
+
+  const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
+
+  const getLengthByStatus = (status) => tableData.filter((item) => item.status === status).length;
+
+  const dataFiltered = applySortFilter({
+    tableData,
+    filterStatus,
+  });
+
+  console.log('dataFiltered', dataFiltered);
+
+  const TABS = [
+    {
+      value: 'all',
+      label: 'Tất cả',
+      color: 'primary',
+      count: tableData.filter((item) => item.status !== 'Đang xử lý').length,
+    },
+    {
+      value: 'Đang vận chuyển',
+      label: 'Đang vận chuyển',
+      color: 'info',
+      count: getLengthByStatus('Đang vận chuyển'),
+    },
+    { value: 'Đã giao hàng', label: 'Đã giao hàng', color: 'success', count: getLengthByStatus('Đã giao hàng') },
+    { value: 'Hoàn trả', label: 'Hoàn trả', color: 'error', count: getLengthByStatus('Hoàn trả') },
+  ];
 
   return (
     <div className="h-full">
@@ -197,7 +227,6 @@ export default function OrderListShipper() {
               Đơn hàng mới
             </Typography>
             <Box sx={{ maxHeight: 255, overflow: 'auto', marginBottom: '50px' }}>
-              {' '}
               <Card className="mx-8 my-3">
                 <Box>
                   <Grid container>
@@ -238,6 +267,7 @@ export default function OrderListShipper() {
                           time
                         </Typography>
                       </Box>
+
                       <Box className="flex ">
                         <Button
                           variant="contained"
@@ -380,57 +410,142 @@ export default function OrderListShipper() {
             <Box
               sx={{
                 width: '100%',
-                margin: '10px 0px',
-             
+                // margin: '10px 0px',
               }}
             >
-              <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-                    {' '}
-                    <Tab label="Tất cả" {...a11yProps(0)} />
-                    <Tab label="Đang giao" {...a11yProps(1)} />
-                    <Tab label="Đã giao" {...a11yProps(2)} />
-                  </Tabs>
+              <>
+                <Card
+                  sx={{
+                    height: 80,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '20px',
+                  }}
+                >
+                  <Box sx={{ position: 'absolute', top: '42%', left: '30px' }}>
+                    <Link component={RouterLink} to="/shipper/dashboard" onClick={() => setValueBottom(0)}>
+                      <Iconify icon={'eva:arrow-ios-back-fill'} width={25} height={25} />
+                    </Link>
+                  </Box>
+                  <Box sx={{ position: 'absolute', top: '42%', fontWeight: 600 }}>Đơn hàng</Box>
+                </Card>
+                <Box sx={{ width: '100%' }}>
+                  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs
+                      allowScrollButtonsMobile
+                      variant="scrollable"
+                      scrollButtons="auto"
+                      value={filterStatus}
+                      onChange={onFilterStatus}
+                      centered
+                    >
+                      {TABS.map((tab) => (
+                        <Tab
+                          // sx={{ fontSize: 17, textTransform: 'none' }}
+                          // disableRipple
+                          sx={{ marginRight: '10px !important' }}
+                          key={tab.value}
+                          value={tab.value}
+                          label={
+                            <Stack spacing={1} direction="row" alignItems="center">
+                              <div>{tab.label}</div>{' '}
+                              <Label sx={{ marginLeft: '5px !important' }} color={tab.color}>
+                                {' '}
+                                {tab.count}{' '}
+                              </Label>
+                            </Stack>
+                          }
+                        />
+                      ))}
+                    </Tabs>
+                  </Box>
+                  <TabPanel value={value} index={0}>
+                    <Box className="overflow-y-auto " sx={{ height: '31.2rem' }}>
+                      <Grid item xs={12} sx={{ padding: 1 }}>
+                        {dataFiltered?.map((item) => {
+                          return (
+                            <Link component={RouterLink} to={PATH_SHIPPER.shipper.view(item._id)}>
+                              <Card p={3} sx={{ marginBottom: 2 }}>
+                                <Grid container>
+                                  <Grid item xs={4} md={4} sx={{ padding: '10px' }}>
+                                    <Box>
+                                      {' '}
+                                      <img
+                                        style={{ borderRadius: '10px', height: '115px' }}
+                                        src={item.orderDetail[0].productImage}
+                                        alt="35"
+                                      />
+                                    </Box>
+                                  </Grid>
+                                  <Grid
+                                    item
+                                    xs={8}
+                                    md={8}
+                                    sx={{
+                                      padding: '10px 5px',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      justifyContent: 'space-around',
+                                    }}
+                                  >
+                                    <Typography align="left" variant="subtitle2">
+                                      {item.orderDetail[0].idProduct.name}
+                                    </Typography>
+                                    <Box className="flex mt-2">
+                                      {' '}
+                                      <PlaceIcon color="primary" />
+                                      <Typography align="left" variant="body2">
+                                        {item.address.fullAddress}
+                                      </Typography>
+                                    </Box>
+                                    <Box className="flex py-3">
+                                      <QueryBuilderIcon color="primary" />
+                                      <Typography align="left" variant="body2">
+                                        time
+                                      </Typography>
+                                    </Box>
+                                    <Box className="flex mb-2">
+                                      <Typography align="left" variant="body2">
+                                        Tổng tiền {fCurrency(item.total)}
+                                      </Typography>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', justifyContent: 'start' }}>
+                                      <Label
+                                        variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                        color={
+                                          (item.status === 'Đã giao hàng' && 'success') ||
+                                          (item.status === 'Đang vận chuyển' && 'info') ||
+                                          (item.status === 'Đã đánh giá' && 'primary') ||
+                                          (item.status === 'Đã hủy' && 'error') ||
+                                          'default'
+                                        }
+                                        sx={{ fontSize: 14 }}
+                                      >
+                                        {item.status}
+                                      </Label>
+                                    </Box>
+                                  </Grid>
+                                </Grid>
+                              </Card>
+                            </Link>
+                          );
+                        })}
+                      </Grid>
+                    </Box>
+                  </TabPanel>
+                  <TabPanel value={value} index={1}>
+                    <Box className="overflow-y-auto " sx={{ height: '31.2rem' }}>
+                      2
+                    </Box>
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                    <Box className="overflow-y-auto " sx={{ height: '31.2rem' }}>
+                      3
+                    </Box>
+                  </TabPanel>
                 </Box>
-                <TabPanel value={value} index={0}>
-                  <Box className="overflow-y-auto " sx={{ height: '31.2rem' }}>
-                    <Grid item xs={12} sx={{ padding: 1 }}>
-                      <Card sx={{ p: 3 }}>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                          }}
-                        >
-                          123
-                        </Box>
-                      </Card>
-                    </Grid>
-                  </Box>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                  <Box className="overflow-y-auto " sx={{ height: '31.2rem' }}>
-                    2
-                  </Box>
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                  <Box className="overflow-y-auto " sx={{ height: '31.2rem' }}>
-                    3
-                  </Box>
-                </TabPanel>
-              </Box>
-            </Box>
-            <Box sx={{ marginRight: '20px' }}>
-              {/* <Search>
-                    <SearchIconWrapper>
-                      <SearchIcon />
-                    </SearchIconWrapper>
-                    <StyledInputBase
-                      classnName="placeholder:text-slate-400"
-                      placeholder="Search…"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                  </Search> */}
+              </>
             </Box>
           </>
         )}
@@ -478,4 +593,22 @@ export default function OrderListShipper() {
       </div>
     </div>
   );
+}
+
+// ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, filterStatus }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  tableData = stabilizedThis.map((el) => el[0]);
+  // Lọc theo filter
+  if (filterStatus === 'all') {
+    tableData = tableData.filter((item) => item.status !== 'Đang xử lý');
+  }
+  if (filterStatus !== 'all') {
+    tableData = tableData.filter((item) => item.status === filterStatus);
+  }
+
+  console.log('tableData', tableData);
+  return tableData;
 }

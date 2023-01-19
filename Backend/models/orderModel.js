@@ -108,7 +108,7 @@ orderModelSchema.pre(/^find/, function (next) {
     .populate({
       path: 'idShipper',
       select:
-        'dateOfBirth gender address phoneNumber email fullName avatar licensePlates',
+        'dateOfBirth gender address phoneNumber email displayName avatar licensePlates',
     });
 
   next();

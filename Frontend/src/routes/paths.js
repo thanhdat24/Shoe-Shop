@@ -37,6 +37,7 @@ export const PATH_SHIPPER = {
   shipper: {
     root: path(ROOTS, 'shipper/dashboard'),
     order: path(ROOTS, 'shipper/order'),
+    view: (id) => path(ROOTS, `shipper/order/view/${id}`),
     // view: (name) => path(ROOTS, `product/${name}`),
   },
 };
