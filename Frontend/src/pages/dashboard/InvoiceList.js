@@ -68,7 +68,6 @@ export default function InvoiceList() {
   const dispatch = useDispatch();
   const { themeStretch } = useSettings();
   const { orders } = useSelector((state) => state.order);
-  console.log('orders', orders);
   const navigate = useNavigate();
 
   const {
@@ -108,7 +107,6 @@ export default function InvoiceList() {
   const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
 
   const handleFilterName = (filterName) => {
-    console.log('filterName', filterName);
     setFilterName(filterName);
     setPage(0);
   };
@@ -118,7 +116,6 @@ export default function InvoiceList() {
     }
   }, [orders]);
   const handleFilterService = (event) => {
-    console.log('filterService', event.target.value);
     setFilterService(event.target.value);
   };
 
@@ -135,7 +132,6 @@ export default function InvoiceList() {
   };
 
   const handleEditRow = (id) => {
-    console.log('iddfff', id);
     navigate(PATH_DASHBOARD.invoice.edit(id));
   };
 
@@ -314,7 +310,6 @@ export default function InvoiceList() {
               setFilterStartDate(newValue);
             }}
             onFilterEndDate={(newValue) => {
-              console.log('Enđate', newValue);
               setFilterEndDate(newValue);
             }}
             optionsService={SERVICE_OPTIONS}
@@ -460,15 +455,13 @@ function applySortFilter({
 
   if (filterService === 'Mã đơn hàng') {
     if (filterName) {
-      console.log('filterName354', filterName);
-      console.log('tableData', tableData);
+
       // tableData = tableData.filter((item) => item.id === filterName);
     }
     // tableData = tableData.filter((item) => item.address.fullName === filterService);
   }
 
   if (filterService === 'Thông tin khách hàng') {
-    console.log('tableData', tableData);
     if (filterName) {
       tableData = tableData.filter(
         (item) =>

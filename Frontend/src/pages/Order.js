@@ -22,6 +22,8 @@ export default function Order() {
 
   const [open, setOpen] = useState(false);
 
+  const [confirmOrder, setConfirmOrder] = useState(false);
+
   const dispatch = useDispatch();
 
   const { themeStretch } = useSettings();
@@ -45,10 +47,10 @@ export default function Order() {
 
   const handleClose = () => {
     setOpen(false);
+    setConfirmOrder(false);
   };
   const handleOpen = (item) => {
     setOpen(true);
-    console.log('orderItem', orderItem);
     setOrderItem(item);
   };
   const handleSubmit = async (e) => {
@@ -79,9 +81,24 @@ export default function Order() {
     }
   };
 
+  const handleConfirm = (e) => {
+    dispatch(updateOrder(orderItem, { status: 'Đã nhận' }));
+    setConfirmOrder(false);
+    setTimeout(() => {
+      enqueueSnackbar('Xác nhận thành công!');
+    }, 500);
+  };
+
+  const handleConfirmOrder = (id) => {
+    setOrderItem(id);
+    setConfirmOrder(true);
+  };
   const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
 
   const getLengthByStatus = (status) => tableData.filter((item) => item.status === status).length;
+
+  const getLengthComplete = () =>
+    tableData.filter((item) => item.status === 'Đã nhận' || item.status === 'Đã đánh giá').length;
 
   const dataFiltered = applySortFilter({
     tableData,
@@ -99,6 +116,7 @@ export default function Order() {
       count: getLengthByStatus('Đang vận chuyển'),
     },
     { value: 'Đã giao hàng', label: 'Đã giao hàng', color: 'success', count: getLengthByStatus('Đã giao hàng') },
+    { value: 'Hoàn thành', label: 'Hoàn thành', color: 'success', count: getLengthComplete() },
     { value: 'Đã hủy', label: 'Đã hủy', color: 'error', count: getLengthByStatus('Đã hủy') },
   ];
   return (
@@ -125,7 +143,7 @@ export default function Order() {
             >
               {TABS.map((tab) => (
                 <Tab
-                  sx={{ fontSize: 17, textTransform: 'none' }}
+                  sx={{ fontSize: 15, textTransform: 'none', marginRight: '10px !important' }}
                   disableRipple
                   key={tab.value}
                   value={tab.value}
@@ -223,7 +241,7 @@ export default function Order() {
                         {' '}
                         <Button
                           variant="contained"
-                          // onClick={() => handleDoneOrder(order.id)}
+                          onClick={() => handleConfirmOrder(order._id)}
                           sx={{ marginRight: 2, marginTop: 2 }}
                         >
                           Đã nhận
@@ -274,6 +292,18 @@ export default function Order() {
               <Box>Bạn chắc chắn muốn hủy đơn hàng này?</Box>
             </DialogContent>
           </DialogAnimate>
+
+          <DialogAnimate
+            open={confirmOrder}
+            onClose={handleClose}
+            onClickSubmit={(e) => handleConfirm(e)}
+            isCancel={'Không phải bây giờ'}
+            isEdit={'Xác nhận'}
+          >
+            <DialogContent>
+              <Box>Xác nhận đã nhận được hàng?</Box>
+            </DialogContent>
+          </DialogAnimate>
         </Grid>
       </Container>
     </Box>
@@ -288,9 +318,16 @@ function applySortFilter({ tableData, filterStatus }) {
   tableData = stabilizedThis.map((el) => el[0]);
   // Lọc theo filter
 
-  if (filterStatus !== 'all') {
+  if (filterStatus !== 'all' && filterStatus !== 'Hoàn thành') {
     tableData = tableData.filter((item) => item.status === filterStatus);
+  } else {
+    tableData = tableData.filter((item) => item.status === 'Đã nhận' || item.status === 'Đã đánh giá');
   }
+  // console.log('filterStatus', filterStatus);
+  // if (filterStatus === 'Hoàn thành') {
+  //   console.log('1234');
+  //   tableData = tableData.filter((item) => item.status === 'Đã nhận');
+  // }
 
   return tableData;
 }

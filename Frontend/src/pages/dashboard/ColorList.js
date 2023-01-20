@@ -94,7 +94,6 @@ export default function ColorList() {
 
   const { themeStretch } = useSettings();
   const { colors, isLoading, newColor, error } = useSelector((state) => state.color);
-  console.log('newCOlo', newColor);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
@@ -122,7 +121,6 @@ export default function ColorList() {
   const onSubmit = async (data) => {
     try {
       dispatch(createColor(data));
-      console.log(data);
       setOpen(false);
 
       // reset();
@@ -135,7 +133,6 @@ export default function ColorList() {
     if (error) {
       enqueueSnackbar('Thêm màu không thành công!', { variant: 'error' });
     } else if (newColor) {
-      console.log('234', newColor);
       dispatch(getColors());
       enqueueSnackbar('Thêm màu thành công!');
       // navigate(PATH_DASHBOARD.user.list);
@@ -182,8 +179,7 @@ export default function ColorList() {
   };
 
   const [tableData, setTableData] = useState([]);
-  console.log('first', tableData);
-  console.log('colors', colors);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {

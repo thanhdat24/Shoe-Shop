@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
 // @mui
-import { Box, Grid, Card, Button, Typography } from '@mui/material';
+import { Box, Grid, Card, Button, Typography, DialogContent } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { onBackStep, onNextStep, createBilling } from '../../../../redux/slices/product';
@@ -13,7 +14,8 @@ import Iconify from '../../../../components/Iconify';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutNewAddressForm from './CheckoutNewAddressForm';
-import { getAddress } from '../../../../redux/slices/address';
+import { deleteAddress, getAddress, resetAddress } from '../../../../redux/slices/address';
+import { DialogAnimate } from '../../../../components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -22,12 +24,12 @@ export default function CheckoutBillingAddress() {
   const dispatch = useDispatch();
   const { checkout } = useSelector((state) => state.product);
   const { total, discount, subtotal } = checkout;
-  const { address } = useSelector((state) => state.address);
-  console.log('address', address);
+  const { address, createAddressSuccess, deleteAddressSuccess } = useSelector((state) => state.address);
   //
   useEffect(() => {
     dispatch(getAddress());
-  }, [dispatch]);
+    return dispatch(resetAddress());
+  }, [dispatch, createAddressSuccess, deleteAddressSuccess]);
 
   //
   const [open, setOpen] = useState(false);
@@ -103,13 +105,34 @@ AddressItem.propTypes = {
 };
 
 function AddressItem({ address, onNextStep, onCreateBilling }) {
-  const { fullName, fullAddress, addressType, phoneNumber, isDefault } = address;
+  const { fullName, fullAddress, addressType, phoneNumber, isDefault, _id } = address;
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [idDelete, setIdDelete] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleCreateBilling = () => {
     onCreateBilling(address);
     onNextStep();
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = (id) => {
+    setIdDelete(id);
+    setOpen(true);
+  };
+
+  const handleDeleteAddress = async (e) => {
+    console.log('idDelete', idDelete);
+    dispatch(deleteAddress(idDelete));
+    setOpen(false);
+    setTimeout(() => {
+      enqueueSnackbar('Xoá địa chỉ thành công!');
+    }, 500);
+  };
   return (
     <Card sx={{ p: 3, mb: 3, position: 'relative' }}>
       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -140,14 +163,26 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
         }}
       >
         {!isDefault && (
-          <Button variant="outlined" size="small" color="inherit">
-            Delete
+          <Button variant="outlined" size="small" color="inherit" onClick={(e) => handleOpen(_id)}>
+            Xoá
           </Button>
         )}
         <Box sx={{ mx: 0.5 }} />
         <Button variant="outlined" size="small" onClick={handleCreateBilling}>
           Giao đến địa chỉ này
         </Button>
+
+        <DialogAnimate
+          open={open}
+          onClose={handleClose}
+          onClickSubmit={(e) => handleDeleteAddress()}
+          isCancel={'Hủy bỏ'}
+          isEdit={'Xác nhận'}
+        >
+          <DialogContent>
+            <Box>Xác nhận xoá địa chỉ này?</Box>
+          </DialogContent>
+        </DialogAnimate>
       </Box>
     </Card>
   );

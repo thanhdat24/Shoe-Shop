@@ -112,8 +112,7 @@ export default function ObjectUseList() {
   const { objects, isLoading, error, newObj } = useSelector((state) => state.objectUse);
 
   const [tableData, setTableData] = useState([]);
-  console.log('first', tableData);
-  console.log('objects', objects);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -123,7 +122,6 @@ export default function ObjectUseList() {
     if (error) {
       enqueueSnackbar('Thêm đối tượng sử dụng không thành công!', { variant: 'error' });
     } else if (newObj) {
-      console.log('234', newObj);
 
       enqueueSnackbar('Thêm đối tượng sử dụng  thành công!');
       dispatch(getObjects());

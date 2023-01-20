@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import axiosMethod from 'axios';
 // utils
 import axios from '../../utils/axios';
 //
@@ -11,6 +12,8 @@ const initialState = {
   address: null,
   error: null,
   success: '',
+  createAddressSuccess: '',
+  deleteAddressSuccess: '',
 };
 
 const slice = createSlice({
@@ -30,11 +33,15 @@ const slice = createSlice({
       console.log('action', action);
     },
 
-    // CRREATE ADMIN
-    createBrandSuccess(state, action) {
-      console.log('action', action.payload);
+    // CRREATE ADDRESS
+    createAddressSuccess(state, action) {
       state.isLoading = false;
-      state.newBrand = action.payload;
+      state.createAddressSuccess = action.payload;
+    },
+
+    deleteAddressSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteAddressSuccess = action.payload;
     },
 
     getAddressSuccess(state, action) {
@@ -53,9 +60,10 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
-    resetBrand(state) {
+    resetAddress(state) {
       state.error = null;
-      state.newBrand = '';
+      state.deleteAddressSuccess = '';
+      state.createAddressSuccess = '';
     },
   },
 });
@@ -64,7 +72,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, resetBrand } = slice.actions;
+export const { openModal, closeModal, selectEvent, resetAddress } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -73,9 +81,41 @@ export function getAddress() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/address/getMeAddress');
-        dispatch(slice.actions.getAddressSuccess(response.data.data));
+      dispatch(slice.actions.getAddressSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export function createAddress(data) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/v1/address', data);
+      dispatch(slice.actions.createAddressSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteAddress(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/address/${id}`);
+      dispatch(slice.actions.deleteAddressSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getListProvince(idProvince) {
+  return axiosMethod.get(`https://sheltered-anchorage-60344.herokuapp.com/district?idProvince=${idProvince}`);
+}
+
+export function getListWard(idDistrict) {
+  return axiosMethod.get(`https://sheltered-anchorage-60344.herokuapp.com/commune?idDistrict=${idDistrict}`);
 }

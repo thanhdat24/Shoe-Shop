@@ -85,8 +85,7 @@ export default function EcommerceProductList() {
   const { products, isLoading } = useSelector((state) => state.product);
 
   const [tableData, setTableData] = useState([]);
-  console.log('first', tableData);
-  console.log('products', products);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {

@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
@@ -14,11 +15,16 @@ import {
   DialogContent,
   DialogActions,
   Typography,
+  Autocomplete,
+  TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSnackbar } from 'notistack';
 // _mock
 import { province } from '../../../../_mock';
 import { FormProvider, RHFCheckbox, RHFSelect, RHFTextField, RHFRadioGroup } from '../../../../components/hook-form';
+import { createAddress, getListProvince, getListWard } from '../../../../redux/slices/address';
+import { useDispatch } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -34,20 +40,19 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
     fullName: Yup.string().required('displayName is required'),
     phoneNumber: Yup.string().required('Phone is required'),
     address: Yup.string().required('Address is required'),
-    city: Yup.string().required('City is required'),
-    state: Yup.string().required('State is required'),
   });
-
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
   const defaultValues = {
-    // fullName,
-    // email,
     addressType: 'Nhà',
     fullName: '',
-    phone: '',
+    phoneNumber: '',
     address: '',
+    district: '',
     city: '',
-    state: '',
-    country: province[0].label,
+    ward: '',
     isDefault: true,
   };
 
@@ -58,23 +63,38 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
   const {
     handleSubmit,
+    watch,
+    control,
     formState: { isSubmitting },
   } = methods;
-
+  const values = watch();
+  console.log('values', values);
   const onSubmit = async (data) => {
     try {
-      onNextStep();
-      onCreateBilling({
-        fullName: data.fullName,
-        phoneNumber: data.phoneNumber,
-        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}`,
-        addressType: data.addressType,
-        isDefault: data.isDefault,
-      });
+      dispatch(createAddress(data));
+      onClose();
+      enqueueSnackbar('Thêm địa chỉ thành công!');
     } catch (error) {
       console.error(error);
     }
   };
+  useEffect(async () => {
+    const data = await getListProvince(values.city?.idProvince);
+    console.log('data', data);
+
+    if (data.status === 200) {
+      setDistrictList(data.data);
+    }
+  }, [values.city]);
+
+  useEffect(async () => {
+    const data = await getListWard(values.district?.idDistrict);
+    console.log('dataWard', data);
+
+    if (data.status === 200) {
+      setWardList(data.data);
+    }
+  }, [values.district]);
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -85,8 +105,6 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Stack spacing={3}>
-            {/* <RHFRadioGroup name="addressType" options={['Nhà', 'Văn phòng']} /> */}
-
             <Box
               sx={{
                 display: 'grid',
@@ -108,51 +126,74 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFSelect name="country" label="Tỉnh / Thành phố">
+              {/* <RHFSelect name="city" label="Tỉnh / Thành phố">
                 {province.map((option) => (
-                  <option key={option.code} value={option.label}>
-                    {option.label}
+                  <option key={option.idProvince} value={option.idProvince}>
+                    {option.name}
                   </option>
                 ))}
-              </RHFSelect>
-              <RHFTextField name="phoneNumber" label="Số điện thoại" />
+              </RHFSelect> */}
+              <Controller
+                name="city"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    isOptionEqualToValue={(option, value) => option.idProvince === value.idProvince}
+                    getOptionLabel={(option) => option.name || ''}
+                    onChange={(event, newValue) => field.onChange(newValue)}
+                    options={province.map((options) => options)}
+                    renderInput={(params) => <TextField label="Tỉnh / Thành phố" {...params} />}
+                  />
+                )}
+              />
+
+              <Controller
+                name="district"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    isOptionEqualToValue={(option, value) => option.idDistrict === value.idDistrict}
+                    getOptionLabel={(option) => option.name || ''}
+                    onChange={(event, newValue) => field.onChange(newValue)}
+                    options={districtList?.map((options) => options)}
+                    renderInput={(params) => <TextField label="Quận / Huyện" {...params} />}
+                  />
+                )}
+              />
+
+              <Controller
+                name="ward"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    isOptionEqualToValue={(option, value) => option.idCommune === value.idCommune}
+                    getOptionLabel={(option) => option.name || ''}
+                    onChange={(event, newValue) => field.onChange(newValue)}
+                    options={wardList?.map((options) => options)}
+                    renderInput={(params) => <TextField label="Phường / Xã" {...params} />}
+                  />
+                )}
+              />
+
+              <RHFTextField name="address" label="Địa chỉ cụ thể" />
             </Box>
 
-            {/* <RHFTextField name="address" label="Address" /> */}
-
-            {/* <Box
-              sx={{
-                display: 'grid',
-                rowGap: 3,
-                columnGap: 2,
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-              }}
-            >
-              <RHFTextField name="city" label="Town / City" />
-              <RHFTextField name="state" label="State" />
-            </Box>
-
-            <RHFSelect name="country" label="Country">
-              {province.map((option) => (
-                <option key={option.code} value={option.label}>
-                  {option.label}
-                </option>
-              ))}
-            </RHFSelect> */}
-
-            <RHFCheckbox name="isDefault" label="Use this address as default." sx={{ mt: 3 }} />
+            <RHFCheckbox name="isDefault" label="Sử dụng địa chỉ này làm địa chỉ mặc định." sx={{ mt: 3 }} />
           </Stack>
         </DialogContent>
 
         <Divider />
 
         <DialogActions>
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Giao đến địa chỉ này
-          </LoadingButton>
           <Button color="inherit" variant="outlined" onClick={onClose}>
-            Cancel
+            Huỷ bỏ
           </Button>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            Lưu địa chỉ
+          </LoadingButton>
         </DialogActions>
       </FormProvider>
     </Dialog>

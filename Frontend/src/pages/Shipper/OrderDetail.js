@@ -47,7 +47,7 @@ export default function OrderDetail() {
   };
 
   const handleSubmit = async (e) => {
-    dispatch(updateOrder(id, { status: 'Đã giao hàng' }));
+    dispatch(updateOrder(id , { status: 'Đã giao hàng' }));
     setOpen(false);
     setTimeout(() => {
       enqueueSnackbar('Giao hàng thành công!');

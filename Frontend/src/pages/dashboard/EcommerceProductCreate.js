@@ -23,7 +23,6 @@ export default function EcommerceProductCreate() {
   const { pathname } = useLocation();
   const { name } = useParams();
   const { products } = useSelector((state) => state.product);
-  console.log('products', products);
   const isEdit = pathname.includes('edit');
   const currentProduct = products?.find((product) => paramCase(product.name) === name);
 
