@@ -88,7 +88,7 @@ export default function Editor({
           onChange={onChange}
           modules={modules}
           formats={formats}
-          placeholder="Write something awesome..."
+          placeholder="Viết một cái gì đó ..."
           {...other}
         />
       </RootStyle>

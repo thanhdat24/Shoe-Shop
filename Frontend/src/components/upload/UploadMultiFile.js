@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 //
 import BlockContent from './BlockContent';
 import RejectionFiles from './RejectionFiles';
@@ -39,29 +40,46 @@ export default function UploadMultiFile({
   onRemoveAll,
   helperText,
   sx,
+  isExistUploadRating,
   ...other
 }) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     ...other,
   });
-
   return (
     <Box sx={{ width: '100%', ...sx }}>
-      <DropZoneStyle
-        {...getRootProps()}
-        sx={{
-          ...(isDragActive && { opacity: 0.72 }),
-          ...((isDragReject || error) && {
-            color: 'error.main',
-            borderColor: 'error.light',
-            bgcolor: 'error.lighter',
-          }),
-        }}
-      >
-        <input {...getInputProps()} />
+      {isExistUploadRating ? (
+        <Button
+          variant="outlined"
+          component="label"
+          sx={{
+            margin: '10px 0 20px 0',
+            padding: '4px 0px',
+            width: '24%',
+            textTransform: 'none !important',
+          }}
+          {...getRootProps()}
+        >
+          <CameraAltIcon fontSize="small" /> <span className="ml-2 text-xs">Thêm Hình ảnh</span>
+          {/* <input {...getInputProps()} /> */}
+        </Button>
+      ) : (
+        <DropZoneStyle
+          {...getRootProps()}
+          sx={{
+            ...(isDragActive && { opacity: 0.72 }),
+            ...((isDragReject || error) && {
+              color: 'error.main',
+              borderColor: 'error.light',
+              bgcolor: 'error.lighter',
+            }),
+          }}
+        >
+          <input {...getInputProps()} />
 
-        <BlockContent />
-      </DropZoneStyle>
+          <BlockContent />
+        </DropZoneStyle>
+      )}
 
       {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
 

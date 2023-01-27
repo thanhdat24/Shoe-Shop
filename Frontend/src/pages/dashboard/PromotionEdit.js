@@ -48,7 +48,6 @@ export default function PromotionEdit() {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { promotionDetail, isLoading, success,error } = useSelector((state) => state.promotion);
-  console.log('promotionDetail', promotionDetail);
   const [effectiveTime, setEffectiveTime] = useState([null, null]);
   const codeRegExp = /^[A-Za-z0-9_-]{5,10}$/;
 
@@ -84,7 +83,6 @@ export default function PromotionEdit() {
 
     validationSchema: CreateSchema,
     onSubmit: (data) => {
-      console.log('data', data);
       if (isLoading) {
         return;
       }
@@ -98,7 +96,6 @@ export default function PromotionEdit() {
 
   const handleChangePublic = (event, checked) => {
     setFieldValue('activePublic', (checked && true) || false);
-    console.log(event);
   };
   const theme = useTheme();
   const handleAlertCreate = () => {

@@ -41,7 +41,7 @@ export default function MultiFilePreview({ showPreview = false, files, onRemove,
 
   return (
     <>
-      <List disablePadding sx={{ ...(hasFile && { my: 3 }) }}>
+      <List disablePadding sx={{ ...hasFile }}>
         <AnimatePresence>
           {files.map((file) => {
             const { key, name, size, preview } = getFileData(file);
@@ -119,12 +119,12 @@ export default function MultiFilePreview({ showPreview = false, files, onRemove,
 
       {hasFile && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button color="inherit" size="small" onClick={onRemoveAll}>
-            Remove all
+          <Button color="inherit" size="small" onClick={onRemoveAll} variant="outlined">
+            Bỏ tất cả
           </Button>
-          <Button size="small" variant="contained">
-            Upload files
-          </Button>
+          {/* <Button size="small" variant="contained">
+            Tải tệp lên
+          </Button> */}
         </Stack>
       )}
     </>

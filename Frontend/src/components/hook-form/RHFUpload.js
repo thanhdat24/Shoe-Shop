@@ -77,9 +77,10 @@ export function RHFUploadSingleFile({ name, ...other }) {
 
 RHFUploadMultiFile.propTypes = {
   name: PropTypes.string,
+  isExistUploadRating: PropTypes.bool,
 };
 
-export function RHFUploadMultiFile({ name, ...other }) {
+export function RHFUploadMultiFile({ name, isExistUploadRating, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -94,6 +95,7 @@ export function RHFUploadMultiFile({ name, ...other }) {
             accept="image/*"
             files={field.value}
             error={checkError}
+            isExistUploadRating={isExistUploadRating}
             helperText={
               checkError && (
                 <FormHelperText error sx={{ px: 2 }}>

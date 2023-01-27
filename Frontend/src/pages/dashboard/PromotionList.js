@@ -60,8 +60,7 @@ const TABLE_HEAD = [
 
 export default function UserList() {
   const { promotions, isLoading, success, error } = useSelector((state) => state.promotion);
-  console.log('promotions', promotions);
-  console.log('success', success);
+
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
@@ -250,8 +249,6 @@ export default function UserList() {
 // ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName, filterRole }) {
-  console.log('filterName', filterName);
-  // filterStatus = filterStatus === 'active' ? true : (filterStatus === 'banned' || filterStatus !== 'all') && false;
 
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 

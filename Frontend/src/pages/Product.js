@@ -7,12 +7,14 @@ import { Box, Tab, Card, Grid, Divider, Container, Typography } from '@mui/mater
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { ProductDetailsCarousel, ProductDetailsSummary } from '../sections/@dashboard/e-commerce/product-details';
 import { useDispatch, useSelector } from '../redux/store';
+import { getProductRating } from '../redux/slices/rating';
 import { addCart, getProduct, onGotoStep, resetProduct } from '../redux/slices/product';
 import Page from '../components/Page';
 import useSettings from '../hooks/useSettings';
 import { SkeletonProduct } from '../components/skeleton';
 import Iconify from '../components/Iconify';
 import Markdown from '../components/Markdown';
+import ProductDetailsReview from './ProductDetailsReview';
 
 // ----------------------------------------------------------------------
 
@@ -54,12 +56,18 @@ export default function Product() {
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { product, error, checkout } = useSelector((state) => state.product);
+  const { productRatingList } = useSelector((state) => state.rating);
   const { name = '' } = useParams();
 
   useEffect(() => {
     dispatch(getProduct(name));
     return dispatch(resetProduct());
   }, [dispatch, name]);
+  console.log('productRatingList', productRatingList);
+  useEffect(() => {
+    if (product) dispatch(getProductRating(product?._id));
+    // return dispatch(resetProduct());
+  }, [dispatch, product]);
 
   const handleAddCart = (product) => {
     console.log('product123', product);
@@ -101,7 +109,7 @@ export default function Product() {
                     <Typography variant="subtitle1" gutterBottom>
                       {item.title}
                     </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{item.desc}</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
                   </Box>
                 </Grid>
               ))}
@@ -115,6 +123,7 @@ export default function Product() {
                     <Tab
                       disableRipple
                       value="2"
+                      label={`Review`}
                       // label={`Review (${product.reviews.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     />
@@ -128,7 +137,9 @@ export default function Product() {
                     <Markdown children={product.desc} />
                   </Box>
                 </TabPanel>
-                <TabPanel value="2">{/* <ProductDetailsReview product={product} /> */}</TabPanel>
+                <TabPanel value="2">
+                  <ProductDetailsReview product={productRatingList} />
+                </TabPanel>
               </TabContext>
             </Card>
           </>

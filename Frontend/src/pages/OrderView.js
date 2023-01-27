@@ -160,10 +160,8 @@ export default function OrderView() {
                             </div>
                           </TableCell>
                           <TableCell align="flex">
-                            <span className="line-through text-gray-400">
-                              {idProduct?.priceSale.toLocaleString()} đ
-                            </span>
-                            <span className="text-red-500"> {idProduct?.price.toLocaleString()} ₫</span>
+                            <span className="line-through text-gray-400">{fCurrency(idProduct?.priceSale)} đ</span>
+                            <span className="text-red-500"> {fCurrency(idProduct?.price)} ₫</span>
                           </TableCell>
                           <TableCell align="flex">{quantity}</TableCell>
                           <TableCell align="flex">

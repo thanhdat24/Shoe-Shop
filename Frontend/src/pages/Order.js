@@ -1,5 +1,21 @@
-import { Box, Button, Card, Container, DialogContent, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Paper,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { DialogAnimate } from '../components/animate';
@@ -16,6 +32,8 @@ import { useDispatch, useSelector } from '../redux/store';
 import { PATH_HOME } from '../routes/paths';
 import { refundMoMoPayment } from '../redux/slices/payment';
 import { fCurrency } from '../utils/formatNumber';
+import RatingItem from './RatingItem';
+import { changeRating, createRating } from '../redux/slices/rating';
 
 export default function Order() {
   const { enqueueSnackbar } = useSnackbar();
@@ -24,20 +42,36 @@ export default function Order() {
 
   const [confirmOrder, setConfirmOrder] = useState(false);
 
+  const [ratingOrder, setRatingOrder] = useState(false);
+
   const dispatch = useDispatch();
 
   const { themeStretch } = useSettings();
 
   const { orders, orderUpdate } = useSelector((state) => state.order);
 
+  const { successRating, ratingList } = useSelector((state) => state.rating);
+
   const [orderItem, setOrderItem] = useState('');
+
+  const [itemReview, setItemReview] = useState('');
+
+  console.log('itemReview', itemReview);
+
+  console.log('ratingList', ratingList);
+
+  const groupByItemReview = _(itemReview.orderDetail)
+    .groupBy((x) => x.idProduct.id)
+    .map((value, key) => ({ idProduct: key, productDetail: value }))
+    .value();
+  console.log('groupByItemReview', groupByItemReview);
 
   const [tableData, setTableData] = useState([]);
 
   // Ds đơn hàng
   useEffect(() => {
     dispatch(getOrders());
-  }, [dispatch, orderUpdate]);
+  }, [dispatch, orderUpdate, successRating]);
 
   useEffect(() => {
     if (orders?.length) {
@@ -46,8 +80,10 @@ export default function Order() {
   }, [orders]);
 
   const handleClose = () => {
+    dispatch(changeRating({ resetRatingList: '' }));
     setOpen(false);
     setConfirmOrder(false);
+    setRatingOrder(false);
   };
   const handleOpen = (item) => {
     setOpen(true);
@@ -81,7 +117,7 @@ export default function Order() {
     }
   };
 
-  const handleConfirm = (e) => {
+  const handleConfirmOrder = (e) => {
     dispatch(updateOrder(orderItem, { status: 'Đã nhận' }));
     setConfirmOrder(false);
     setTimeout(() => {
@@ -89,10 +125,25 @@ export default function Order() {
     }, 500);
   };
 
-  const handleConfirmOrder = (id) => {
+  const handleReviewOrder = (e) => {
+    dispatch(createRating(ratingList));
+    setRatingOrder(false);
+    setTimeout(() => {
+      onFilterStatus(e, 'Hoàn thành');
+      enqueueSnackbar('Xời, tuyệt vời! Cảm ơn bạn');
+      dispatch(changeRating({ resetRatingList: '' }));
+    }, 500);
+  };
+
+  const handleOpenConfirmOrder = (id) => {
     setOrderItem(id);
     setConfirmOrder(true);
   };
+  const handleOpenReview = (item) => {
+    setItemReview(item);
+    setRatingOrder(true);
+  };
+
   const { currentTab: filterStatus, onChangeTab: onFilterStatus } = useTabs('all');
 
   const getLengthByStatus = (status) => tableData.filter((item) => item.status === status).length;
@@ -229,7 +280,7 @@ export default function Order() {
                         sx={{ marginTop: 2 }}
                         variant="contained"
                         style={{ marginRight: '10px' }}
-                        // onClick={() => handleClickOpen(order.id)}
+                        onClick={() => handleOpenReview(order)}
                       >
                         Đánh giá
                       </Button>
@@ -241,7 +292,7 @@ export default function Order() {
                         {' '}
                         <Button
                           variant="contained"
-                          onClick={() => handleConfirmOrder(order._id)}
+                          onClick={() => handleOpenConfirmOrder(order._id)}
                           sx={{ marginRight: 2, marginTop: 2 }}
                         >
                           Đã nhận
@@ -296,7 +347,7 @@ export default function Order() {
           <DialogAnimate
             open={confirmOrder}
             onClose={handleClose}
-            onClickSubmit={(e) => handleConfirm(e)}
+            onClickSubmit={(e) => handleConfirmOrder(e)}
             isCancel={'Không phải bây giờ'}
             isEdit={'Xác nhận'}
           >
@@ -304,6 +355,40 @@ export default function Order() {
               <Box>Xác nhận đã nhận được hàng?</Box>
             </DialogContent>
           </DialogAnimate>
+
+          <Dialog
+            fullWidth
+            maxWidth="sm"
+            // sx={{ maxWidth: '655px !important' }}
+            sx={{
+              '& .MuiDialog-container': {
+                '& .MuiPaper-root': {
+                  width: '100%',
+                  maxWidth: '670px !important', // Set your width here
+                },
+              },
+            }}
+            open={ratingOrder}
+            onClose={handleClose}
+            // onClickSubmit={(e) => handleReviewOrder(e)}
+          >
+            <Paper>
+              <DialogContent sx={{ paddingBottom: '0px !important' }}>
+                {groupByItemReview?.map((item, index) => (
+                  <RatingItem itemReview={item} idOrder={itemReview._id} idProduct={item.idProduct} />
+                ))}
+              </DialogContent>
+
+              <DialogActions sx={{ paddingTop: '0px !important' }}>
+                <Button onClick={handleClose} variant="contained" color="error">
+                  Trở lại
+                </Button>
+                <Button type="submit" onClick={(e) => handleReviewOrder(e)} variant="outlined">
+                  Hoàn thành
+                </Button>
+              </DialogActions>
+            </Paper>
+          </Dialog>
         </Grid>
       </Container>
     </Box>
