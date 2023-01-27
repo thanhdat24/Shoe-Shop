@@ -22,7 +22,6 @@ import {
   MenuItem,
   InputLabel,
   TextField,
-  TextareaAutosize,
   DialogContent,
 } from '@mui/material';
 
@@ -71,8 +70,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
   const { id } = useParams();
   const { shipperDetail } = useSelector((state) => state.shipper);
   const { orderUpdate } = useSelector((state) => state.order);
-  console.log('shipperDetail', shipperDetail);
-  console.log('orderUpdate', orderUpdate);
+
   const { enqueueSnackbar } = useSnackbar();
   const handleChange = (event) => {
     // dispatch(getShipperDetail(shipper));
@@ -80,7 +78,6 @@ export default function InvoiceDetails({ invoice, shippers }) {
     setShipper(shipperNew[0]);
   };
 
-  console.log('shipper', shipper);
   const defaultValues = useMemo(
     () => ({
       displayName: shipperDetail?.displayName || null,

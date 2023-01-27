@@ -177,7 +177,6 @@ export default function ShipperList() {
   const onSubmit = async (data) => {
     try {
       //   dispatch(createSize(data));
-      console.log(data);
       setOpen(false);
       await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
@@ -191,11 +190,9 @@ export default function ShipperList() {
     setOpen(false);
   };
   const handleSubmitDialog = () => {
-    console.log('#54');
   };
 
   const handleViewRow = (id) => {
-    console.log('iddd', id);
     setIdShipper(id);
     // navigate(PATH_DASHBOARD.invoice.view(id));
   };
