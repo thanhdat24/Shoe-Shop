@@ -38,7 +38,7 @@ export default function AccountChangePassword() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log("data45",data)
+    console.log('data45', data);
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
@@ -52,14 +52,14 @@ export default function AccountChangePassword() {
     <Card sx={{ p: 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="flex-end">
-          <RHFTextField name="oldPassword" type="password" label="Old Password" />
+          <RHFTextField name="oldPassword" type="password" label="Mật khẩu cũ" />
 
-          <RHFTextField name="newPassword" type="password" label="New Password" />
+          <RHFTextField name="newPassword" type="password" label="Mật khẩu mới" />
 
-          <RHFTextField name="confirmNewPassword" type="password" label="Confirm New Password" />
+          <RHFTextField name="confirmNewPassword" type="password" label="Nhập lại mật khẩu mới" />
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save Changes
+            Thay đổi
           </LoadingButton>
         </Stack>
       </FormProvider>

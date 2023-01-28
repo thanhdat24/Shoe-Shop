@@ -15,6 +15,7 @@ import { PATH_AFTER_LOGIN } from '../config';
 import LoadingScreen from '../components/LoadingScreen';
 import AccountLayoutLayout from '../layouts/account';
 import OrderDetail from '../pages/Shipper/OrderDetail';
+import ShipperLayout from '../layouts/shipper';
 
 // import PromotionCreate from '../pages/dashboard/PromotionCreate';
 // import BrandList from '../pages/dashboard/BrandList';
@@ -228,11 +229,22 @@ export default function Router() {
       ],
     },
     { path: '/shipper/login', element: <LoginShipper /> },
-    { path: '/shipper/dashboard', element: <OrderListShipper /> },
     {
       path: 'shipper',
-      children: [{ path: 'order/view/:id', element: <OrderDetail /> }],
+      element: <ShipperLayout />,
+      children: [
+        // { element: <OrderListShipper />, index: true },
+        { path: 'dashboard', element: <OrderListShipper /> },
+        { path: 'account', element: <AccountShipper /> },
+        { path: 'order/view/:id', element: <OrderDetail /> },
+        { path: 'change-password', element: <ChangePassword /> },
+      ],
     },
+    // { path: '/shipper/dashboard', element: <OrderListShipper /> },
+    // {
+    //   path: 'shipper',
+    //   children: [{ path: 'order/view/:id', element: <OrderDetail /> }],
+    // },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
@@ -315,3 +327,5 @@ const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 
 const LoginShipper = Loadable(lazy(() => import('../pages/Shipper/login/LoginShipper')));
 const OrderListShipper = Loadable(lazy(() => import('../pages/Shipper/OrderListShipper')));
+const AccountShipper = Loadable(lazy(() => import('../pages/Shipper/Account')));
+const ChangePassword = Loadable(lazy(() => import('../pages/Shipper/ChangePassword')));
