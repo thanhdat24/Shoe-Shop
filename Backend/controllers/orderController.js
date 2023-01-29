@@ -9,6 +9,19 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllOrder = factory.getAll(Order, { path: 'orderDetail' });
+exports.getMeOrder = catchAsync(async (req, res, next) => {
+  let query = Order.find(req.query).populate('orderDetail');
+  const doc = await query;
+  let filterDoc = doc.filter((item) => item.idUser.id === req.user.id);
+
+  filterDoc.sort((a, b) => b.createdAt - a.createdAt);
+
+  res.status(200).json({
+    status: 'success',
+    length: filterDoc.length,
+    data: filterDoc,
+  });
+});
 exports.getDetailOrder = factory.getOne(Order, { path: 'orderDetail' });
 
 // exports.getDetailOrder = catchAsync(async (req, res, next) => {
