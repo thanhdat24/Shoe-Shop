@@ -20,7 +20,7 @@ export default function CheckoutBillingInfo({ onBackStep }) {
   return (
     <Card sx={{ mb: 3 }}>
       <CardHeader
-        title="Billing Address"
+        title="Địa chỉ giao hàng"
         action={
           <Button size="small" startIcon={<Iconify icon={'eva:edit-fill'} />} onClick={onBackStep}>
             Edit

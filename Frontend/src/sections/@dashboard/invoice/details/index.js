@@ -105,7 +105,6 @@ export default function InvoiceDetails({ invoice, shippers }) {
     return null;
   }
 
-
   // mở khung chọn shipper
 
   const hanldeOpen = () => {
@@ -133,7 +132,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
         amount: invoice.total,
         transId: Number(invoice.paymentMethod.transId),
       });
-      console.log('data',  data);
+      console.log('data', data);
       if (data?.data.resultCode === 0) {
         dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
         enqueueSnackbar('Hủy đơn hàng thành công!');
@@ -565,7 +564,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                         <p>Họ tên</p>
                       </Grid>
                       <Grid item xs={12} sm={6} md={8}>
-                        <p> {invoice.address.displayName}</p>
+                        <p> {invoice.address.fullName}</p>
                       </Grid>
                     </Grid>
                     <Grid container sx={{ marginBottom: '5px' }}>
@@ -593,12 +592,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
             <Scrollbar>
               <TableContainer sx={{ minWidth: 150 }}>
                 <Table>
-                  <TableHead
-                    sx={{
-                      borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-                      '& th': { backgroundColor: 'transparent' },
-                    }}
-                  >
+                  <TableHead>
                     <Typography variant="subtitle1" sx={{ color: '#00ab55' }} noWrap>
                       Ghi chú
                     </Typography>

@@ -48,7 +48,7 @@ export default function AccountLayoutLayout() {
         >
           <Box>
             <HeaderBreadcrumbs
-              heading="Account"
+              heading=""
               sx={{ mb: 0 }}
               links={[{ name: 'Trang chủ', href: PATH_AUTH.home }, { name: 'Thông tin tài khoản' }]}
             />

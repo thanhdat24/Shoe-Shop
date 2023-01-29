@@ -13,6 +13,7 @@ export default function MyAvatar({ ...other }) {
     <Avatar
       src={user?.photoURL}
       alt={user?.displayName}
+      imgProps={{ referrerPolicy: 'no-referrer' }}
       // color={user?.photoURL ? 'default' : createAvatar(user?.displayName).color}
       {...other}
     />

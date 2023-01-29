@@ -47,7 +47,7 @@ export default function OrderDetail() {
   };
 
   const handleSubmit = async (e) => {
-    dispatch(updateOrder(id , { status: 'Đã giao hàng' }));
+    dispatch(updateOrder(id, { status: 'Đã giao hàng' }));
     setOpen(false);
     setTimeout(() => {
       enqueueSnackbar('Giao hàng thành công!');
@@ -280,7 +280,9 @@ export default function OrderDetail() {
                         display: 'flex',
                       }}
                     >
-                      <Item sx={{ paddingLeft: '0px !important' }}>{orderDetail?.address.fullAddress}</Item>
+                      <Item sx={{ paddingLeft: '0px !important', textAlign: 'initial ' }}>
+                        {orderDetail?.address.fullAddress}
+                      </Item>
                     </Grid>
                   </Grid>
                 </Box>

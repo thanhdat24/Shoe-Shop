@@ -60,7 +60,12 @@ export default function InvoiceTableRow({
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar src={idUser?.photoURL} alt={idUser.displayName} sx={{ mr: 2 }} />
+        <Avatar
+          src={idUser?.photoURL}
+          alt={idUser.displayName}
+          sx={{ mr: 2 }}
+          imgProps={{ referrerPolicy: 'no-referrer' }}
+        />
         <Stack>
           <Typography variant="subtitle2" noWrap>
             {address.fullName}

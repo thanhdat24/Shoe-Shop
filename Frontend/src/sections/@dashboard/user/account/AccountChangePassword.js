@@ -15,9 +15,9 @@ export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
 
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
-    newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
-    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+    oldPassword: Yup.string().required('Mật khẩu cũ là bắt buộc'),
+    newPassword: Yup.string().min(6, 'Mật khẩu phải ít nhất 6 kí tự').required('New Password is required'),
+    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Mật khẩu phải trùng khớp'),
   });
 
   const defaultValues = {

@@ -133,6 +133,9 @@ export default function OrderListShipper() {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+  const handleAccept = (item) => {
+    dispatch(updateOrder(item._id, { ...item, status: 'Đã giao hàng' }));
+  };
   const handleCancel = (item) => {
     dispatch(updateOrder(item._id, { ...item, status: 'Đang xử lý' }));
   };
@@ -147,6 +150,11 @@ export default function OrderListShipper() {
 
   const getLengthByStatus = (status) => tableData.filter((item) => item.status === status).length;
 
+  const getLengthComplete = () =>
+    tableData.filter(
+      (item) => item.status === 'Đã giao hàng' || item.status === 'Đã nhận' || item.status === 'Đã đánh giá'
+    ).length;
+
   const dataFiltered = applySortFilter({
     tableData,
     filterStatus,
@@ -157,7 +165,7 @@ export default function OrderListShipper() {
       value: 'all',
       label: 'Tất cả',
       color: 'primary',
-      count: tableData.filter((item) => item.status !== 'Đang xử lý').length,
+      count: tableData.filter((item) => item.status !== 'Đang xử lý' && item.status !== 'Đã hủy').length,
     },
     {
       value: 'Đang vận chuyển',
@@ -165,7 +173,7 @@ export default function OrderListShipper() {
       color: 'info',
       count: getLengthByStatus('Đang vận chuyển'),
     },
-    { value: 'Đã giao hàng', label: 'Đã giao hàng', color: 'success', count: getLengthByStatus('Đã giao hàng') },
+    { value: 'Hoàn thành', label: 'Hoàn thành', color: 'success', count: getLengthComplete() },
     { value: 'Hoàn trả', label: 'Hoàn trả', color: 'error', count: getLengthByStatus('Hoàn trả') },
   ];
   const handleLogout = async () => {
@@ -238,7 +246,7 @@ export default function OrderListShipper() {
               ?.map((item, index) => {
                 return (
                   <Card className="mx-4 my-5">
-                    <Box>
+                    <Link component={RouterLink} to={PATH_SHIPPER.shipper.view(item._id)}>
                       <Grid container>
                         <Grid item xs={4} md={4} sx={{ padding: '10px' }}>
                           <Box>
@@ -277,44 +285,44 @@ export default function OrderListShipper() {
                               {fCurrency(item.total)} ₫
                             </Typography>
                           </Box>
-                          <Box className="flex mt-2">
-                            <Button
-                              onClick={() => {
-                                setOpenDialog(true);
-                                // setGetID(item)
-                              }}
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              style={{ textTransform: 'none' }}
-                              className="mr-2 "
-                              sx={{ marginRight: '10px' }}
-                            >
-                              Đồng ý
-                            </Button>
-                            <DialogAnimate
-                              open={openDialog}
-                              onClose={handleCloseDialog}
-                              onClickSubmit={(e) => handleAccept(item)}
-                              isCancel={'Hủy'}
-                              isEdit={'Xác nhận'}
-                            >
-                              <DialogContent>
-                                <Box>Bạn đã giao hàng thành công?</Box>
-                              </DialogContent>
-                            </DialogAnimate>
-                            <Button
-                              variant="contained"
-                              style={{ textTransform: 'none' }}
-                              color="error"
-                              size="small"
-                              onClick={() => handleCancel(item)}
-                            >
-                              Từ chối
-                            </Button>
-                          </Box>
                         </Grid>
                       </Grid>
+                    </Link>
+                    <Box className="flex mb-2 justify-center">
+                      <Button
+                        onClick={() => {
+                          setOpenDialog(true);
+                          // setGetID(item)
+                        }}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        style={{ textTransform: 'none' }}
+                        className="mr-2 "
+                        sx={{ marginRight: '10px' }}
+                      >
+                        Đồng ý
+                      </Button>
+                      <DialogAnimate
+                        open={openDialog}
+                        onClose={handleCloseDialog}
+                        onClickSubmit={(e) => handleAccept(item)}
+                        isCancel={'Hủy'}
+                        isEdit={'Xác nhận'}
+                      >
+                        <DialogContent>
+                          <Box>Bạn đã giao hàng thành công?</Box>
+                        </DialogContent>
+                      </DialogAnimate>
+                      <Button
+                        variant="contained"
+                        style={{ textTransform: 'none' }}
+                        color="error"
+                        size="small"
+                        onClick={() => handleCancel(item)}
+                      >
+                        Từ chối
+                      </Button>
                     </Box>
                   </Card>
                 );
@@ -475,6 +483,8 @@ export default function OrderListShipper() {
                 <img
                   className="h-full w-full select-none bg-white rounded-full object-cover flex-shrink-0 filter hover:brightness-110"
                   src={user.photoURL}
+                  alt="ph"
+                  referrerpolicy="no-referrer"
                 />
               </Box>
             </Box>
@@ -532,7 +542,7 @@ export default function OrderListShipper() {
             setValueBottom(newValue);
           }}
         >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+          <BottomNavigationAction label="Trang chủ" icon={<HomeIcon />} />
           <BottomNavigationAction label="Đơn hàng" icon={<LocalShippingIcon />} />
           <BottomNavigationAction label="Tài khoản" icon={<AccountCircleIcon />} />
         </BottomNavigation>
@@ -548,12 +558,19 @@ function applySortFilter({ tableData, filterStatus }) {
 
   tableData = stabilizedThis.map((el) => el[0]);
   // Lọc theo filter
-  if (filterStatus === 'all') {
-    tableData = tableData.filter((item) => item.status !== 'Đang xử lý');
-  }
-  if (filterStatus !== 'all') {
+
+  if (filterStatus !== 'all' && filterStatus !== 'Hoàn thành') {
     tableData = tableData.filter((item) => item.status === filterStatus);
+  } else {
+    tableData = tableData.filter(
+      (item) => item.status === 'Đã giao hàng' || item.status === 'Đã nhận' || item.status === 'Đã đánh giá'
+    );
   }
+  // console.log('filterStatus', filterStatus);
+  // if (filterStatus === 'Hoàn thành') {
+  //   console.log('1234');
+  //   tableData = tableData.filter((item) => item.status === 'Đã nhận');
+  // }
 
   return tableData;
 }

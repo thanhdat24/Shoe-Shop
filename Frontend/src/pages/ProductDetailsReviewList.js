@@ -57,6 +57,7 @@ function ReviewItem({ review }) {
       idUser: { photoURL, displayName },
     },
   } = review;
+  console.log('imageRating', imageRating);
 
   const handleClickHelpful = () => {
     setHelpfuls((prev) => !prev);
@@ -158,6 +159,7 @@ function ReviewItem({ review }) {
               width: { md: 64 },
               height: { md: 64 },
             }}
+            imgProps={{ referrerPolicy: 'no-referrer' }}
           />
           <div>
             <Typography variant="subtitle2" noWrap>
@@ -188,34 +190,12 @@ function ReviewItem({ review }) {
           <Typography variant="body2">{content}</Typography>
 
           <RootStyle>
-            <Box sx={{ p: 1 }}>
-              <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
-                <Slider {...settings1} asNavFor={nav2} ref={slider1}>
-                  {imageRating.map((img) => (
-                    <Image
-                      key={img}
-                      alt="large image"
-                      src={img}
-                      ratio="1/1"
-                      onClick={() => handleOpenLightbox(img)}
-                      sx={{ cursor: 'zoom-in' }}
-                    />
-                  ))}
-                </Slider>
-                <CarouselArrowIndex
-                  index={currentIndex}
-                  total={imageRating.length}
-                  onNext={handleNext}
-                  onPrevious={handlePrevious}
-                />
-              </Box>
-            </Box>
             <Box
               sx={{
                 my: 3,
                 '& .slick-current .isActive': { opacity: 1 },
                 ...(imageRating.length === 1 && { maxWidth: THUMB_SIZE * 1 + 16 }),
-                ...(imageRating.length === 2 && { maxWidth: THUMB_SIZE * 2 + 100 }),
+                ...(imageRating.length === 2 && { maxWidth: THUMB_SIZE * 2 + 32 }),
                 ...(imageRating.length === 3 && { maxWidth: THUMB_SIZE * 3 + 48 }),
                 ...(imageRating.length === 4 && { maxWidth: THUMB_SIZE * 3 + 48 }),
                 ...(imageRating.length >= 5 && { maxWidth: THUMB_SIZE * 6 }),
@@ -228,10 +208,6 @@ function ReviewItem({ review }) {
                     height: '100%',
                     position: 'absolute',
                     width: (THUMB_SIZE * 2) / 3,
-                    backgroundImage: (theme) =>
-                      `linear-gradient(to left, ${alpha(theme.palette.background.paper, 0)} 0%, ${
-                        theme.palette.background.paper
-                      } 100%)`,
                   },
                   '&:after': { right: 0, transform: 'scaleX(-1)' },
                 }),
@@ -249,9 +225,6 @@ function ReviewItem({ review }) {
                         height: THUMB_SIZE,
                         borderRadius: 1.5,
                         cursor: 'pointer',
-                        ...(currentIndex === index && {
-                          border: (theme) => `solid 3px ${theme.palette.primary.main}`,
-                        }),
                       }}
                     />
                   </Box>
@@ -259,7 +232,7 @@ function ReviewItem({ review }) {
               </Slider>
             </Box>
           </RootStyle>
-          {/* <Box
+          <Box
             sx={{
               mt: 1,
               display: 'flex',
@@ -281,7 +254,7 @@ function ReviewItem({ review }) {
             >
               {likes ? 'Helpful' : 'Thích'}({fShortenNumber(!likes ? helpful : helpful + 1)})
             </Button>
-          </Box> */}
+          </Box>
         </div>
       </ListItem>
     </>

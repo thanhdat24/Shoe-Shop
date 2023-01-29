@@ -27,7 +27,7 @@ import { TableEmptyRows, TableHeadCustom } from '../components/table';
 import useSettings from '../hooks/useSettings';
 import useTable from '../hooks/useTable';
 import useTabs from '../hooks/useTabs';
-import { getOrders, updateOrder } from '../redux/slices/order';
+import { getMeOrder, getOrders, updateOrder } from '../redux/slices/order';
 import { useDispatch, useSelector } from '../redux/store';
 import { PATH_HOME } from '../routes/paths';
 import { refundMoMoPayment } from '../redux/slices/payment';
@@ -48,7 +48,7 @@ export default function Order() {
 
   const { themeStretch } = useSettings();
 
-  const { orders, orderUpdate } = useSelector((state) => state.order);
+  const { orders, orderUpdate, orderUser } = useSelector((state) => state.order);
 
   const { successRating, ratingList } = useSelector((state) => state.rating);
 
@@ -64,20 +64,20 @@ export default function Order() {
     .groupBy((x) => x.idProduct.id)
     .map((value, key) => ({ idProduct: key, productDetail: value }))
     .value();
-  console.log('groupByItemReview', groupByItemReview);
+  console.log('orderUser', orderUser);
 
   const [tableData, setTableData] = useState([]);
 
   // Ds đơn hàng
   useEffect(() => {
-    dispatch(getOrders());
+    dispatch(getMeOrder());
   }, [dispatch, orderUpdate, successRating]);
 
   useEffect(() => {
-    if (orders?.length) {
-      setTableData(orders);
+    if (orderUser?.length) {
+      setTableData(orderUser);
     }
-  }, [orders]);
+  }, [orderUser]);
 
   const handleClose = () => {
     dispatch(changeRating({ resetRatingList: '' }));

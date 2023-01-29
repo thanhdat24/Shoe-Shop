@@ -12,6 +12,7 @@ const initialState = {
   error: null,
   success: '',
   orders: null,
+  orderUser: null,
   orderDetail: null,
   orderUpdate: null,
 };
@@ -40,6 +41,11 @@ const slice = createSlice({
     getOrdersSuccess(state, action) {
       state.isLoading = false;
       state.orders = action.payload;
+    },
+
+    getMeOrdersSuccess(state, action) {
+      state.isLoading = false;
+      state.orderUser = action.payload;
     },
     // GET ORDER DETAIL SUCCESS
     getOrderDetailSuccess(state, action) {
@@ -105,6 +111,20 @@ export function getOrders() {
     }
   };
 }
+
+export function getMeOrder() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/orders/getMeOrder');
+      console.log('response', response);
+      dispatch(slice.actions.getMeOrdersSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 export function getOrderDetail(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
