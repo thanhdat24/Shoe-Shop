@@ -31,8 +31,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-      console.log('state', state);
-      console.log('action', action);
+
     },
     loginSuccess(state, action) {
       state.isLoading = false;
@@ -41,7 +40,6 @@ const slice = createSlice({
     },
     // CRREATE ADMIN
     createAdminSuccess(state, action) {
-      console.log('action', action.payload);
       state.isLoading = false;
       state.newAccount = action.payload;
     },
@@ -90,45 +88,36 @@ export const { openModal, closeModal, selectEvent, resetAdmin } = slice.actions;
 // ----------------------------------------------------------------------
 
 export function createAdmin(account) {
-  console.log('createAdmin', account);
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/v1/auth/signup', account);
-      console.log('response', response);
       dispatch(slice.actions.createAdminSuccess(response.data?.user));
     } catch (error) {
-      console.log('error', error);
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
 export function updateCurrentUser(updateAdmin) {
-  console.log('updateAdmin', updateAdmin);
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put('/api/v1/admin/updateMe', updateAdmin);
-      console.log('response', response);
       dispatch(slice.actions.updateCurrentSuccess(response.data.user));
     } catch (error) {
-      console.log('error', error);
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
 export function updateAdmin(updateAdmin, id) {
-  console.log('updateAdmin', updateAdmin);
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`api/v1/admin/${id}`, updateAdmin);
-      console.log('response', response);
       dispatch(slice.actions.updateAdminSuccess(response.data.data));
     } catch (error) {
-      console.log('error', error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -141,7 +130,6 @@ export function login(value) {
       const response = await axios.post('/api/v1/shippers/login-shipper', value);
       dispatch(slice.actions.loginSuccess(response.data));
     } catch (error) {
-      console.log('error', error);
       dispatch(slice.actions.hasError(error));
     }
   };

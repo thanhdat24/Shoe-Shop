@@ -38,7 +38,6 @@ export default function AccountChangePassword() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('data45', data);
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();

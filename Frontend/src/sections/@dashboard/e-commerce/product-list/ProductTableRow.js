@@ -53,9 +53,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
       nameColor: value,
     }))
     .value();
-  console.log('color24', color);
-  console.log('sizes', sizes);
-  console.log('price', price);
+
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {

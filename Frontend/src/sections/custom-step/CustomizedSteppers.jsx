@@ -122,7 +122,6 @@ function ColorlibStepIcon(props) {
 }
 function ColorlibStepIconCancel(props) {
   const { active, completed, className } = props;
-  console.log(props);
   const iconCancel = {
     1: <ReceiptIcon />,
     2: <ProductionQuantityLimitsIcon />,
@@ -174,7 +173,6 @@ ColorlibStepIconCancel.propTypes = {
 const steps = ['Chờ xác nhận', 'Đang vận chuyển', 'Đã giao hàng', 'Đã nhận', 'Đánh giá'];
 const stepsCancel = ['Chờ xác nhận', 'Đã hủy'];
 export default function CustomizedSteppers({ orderDetail }) {
-  console.log('orderDetail,', orderDetail);
   const [step, setStep] = useState(0);
   const [cancelStatus, setCancelStatus] = useState(0);
 
@@ -185,12 +183,10 @@ export default function CustomizedSteppers({ orderDetail }) {
       orderDetail !== 'undefined' &&
       (orderDetail?.status === 'Đang vận chuyển' || orderDetail?.status === 'Đã hủy')
     ) {
-      console.log('Step', step);
       setStep(1);
     } else if (orderDetail !== 'undefined' && orderDetail?.status === 'Đã đánh giá') {
       setStep(4);
     } else if (orderDetail !== 'undefined' && orderDetail?.status === 'Đã giao hàng') {
-      // console.log("!4");
       setStep(2);
     } else setStep(3);
   }, [step, orderDetail]);

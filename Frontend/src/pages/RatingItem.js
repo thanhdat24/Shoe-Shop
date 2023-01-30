@@ -38,13 +38,6 @@ export default function RatingItem({ itemReview, idOrder, idProduct }) {
     imageRating: [],
   });
 
-  // console.log('dataRating', dataRating);
-  // console.log('itemReview', itemReview);
-
-  // const { ratingList, successRating } = useSelector((state) => state.rating);
-
-  // console.log('successRating', successRating);
-
   const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
 
   const defaultValues = useMemo(

@@ -37,12 +37,10 @@ export default function ShipperNewEditForm({ isEdit, currentUser }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { newShipper, error } = useSelector((state) => state.shipper);
-  console.log('new', newShipper);
   useEffect(() => {
     if (error) {
       enqueueSnackbar('Thêm shipper không thành công!', { variant: 'error' });
     } else if (newShipper) {
-      console.log('234', newShipper);
       enqueueSnackbar('Thêm shipper  thành công!');
       navigate(PATH_DASHBOARD.shipper.list);
     }
@@ -106,7 +104,6 @@ export default function ShipperNewEditForm({ isEdit, currentUser }) {
   }, [isEdit, currentUser]);
 
   const onSubmit = async (account) => {
-    console.log('account', account);
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
       await dispatch(createShipper(account));

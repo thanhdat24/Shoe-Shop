@@ -97,7 +97,6 @@ export default function HomeMinimal() {
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
-  console.log('products', products);
   const isLight = theme.palette.mode === 'light';
 
   return (

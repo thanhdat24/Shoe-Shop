@@ -149,22 +149,7 @@ const slice = createSlice({
         } else {
           state.checkout.cart = [...state.checkout.cart, product];
         }
-        // state.checkout.cart = state.checkout.cart.map((_product) => {
-        //   console.log('_product.id', _product);
-        //   console.log('product.id', product);
-        //   console.log('Number(product.size)', Number(product.size));
-
-        //   const isExisted =
-        //     _product.id === product.id && _product.size === Number(product.size) && _product.color === product.color;
-        //   console.log('isExisted', isExisted);
-        //   if (isExisted) {
-        //     return {
-        //       ..._product,
-        //       quantity: _product.quantity + 1,
-        //     };
-        //   }
-        //   return _product;
-        // });
+      
       }
     },
 
@@ -239,7 +224,6 @@ const slice = createSlice({
     },
 
     createPaymentMethod(state, action) {
-      console.log(' action.payload', action.payload);
       state.checkout.payment = action.payload;
     },
 
@@ -297,7 +281,6 @@ export function getProducts() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/products');
-      console.log('response', response);
       dispatch(slice.actions.getProductsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -319,7 +302,6 @@ export function getProduct(name) {
         .groupBy((x) => x.idColor.color)
         .map((value, key) => ({ color: key, productDetail: value }))
         .value();
-      console.log('groupByColors', groupByColors);
 
       const groupBySizes = _(response.data.data[0].productDetail)
         .groupBy((x) => x.idSize.name)
@@ -332,10 +314,8 @@ export function getProduct(name) {
       groupByColors.map((item) => colors.push({ id: item.productDetail[0].idColor._id, color: item.color }));
       groupBySizes.map((item) => sizes.push({ id: item.productDetail[0].idSize._id, size: item.size }));
       response.data.data[0] = { ...response.data.data[0], colors, sizes, images };
-      console.log('response.data.data[0]', response.data.data[0]);
       dispatch(slice.actions.getProductSuccess(response.data.data[0]));
     } catch (error) {
-      console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -345,10 +325,8 @@ export function getAllProduct() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/products');
-      console.log('response product', response);
       dispatch(slice.actions.getAllProductSuccess(response.data.data));
     } catch (error) {
-      console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -357,10 +335,8 @@ export function getAllProduct() {
 export function createProduct(newProduct) {
   return async () => {
     dispatch(slice.actions.startLoading());
-    console.log('newProduct', newProduct);
     try {
       const response = await axios.post('/api/v1/products', newProduct);
-      console.log('response', response);
       // dispatch(slice.actions.createProductSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

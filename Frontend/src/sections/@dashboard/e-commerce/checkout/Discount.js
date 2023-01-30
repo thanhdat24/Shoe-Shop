@@ -73,8 +73,7 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
 
   const { cart, total, discount, subtotal } = checkout;
 
-  console.log('total', total);
-  console.log('promotions', promotions);
+
   // ----------------------------------------------------------------------
   const handleCopy = () => {
     setTimeout(() => {

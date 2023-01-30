@@ -31,7 +31,6 @@ export default function InvoiceTableToolbar({
   onFilterStartDate,
   onFilterEndDate,
 }) {
-  console.log('filterService4354', filterService);
   return (
     <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} sx={{ py: 2.5, px: 3 }}>
       <TextField

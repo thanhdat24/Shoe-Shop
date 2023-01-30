@@ -119,7 +119,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const { brandList } = useSelector((state) => state.brand);
   const GENDER_OPTION = objects;
   const BRAND_OPTION = brandList;
-  console.log('GENDER_OPTION', GENDER_OPTION);
 
   // cate
   const cateName = [];
@@ -132,12 +131,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   sizes.map((item) => {
     return nameSize.push(item.name);
   });
-  console.log('sizes', sizes);
 
   const CATEGORY_OPTION = cates;
   const SIZE_OPTION = sizes;
-
-  console.log('CATEGORY_OPTION', CATEGORY_OPTION);
 
   // color
   const colorName = [];
@@ -227,7 +223,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   } = methods;
 
   const values = watch();
-  console.log('values123', values);
   useEffect(() => {
     if (isEdit && currentProduct) {
       reset(defaultValues);
@@ -243,21 +238,16 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     newProduct = {
       ...product,
     };
-    // console.log('newProduct123123', newProduct);
 
     try {
       if (newProduct !== undefined) {
-        // console.log('productUpdatew35', productUpdate);
         await new Promise((resolve) => setTimeout(resolve, 500));
         setActiveStep(1);
-        // console.log('productUpdatew3', productUpdate);
         const arrayItemProduct = [];
         let index = 0;
 
         for (let i = 0; i < newProduct?.size.length; i += 1) {
           for (let j = 0; j < newProduct?.color.length; j += 1) {
-            console.log('index', index);
-            console.log('newProduct', newProduct);
             index += 1;
             const itemProduct = {
               name: newProduct.name,
@@ -291,7 +281,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-  console.log('arrayNewProduct', arrayNewProduct);
 
   const [images, setImages] = useState([]);
   const imageTypeRegex = /image\/(png|jpg|jpeg|svg)/gm;
@@ -300,7 +289,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       const file = acceptedFiles;
       const gallery = [];
       const imageGallery = [];
-      console.log('file', file);
       file.forEach((item, index) => {
         if (item.type.match(imageTypeRegex)) {
           gallery.push(item);

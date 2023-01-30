@@ -31,13 +31,11 @@ export default function InvoiceDetails() {
     dispatch(getOrderDetail(id));
     dispatch(getShippers());
   }, [dispatch]);
-  console.log('orderDetail');
   useEffect(() => {
     dispatch(getOrders());
   }, [orderUpdate]);
 
   const invoice = orders?.find((invoice) => invoice?.id === id);
-  console.log('shippers34', shippers);
   return (
     <>
       <HeaderBreadcrumbs

@@ -16,8 +16,6 @@ import { createAdmin, resetAdmin } from '../../../redux/slices/admin';
 import { fData } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-// _mock
-import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
@@ -37,12 +35,10 @@ export default function BrandEditForm({ isEdit, currentUser }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { newBrand, error } = useSelector((state) => state.brand);
-  console.log('newBrand', newBrand);
   useEffect(() => {
     if (error) {
       enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
     } else if (newBrand) {
-      console.log('234', newBrand);
       enqueueSnackbar('Thêm thương hiệu  thành công!');
       // navigate(PATH_DASHBOARD.user.list);
     }
@@ -90,7 +86,6 @@ export default function BrandEditForm({ isEdit, currentUser }) {
   }, [isEdit, currentUser]);
 
   const onSubmit = async (account) => {
-    console.log('account', account);
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
       await dispatch(createBrand(account));

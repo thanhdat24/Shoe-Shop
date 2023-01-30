@@ -11,7 +11,6 @@ const cloudinary = require('../utils/cloudinary');
 exports.getAllUser = factory.getAll(User);
 exports.createUser = catchAsync(async (req, res, next) => {
   const { googleId } = req.body;
-  console.log('req.body', req.body);
 
   User.findOne(
     {

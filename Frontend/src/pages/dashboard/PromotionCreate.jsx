@@ -44,7 +44,6 @@ export default function PromotionCreate() {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { newDiscount, error, isLoading } = useSelector((state) => state.promotion);
-  console.log('newDiscount', newDiscount);
 
   const codeRegExp = /^[A-Za-z0-9_-]{5,10}$/;
 
@@ -73,7 +72,6 @@ export default function PromotionCreate() {
 
     validationSchema: CreateSchema,
     onSubmit: (data) => {
-      console.log('data', data);
       if (isLoading) {
         return;
       }
@@ -89,7 +87,6 @@ export default function PromotionCreate() {
 
   const handleChangePublic = (event, checked) => {
     setFieldValue('activePublic', (checked && true) || false);
-    console.log(event);
   };
 
   const handleAlertCreate = () => {

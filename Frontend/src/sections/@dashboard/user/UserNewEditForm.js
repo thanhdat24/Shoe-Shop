@@ -16,8 +16,7 @@ import { createAdmin, resetAdmin } from '../../../redux/slices/admin';
 import { fData } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-// _mock
-import { countries } from '../../../_mock';
+
 // components
 import Label from '../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
@@ -37,12 +36,10 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { newAccount, error } = useSelector((state) => state.admin);
-  console.log('newAccount', newAccount);
   useEffect(() => {
     if (error) {
       enqueueSnackbar('Thêm người dùng không thành công!', { variant: 'error' });
     } else if (newAccount) {
-      console.log('234', newAccount);
       enqueueSnackbar('Thêm người dùng  thành công!');
       // navigate(PATH_DASHBOARD.user.list);
     }
@@ -105,7 +102,6 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   }, [isEdit, currentUser]);
 
   const onSubmit = async (account) => {
-    console.log('account', account);
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
       await dispatch(createShipper(account))

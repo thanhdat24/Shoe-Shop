@@ -54,8 +54,6 @@ export default function CheckoutPayment() {
 
   const orderId = new URLSearchParams(search).get('orderId');
   const requestId = new URLSearchParams(search).get('requestId');
-  console.log('orderId', orderId);
-  console.log('requestId', requestId);
 
   const dispatch = useDispatch();
 
@@ -121,7 +119,6 @@ export default function CheckoutPayment() {
       };
       let cartCheckout = {};
       cartCheckout = { ...checkout, paymentMethod };
-      console.log('cartCheckout', cartCheckout);
 
       if (data.payment === 'Thanh toán qua ví Momo') {
         const data = await createMoMoPayment({
@@ -133,7 +130,6 @@ export default function CheckoutPayment() {
           } - Tổng tiền ${fCurrency(cartCheckout.total)}đ`,
         });
 
-        console.log('dataMomo', data.data.qrCodeUrl);
 
         setLinkMoMo(data.data.qrCodeUrl);
         checkoutLinkRef.current.click();
@@ -152,7 +148,6 @@ export default function CheckoutPayment() {
     }
   }, [orderId]);
 
-  console.log('values', values.payment);
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>

@@ -86,13 +86,10 @@ export const { openModal, closeModal, selectEvent, resetOrder } = slice.actions;
 export function createOrder(newProduct) {
   return async () => {
     dispatch(slice.actions.startLoading());
-    console.log('newProduct', newProduct);
     try {
       const response = await axios.post('/api/v1/orders', newProduct);
-      console.log('response', response);
       dispatch(slice.actions.createOrderSuccess(response.data.data));
     } catch (error) {
-      console.log('error123', error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -104,7 +101,6 @@ export function getOrders() {
 
     try {
       const response = await axios.get('/api/v1/orders');
-      console.log('response', response);
       dispatch(slice.actions.getOrdersSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -117,7 +113,6 @@ export function getMeOrder() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/orders/getMeOrder');
-      console.log('response', response);
       dispatch(slice.actions.getMeOrdersSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -131,7 +126,6 @@ export function getOrderDetail(id) {
 
     try {
       const response = await axios.get(`/api/v1/orders/${id}`);
-      console.log('response', response);
       dispatch(slice.actions.getOrderDetailSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

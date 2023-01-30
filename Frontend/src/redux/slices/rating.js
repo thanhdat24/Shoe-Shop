@@ -33,8 +33,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-      console.log('state', state);
-      console.log('action', action);
+
     },
 
     // OPEN MODAL
@@ -58,7 +57,6 @@ const slice = createSlice({
       //   const dataRating = action.payload;
       const { rating, idProduct, content, imageRating, resetRatingList } = action.payload;
       const isEmptyRatingList = state.ratingList.length === 0;
-      console.log('action.payload', action.payload);
       if (resetRatingList === '') {
         state.ratingList = [];
       } else if (isEmptyRatingList) {
@@ -114,7 +112,6 @@ export function createRating(ratingList) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log('ratingList', ratingList);
 
       const response = await axios.post('/api/v1/ratings', ratingList);
       dispatch(slice.actions.createRatingSuccess(response.data.data));
@@ -129,10 +126,8 @@ export function getProductRating(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/v1/ratings/product-rating/${id}`);
-      console.log('response product', response);
       dispatch(slice.actions.getProductRatingSuccess(response.data.data));
     } catch (error) {
-      console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };

@@ -53,7 +53,6 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
   const [detailColorSize, setDetailColorSize] = useState({});
   const { id, name, sizes, price, cover, status, colors, priceSale, inventoryType } = product;
   const { totalRating, totalReview } = ratingList;
-  console.log('totalRating', totalRating);
   const alreadyProduct = cart?.map((item) => item.id).includes(id);
 
   const defaultValues = {
@@ -79,7 +78,6 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
     );
     setDetailColorSize(idColorAndSize[0]);
   }, [values.color, values.size]);
-  console.log('detailColorSize', detailColorSize);
   const onSubmit = async (data) => {
     try {
       if (!alreadyProduct) {

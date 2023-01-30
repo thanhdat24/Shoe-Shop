@@ -45,13 +45,11 @@ PromotionTableRow.propTypes = {
 
 export default function PromotionTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const { promotions, isLoading } = useSelector((state) => state.promotion);
-  console.log('promotion', promotions);
   const theme = useTheme();
   const classes = useStyles();
 
   const navigate = useNavigate();
   const { title, price, miniPrice, code, activeCode, startDate, expiryDate, id } = row;
-  console.log('title', title);
   const [openMenu, setOpenMenuActions] = useState(null);
   const [openNotify, setOpenNotify] = useState(false);
   const dispatch = useDispatch();
@@ -71,9 +69,7 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
   };
 
   const handleActiveCode = () => {
-    console.log('id,', id);
     let discountChangeActiveCode = promotions.find((item) => item._id === id);
-    console.log('discountChangeActiveCode', discountChangeActiveCode);
     if (discountChangeActiveCode) {
       discountChangeActiveCode = { ...discountChangeActiveCode, activeCode: 'Kết thúc' };
     }
@@ -83,7 +79,6 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
     setOpenNotify(false);
   };
 
-  console.log('openNotify', openNotify);
 
   return (
     <TableRow hover selected={selected}>

@@ -38,8 +38,7 @@ export default function InvoiceTableRow({
   const theme = useTheme();
 
   const { address, _id, createdAt, status, total, paymentMethod, idUser, idShipper } = row;
-  console.log('csdg', _id);
-  console.log('row', row);
+
 
   // setIdShipper === _id;
   // setIdShipper(_id);

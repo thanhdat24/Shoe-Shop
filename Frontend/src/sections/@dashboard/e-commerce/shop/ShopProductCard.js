@@ -42,8 +42,7 @@ export default function ShopProductCard({ product }) {
   groupBySizes.map((item) => {
     return sizes.push(Number(item.size));
   });
-  console.log('sizes', sizes);
-  console.log('colors', colors);
+
 
   return (
     <Card>

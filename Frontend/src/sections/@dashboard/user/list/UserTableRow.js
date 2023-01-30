@@ -39,7 +39,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const { name, displayName, email, role, gender, active, avatar, status, _id } = row;
-  console.log('active', active);
   const [openMenu, setOpenMenuActions] = useState(null);
   const [checked, setChecked] = useState(active);
   const handleOpen = () => {
@@ -64,7 +63,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     if (error) {
       enqueueSnackbar('Cập nhật không thành công!', { variant: 'error' });
     } else if (adminUpdate) {
-      console.log('234', adminUpdate);
       enqueueSnackbar('Cập nhật  thành công!');
       dispatch(getUsers());
       // navigate(PATH_DASHBOARD.user.list);
@@ -77,7 +75,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
-  console.log('checked', checked);
 
   return (
     <TableRow hover selected={selected}>

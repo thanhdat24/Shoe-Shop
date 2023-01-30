@@ -62,8 +62,7 @@ InvoiceDetails.propTypes = {
 };
 
 export default function InvoiceDetails({ invoice, shippers }) {
-  console.log('invoice354', invoice);
-  console.log('shippers', shippers);
+
   const theme = useTheme();
   const [shipper, setShipper] = useState();
   const [shipperInfo, setShipperInfo] = useState('');
@@ -90,7 +89,6 @@ export default function InvoiceDetails({ invoice, shippers }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [shipper]
   );
-  console.log('defaultValues', defaultValues);
   const methods = useForm({ defaultValues });
   const [open, setOpen] = useState(false);
   const [openDialog, setOpeDialog] = useState(false);
@@ -126,13 +124,11 @@ export default function InvoiceDetails({ invoice, shippers }) {
   const handleSubmit = async () => {
     setOpeDialog(false);
     if (invoice?.paymentMethod.name === 'Thanh toán qua ví Momo') {
-      console.log('invoice.total', invoice.total);
-      console.log('invoice.paymentMethod.transId', typeof invoice.paymentMethod.transId);
+   
       const data = await refundMoMoPayment({
         amount: invoice.total,
         transId: Number(invoice.paymentMethod.transId),
       });
-      console.log('data', data);
       if (data?.data.resultCode === 0) {
         dispatch(updateOrder(id, { ...invoice, status: 'Đã hủy' }));
         enqueueSnackbar('Hủy đơn hàng thành công!');

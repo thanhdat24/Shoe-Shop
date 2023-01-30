@@ -110,8 +110,7 @@ export default function CateList() {
   const { cates, isLoading, newCate, error } = useSelector((state) => state.cate);
 
   const [tableData, setTableData] = useState([]);
-  console.log('first', tableData);
-  console.log('cates', cates);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {

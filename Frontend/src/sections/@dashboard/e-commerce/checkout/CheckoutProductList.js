@@ -67,7 +67,6 @@ export default function CheckoutProductList({ products, onDelete, onIncreaseQuan
         <TableBody>
           {products.map((product, index) => {
             const { id, name, size, price, color, cover, quantity, available } = product;
-            console.log('product123123', product);
             return (
               <TableRow key={index}>
                 <TableCell>

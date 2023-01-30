@@ -56,15 +56,12 @@ export default function Order() {
 
   const [itemReview, setItemReview] = useState('');
 
-  console.log('itemReview', itemReview);
 
-  console.log('ratingList', ratingList);
 
   const groupByItemReview = _(itemReview.orderDetail)
     .groupBy((x) => x.idProduct.id)
     .map((value, key) => ({ idProduct: key, productDetail: value }))
     .value();
-  console.log('orderUser', orderUser);
 
   const [tableData, setTableData] = useState([]);
 
@@ -95,7 +92,6 @@ export default function Order() {
         amount: orderItem.total,
         transId: Number(orderItem.paymentMethod.transId),
       });
-      console.log('data?.data', data?.data);
       if (data?.data.resultCode === 0) {
         dispatch(updateOrder(orderItem._id, { status: 'Đã hủy' }));
         setOpen(false);
@@ -156,7 +152,6 @@ export default function Order() {
     filterStatus,
   });
 
-  console.log('dataFiltered', dataFiltered);
   const TABS = [
     { value: 'all', label: 'Tất cả', color: 'primary', count: tableData.length },
     { value: 'Đang xử lý', label: 'Đang xử lý', color: 'warning', count: getLengthByStatus('Đang xử lý') },
@@ -408,11 +403,7 @@ function applySortFilter({ tableData, filterStatus }) {
   } else {
     tableData = tableData.filter((item) => item.status === 'Đã nhận' || item.status === 'Đã đánh giá');
   }
-  // console.log('filterStatus', filterStatus);
-  // if (filterStatus === 'Hoàn thành') {
-  //   console.log('1234');
-  //   tableData = tableData.filter((item) => item.status === 'Đã nhận');
-  // }
+
 
   return tableData;
 }

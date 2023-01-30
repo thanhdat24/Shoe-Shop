@@ -126,7 +126,6 @@ export default function ShipperList() {
   useEffect(() => {
     dispatch(getOrders());
   }, [dispatch]);
-  console.log('orders', orders);
   useEffect(() => {
     if (orders && getIdShipper) {
       const shipperOrder = orders?.filter((item) => item?.idShipper?._id === getIdShipper);
@@ -134,7 +133,6 @@ export default function ShipperList() {
     }
   }, [orders, getIdShipper]);
 
-  console.log('orderShipper', orderShipper);
   const getLengthByStatus = (status) => orderShipper?.filter((item) => item.status === status).length;
 
   const TABS = [
@@ -207,8 +205,7 @@ export default function ShipperList() {
   };
 
   const [tableData, setTableData] = useState([]);
-  console.log('first', tableData);
-  console.log('shippers', shippers);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -239,11 +236,9 @@ export default function ShipperList() {
   };
 
   const handleEditRow = (id) => {
-    console.log('id435', id);
     setIdShipper(id);
     setOpenDialog(true);
   };
-  console.log('getIdShipper', getIdShipper);
   const dataFiltered = applySortFilter({
     tableData,
     comparator: getComparator(order, orderBy),
@@ -501,9 +496,6 @@ export default function ShipperList() {
 // ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName, filterStatus }) {
-  // if(orders !== null) tableData = orders;
-  // console.log('orders', orders);
-  console.log('tableData', tableData);
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
