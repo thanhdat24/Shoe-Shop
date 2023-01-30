@@ -91,6 +91,7 @@ export default function Product() {
                 <Grid item xs={12} md={6} lg={5}>
                   <ProductDetailsSummary
                     product={product}
+                    ratingList={productRatingList !== null && productRatingList}
                     cart={checkout.cart}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
@@ -119,12 +120,12 @@ export default function Product() {
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
+                    <Tab disableRipple value="1" label="Nội dung" />
                     <Tab
                       disableRipple
                       value="2"
-                      label={`Review`}
-                      // label={`Review (${product.reviews.length})`}
+                      // label={`Đánh giá`}
+                      label={`Đánh giá (${productRatingList?.totalReview})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     />
                   </TabList>

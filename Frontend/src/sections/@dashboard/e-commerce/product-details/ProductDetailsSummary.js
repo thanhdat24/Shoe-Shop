@@ -44,17 +44,16 @@ ProductDetailsSummary.propTypes = {
     priceSale: PropTypes.number,
     sizes: PropTypes.arrayOf(PropTypes.object),
     status: PropTypes.string,
-    totalRating: PropTypes.number,
-    totalReview: PropTypes.number,
   }),
 };
 
-export default function ProductDetailsSummary({ cart, product, onAddCart, onGotoStep, ...other }) {
+export default function ProductDetailsSummary({ cart, product, ratingList, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [detailColorSize, setDetailColorSize] = useState({});
-  const { id, name, sizes, price, cover, status, colors, priceSale, totalRating, totalReview, inventoryType } = product;
-  console.log('product56', product);
+  const { id, name, sizes, price, cover, status, colors, priceSale, inventoryType } = product;
+  const { totalRating, totalReview } = ratingList;
+  console.log('totalRating', totalRating);
   const alreadyProduct = cart?.map((item) => item.id).includes(id);
 
   const defaultValues = {
@@ -142,13 +141,15 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
           {name}
         </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          <Rating value={totalRating} precision={0.1} readOnly />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(totalReview)}
-            reviews)
-          </Typography>
-        </Stack>
+        {ratingList && (
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+            <Rating readOnly value={totalRating} precision={0.1} />
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              ({fShortenNumber(totalReview)}
+              &nbsp;nhận xét)
+            </Typography>
+          </Stack>
+        )}
 
         <Typography variant="h4" sx={{ mb: 3 }}>
           <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>

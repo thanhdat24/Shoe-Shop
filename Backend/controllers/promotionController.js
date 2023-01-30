@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getAllPromotion = catchAsync(async (req, res, next) => {
   try {
-    let query = Promotion.find();
+    let query = Promotion.find().sort({ activeCode: -1 });
     let result = await query;
     let currentDay = moment().format('YYYY-MM-DDTHH:mm:SS');
     result.map(async (day) => {

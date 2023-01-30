@@ -77,7 +77,6 @@ export default function EcommerceProductDetails() {
     dispatch(addCart(product));
   };
 
-
   const handleGotoStep = (step) => {
     dispatch(onGotoStep(step));
   };
@@ -141,11 +140,11 @@ export default function EcommerceProductDetails() {
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
+                    <Tab disableRipple value="1" label="Nội dung" />
                     <Tab
                       disableRipple
                       value="2"
-                      label={`Review (${product.reviews.length})`}
+                      label={`Đánh giá (${product.reviews.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     />
                   </TabList>

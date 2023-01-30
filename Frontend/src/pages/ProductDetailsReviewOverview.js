@@ -32,19 +32,18 @@ const GridStyle = styled(Grid)(({ theme }) => ({
 
 ProductDetailsReviewOverview.propTypes = {
   product: PropTypes.object,
-  onOpen: PropTypes.func,
 };
 
-export default function ProductDetailsReviewOverview({ product, onOpen }) {
+export default function ProductDetailsReviewOverview({ product }) {
   const { totalRating, totalReview, ratings } = product;
 
   const total = sumBy(ratings, (star) => star.starCount);
 
   return (
     <Grid container>
-      <GridStyle item xs={12} md={4}>
+      <GridStyle item xs={12} md={6}>
         <Typography variant="subtitle1" gutterBottom>
-          Average rating
+          Đánh giá trung bình
         </Typography>
         <Typography variant="h2" gutterBottom sx={{ color: 'error.main' }}>
           {totalRating}/5
@@ -52,11 +51,11 @@ export default function ProductDetailsReviewOverview({ product, onOpen }) {
         <RatingStyle readOnly value={totalRating} precision={0.1} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           ({fShortenNumber(totalReview)}
-          &nbsp;reviews)
+          &nbsp;nhận xét)
         </Typography>
       </GridStyle>
 
-      <GridStyle item xs={12} md={4}>
+      <GridStyle item xs={12} md={6}>
         <Stack spacing={1.5} sx={{ width: 1 }}>
           {ratings
             .slice(0)
@@ -65,14 +64,6 @@ export default function ProductDetailsReviewOverview({ product, onOpen }) {
               <ProgressItem key={rating.name} star={rating} total={total} />
             ))}
         </Stack>
-      </GridStyle>
-
-      <GridStyle item xs={12} md={4}>
-        <Link href="#move_add_review" underline="none">
-          <Button size="large" onClick={onOpen} variant="outlined" startIcon={<Iconify icon={'eva:edit-2-fill'} />}>
-            Write your review
-          </Button>
-        </Link>
       </GridStyle>
     </Grid>
   );
@@ -86,10 +77,10 @@ ProgressItem.propTypes = {
 };
 
 function ProgressItem({ star, total }) {
-  const { name, starCount, reviewCount } = star;
+  const { starName, starCount, reviewCount } = star;
   return (
     <Stack direction="row" alignItems="center" spacing={1.5}>
-      <Typography variant="subtitle2">{name}</Typography>
+      <Typography variant="subtitle2">{starName} Sao</Typography>
       <LinearProgress
         variant="determinate"
         value={(starCount / total) * 100}

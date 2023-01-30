@@ -106,7 +106,7 @@ export default function HomeMinimal() {
         <Box
           sx={{
             textAlign: 'center',
-            mb: { xs: 10, md: 25 },
+            mb: { xs: 2, md: 5 },
           }}
         >
           <m.div variants={varFade().inDown}>

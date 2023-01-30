@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
 const multer = require('multer');
 const Order = require('../models/orderModel');
+const _ = require('lodash');
 
 exports.getAllRating = factory.getAll(Rating);
 exports.getDetailRating = factory.getOne(Rating);
@@ -126,14 +127,33 @@ exports.getProductRating = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   let query = Rating.find().populate('idOrder idProduct');
+
   const doc = await query;
 
   let filterDoc = doc.filter((item) => item.idProduct.id === id);
 
+  result = _(filterDoc)
+    .groupBy('rating')
+    .map((array, key) => ({
+      starName: key,
+      starCount: _.sumBy(array, 'rating'),
+      reviewCount: array.reduce((total, item, index) => (total += index), 1),
+    }))
+    .value();
+
+  let newRatings = {
+    totalReview: filterDoc.length,
+    totalRating: (
+      filterDoc.reduce((total, item) => (total += item.rating), 0) /
+      filterDoc.length
+    ).toFixed(1),
+    data: filterDoc,
+    ratings: result,
+  };
   res.status(200).json({
     status: 'success',
-    length: filterDoc.length,
-    data: filterDoc,
+    length: newRatings.length,
+    data: newRatings,
   });
 });
 

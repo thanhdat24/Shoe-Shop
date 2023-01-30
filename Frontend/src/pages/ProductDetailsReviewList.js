@@ -207,7 +207,6 @@ function ReviewItem({ review }) {
                     content: "''",
                     height: '100%',
                     position: 'absolute',
-                    width: (THUMB_SIZE * 2) / 3,
                   },
                   '&:after': { right: 0, transform: 'scaleX(-1)' },
                 }),

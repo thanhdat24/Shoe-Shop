@@ -47,10 +47,11 @@ export default function PromotionEdit() {
   //   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const { promotionDetail, isLoading, success,error } = useSelector((state) => state.promotion);
+  const { promotionDetail, isLoading, success, error } = useSelector((state) => state.promotion);
   const [effectiveTime, setEffectiveTime] = useState([null, null]);
   const codeRegExp = /^[A-Za-z0-9_-]{5,10}$/;
-
+  const isDisabled =
+    (promotionDetail?.activeCode === 'Kết thúc' || promotionDetail?.activeCode === 'Đang diễn ra') && 1;
   const CreateSchema = Yup.object().shape({
     title: Yup.string().required('*Vui lòng nhập thông tin này'),
     code: Yup.string()
@@ -237,25 +238,8 @@ export default function PromotionEdit() {
             >
               {promotionDetail?.activeCode}
             </Label>
-            {/* <span className="mr-3"> Trạng thái: </span>
-            {(promotionDetail?.activeCode === 'Sắp diễn ra' && (
-              <Label label={promotionDetail?.activeCode} variant="outlined" />
-            )) ||
-              (promotionDetail?.activeCode === 'Đang diễn ra' && (
-                <Label label={promotionDetail?.activeCode} variant="outlined" />
-              )) || <Label label="Kết thúc" variant="outlined" />} */}
           </Box>
         </Stack>
-        {/* <Box>
-          <span className="mr-3"> Trạng thái: </span>
-          {promotionDetail?.activeCode === 'Sắp diễn ra' ? (
-            <Chip label={promotionDetail?.activeCode} variant="outlined" className={classes.labelComingSoon} />
-          ) : promotionDetail?.activeCode === 'Đang diễn ra' ? (
-            <Chip label={promotionDetail?.activeCode} variant="outlined" className={classes.labelNowShowing} />
-          ) : (
-            <Chip label="Kết thúc" variant="outlined" className={classes.labelEnd} />
-          )}
-        </Box> */}
       </Stack>
       <Box sx={{ width: '100%', typography: 'body1' }}>
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -284,6 +268,7 @@ export default function PromotionEdit() {
                             {...getFieldProps('title')}
                             error={Boolean(touched.title && errors.title)}
                             helperText={touched.title && errors.title}
+                            disabled={promotionDetail?.activeCode === 'Kết thúc' && 1}
                           />
                           <span className={classes.textValidation}>Chỉ bao gồm từ 5 - 10 ký tự thường và chữ số.</span>
                           <TextField
@@ -297,7 +282,7 @@ export default function PromotionEdit() {
                             {...getFieldProps('code')}
                             error={Boolean(touched.code && errors.code)}
                             helperText={touched.code && errors.code}
-                            disabled
+                            disabled={isDisabled}
                           />
                           <Box sx={{ display: 'flex' }}>
                             <Box className="mr-28 whitespace-nowrap text-green-600 font-semibold mt-2">
@@ -316,6 +301,7 @@ export default function PromotionEdit() {
                                   checked={values.activePublic}
                                   value={values.activePublic}
                                   onChange={handleChangePublic}
+                                  disabled={promotionDetail?.activeCode === 'Kết thúc' && 1}
                                 />
                                 <Typography>Công khai</Typography>
                               </Box>
@@ -350,7 +336,7 @@ export default function PromotionEdit() {
                             {...getFieldProps('price')}
                             error={Boolean(touched.price && errors.price)}
                             helperText={touched.price && errors.price}
-                            disabled={values.activeCode === 'Đang diễn ra' && true}
+                            disabled={isDisabled}
                           />
                           <TextField
                             fullWidth
@@ -361,7 +347,7 @@ export default function PromotionEdit() {
                             {...getFieldProps('miniPrice')}
                             error={Boolean(touched.miniPrice && errors.miniPrice)}
                             helperText={touched.miniPrice && errors.miniPrice}
-                            disabled={values.activeCode === 'Đang diễn ra' && true}
+                            disabled={isDisabled}
                           />
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <Box className="mr-28 whitespace-nowrap text-green-600 font-semibold">
@@ -384,12 +370,9 @@ export default function PromotionEdit() {
                               }}
                               renderInput={(startProps, endProps) => (
                                 <>
-                                  <TextField
-                                    {...startProps}
-                                    disabled={promotionDetail?.activeCode === 'Đang diễn ra' && true}
-                                  />
+                                  <TextField {...startProps} disabled={isDisabled} />
                                   <Box sx={{ mx: 2 }}> đến </Box>
-                                  <TextField {...endProps} />
+                                  <TextField {...endProps} disabled={promotionDetail?.activeCode === 'Kết thúc' && 1} />
                                 </>
                               )}
                             />
@@ -661,24 +644,29 @@ export default function PromotionEdit() {
                       >
                         Quay lại
                       </Button>
-                      <Button
-                        size="large"
-                        variant="outlined"
-                        //   disabled={!isReadyEditDiscount}
-                        className={classes.buttonCreate}
-                        onClick={handleAlertCreate}
-                      >
-                        Kết thúc
-                      </Button>
-                      <Button
-                        size="large"
-                        variant="contained"
-                        //   disabled={!isReadyEditDiscount}
-                        className={classes.buttonCreate}
-                        onClick={handleAlertCreate}
-                      >
-                        Chỉnh sửa
-                      </Button>
+                      {promotionDetail?.activeCode !== 'Kết thúc' && (
+                        <>
+                          {' '}
+                          <Button
+                            size="large"
+                            variant="outlined"
+                            //   disabled={!isReadyEditDiscount}
+                            className={classes.buttonCreate}
+                            onClick={handleAlertCreate}
+                          >
+                            Kết thúc
+                          </Button>
+                          <Button
+                            size="large"
+                            variant="contained"
+                            //   disabled={!isReadyEditDiscount}
+                            className={classes.buttonCreate}
+                            onClick={handleAlertCreate}
+                          >
+                            Chỉnh sửa
+                          </Button>
+                        </>
+                      )}
                     </Box>
                   </Box>
                   {/* Modal  */}

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 // @mui
 import moment from 'moment';
@@ -16,7 +17,7 @@ import {
   DialogContentText,
   DialogActions,
   Dialog,
-
+  Link,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
@@ -25,16 +26,12 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { InfoIcon } from '../../../../theme/overrides/CustomIcons';
 import { updatePromotion } from '../../../../redux/slices/promotion';
 
-
 import { useStyles } from './promotionStyle';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-
-
-
-
+import { fCurrency } from '../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +48,7 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
   console.log('promotion', promotions);
   const theme = useTheme();
   const classes = useStyles();
-  
+
   const navigate = useNavigate();
   const { title, price, miniPrice, code, activeCode, startDate, expiryDate, id } = row;
   console.log('title', title);
@@ -78,8 +75,7 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
     let discountChangeActiveCode = promotions.find((item) => item._id === id);
     console.log('discountChangeActiveCode', discountChangeActiveCode);
     if (discountChangeActiveCode) {
-      discountChangeActiveCode = { ...discountChangeActiveCode ,activeCode:"Kết thúc"};
-
+      discountChangeActiveCode = { ...discountChangeActiveCode, activeCode: 'Kết thúc' };
     }
 
     dispatch(updatePromotion(discountChangeActiveCode, id));
@@ -87,26 +83,34 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
     setOpenNotify(false);
   };
 
-    console.log('openNotify', openNotify);
+  console.log('openNotify', openNotify);
 
   return (
     <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
       <TableCell align="left">
         <Typography noWrap>
           <p> {title}</p>
-          <p> {code}</p>
+          <Link
+            component={RouterLink}
+            to={PATH_DASHBOARD.promotion.edit(`${id}`)}
+            color="info.main"
+            sx={{
+              textDecoration: 'underline',
+              '&:hover': { color: '#40a9ff' },
+            }}
+          >
+            {code}
+          </Link>
+          {/* <p> {code}</p> */}
         </Typography>
       </TableCell>
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        Giảm {price} ₫
+        Giảm {fCurrency(price)} ₫
       </TableCell>
       <TableCell align="left">
         <p>Tất cả sản phẩm</p>
-        <p>Cho tất cả dơn hàng</p>
-        <p> >= {miniPrice} ₫ giá trị đơn hàng</p>
+        <p>Cho tất cả đơn hàng</p>
+        <p> &gt;= {fCurrency(miniPrice)} ₫ giá trị đơn hàng</p>
         <p>Không giới hạn số lần sử dụng của mỗi khách hàng</p>
       </TableCell>
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
@@ -154,7 +158,6 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
           <Button variant="outlined" color="error" onClick={handleClickButtonEnd}>
             Kết thúc
           </Button>
-
         </TableCell>
       ) : (
         <TableCell align="center">{''}</TableCell>

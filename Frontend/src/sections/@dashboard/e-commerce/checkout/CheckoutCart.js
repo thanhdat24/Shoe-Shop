@@ -83,8 +83,8 @@ export default function CheckoutCart() {
           ) : (
             <EmptyContent
               title="Cart is empty"
-              description="Look like you have no items in your shopping cart."
-              img="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_empty_cart.svg"
+              description="Có vẻ như bạn không có mặt hàng nào trong giỏ hàng của bạn."
+              img="./static/empty_cart.svg"
             />
           )}
         </Card>

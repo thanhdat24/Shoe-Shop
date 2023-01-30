@@ -132,11 +132,6 @@ export default function ProductDetailsCarousel({ product }) {
               content: "''",
               height: '100%',
               position: 'absolute',
-              width: (THUMB_SIZE * 2) / 3,
-              backgroundImage: (theme) =>
-                `linear-gradient(to left, ${alpha(theme.palette.background.paper, 0)} 0%, ${
-                  theme.palette.background.paper
-                } 100%)`,
             },
             '&:after': { right: 0, transform: 'scaleX(-1)' },
           }),
