@@ -5,6 +5,8 @@ const ProductImages = require('../models/productImagesModel');
 const catchAsync = require('../utils/catchAsync');
 const _ = require('lodash');
 const cloudinary = require('../utils/cloudinary');
+const fullTextSearch = require('fulltextsearch');
+const fullTextSearchVi = fullTextSearch.vi;
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -23,21 +25,9 @@ exports.getDetailProductByName = factory.getOneByName(Product, {
 
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
-// exports.getAllProduct = catchAsync(async (req, res, next) => {
-//   let query = Product.find(req.query).populate('productDetail productImages');
-//   const doc = await query;
-//   // console.log('doc', doc.productDetail);
-//   res.status(200).json({
-//     status: 'success',
-//     result: doc.length,
-//     data: doc,
-//   });
-// });
 exports.getAllProduct = factory.getAll(Product, {
   path: 'productDetail productImages',
 });
-
-// exports.createProduct = factory.createOne(Product);
 exports.createProduct = catchAsync(async (req, res, next) => {
   const { productImages } = req.body[0];
   let productItems = [];
@@ -83,4 +73,23 @@ exports.createProduct = catchAsync(async (req, res, next) => {
       }
     });
   }
+});
+
+exports.searchProduct = catchAsync(async (req, res, next) => {
+  const { search } = req.query;
+  console.log('search', search);
+  var filter = {};
+  if (search != '') {
+    filter.name = new RegExp(fullTextSearchVi(search), 'i');
+  }
+
+  await Product.find(filter)
+    .populate('productImages productDetail')
+    .then((records) => {
+      res.status(200).json({
+        status: 'success',
+        result: records.length,
+        data: records,
+      });
+    });
 });
