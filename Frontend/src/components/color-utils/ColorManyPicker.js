@@ -13,11 +13,12 @@ ColorManyPicker.propTypes = {
 };
 
 export default function ColorManyPicker({ colors, onChangeColor, sx, ...other }) {
+  console.log('colors123', colors);
   return (
     <Box sx={sx}>
-      {colors.map((color) => {
+      {colors.map((item) => {
+        const { color } = item;
         const isWhite = color === '#FFFFFF' || color === 'white';
-
         return (
           <Checkbox
             key={color}

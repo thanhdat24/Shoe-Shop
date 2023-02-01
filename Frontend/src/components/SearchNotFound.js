@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -9,16 +9,16 @@ SearchNotFound.propTypes = {
 
 export default function SearchNotFound({ searchQuery = '', ...other }) {
   return searchQuery ? (
-    <Paper {...other}>
+    <Box {...other}>
       <Typography gutterBottom align="center" variant="subtitle1">
-        Not found
+        Không tìm thấy
       </Typography>
       <Typography variant="body2" align="center">
-        No results found for &nbsp;
-        <strong>&quot;{searchQuery}&quot;</strong>. Try checking for typos or using complete words.
+        Không tìm thấy kết quả cho &nbsp;
+        <strong>&quot;{searchQuery}&quot;</strong>. Hãy thử kiểm tra lỗi chính tả hoặc sử dụng các từ hoàn chỉnh.
       </Typography>
-    </Paper>
+    </Box>
   ) : (
-    <Typography variant="body2"> Please enter keywords</Typography>
+    <Typography variant="body2"> Vui lòng nhập từ khóa</Typography>
   );
 }

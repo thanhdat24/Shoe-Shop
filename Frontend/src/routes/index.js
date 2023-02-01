@@ -203,11 +203,11 @@ export default function Router() {
         { path: 'faqs', element: <Faqs /> },
         {
           path: 'product',
-          children: [
-            { element: <Contact />, index: true },
-            { path: '', element: <Contact /> },
-            { path: ':name', element: <Product /> },
-          ],
+          children: [{ path: ':name', element: <Product /> }],
+        },
+        {
+          path: 'search',
+          element: <Search />,
         },
         {
           path: 'account',
@@ -319,6 +319,7 @@ const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Product = Loadable(lazy(() => import('../pages/Product')));
+const Search = Loadable(lazy(() => import('../pages/Search')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

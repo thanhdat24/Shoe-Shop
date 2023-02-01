@@ -22,6 +22,12 @@ export const PATH_AUTH = {
 };
 
 export const PATH_HOME = {
+  search: {
+    root: path(ROOTS, '/search'),
+    view: (name) => path(ROOTS, `search?q=${name}`),
+    viewPrice: (name, priceGte, priceLte) =>
+      path(ROOTS, `search?q=${name}&price_gte=${priceGte}&price_lte=${priceLte}`),
+  },
   product: {
     root: path(ROOTS, '/product'),
     view: (name) => path(ROOTS, `product/${name}`),

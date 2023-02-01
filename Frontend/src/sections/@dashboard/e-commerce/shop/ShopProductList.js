@@ -13,18 +13,20 @@ ShopProductList.propTypes = {
   loading: PropTypes.bool,
 };
 
-export default function ShopProductList({ products, loading }) {
+export default function ShopProductList({ products, loading, isSearch }) {
   return (
     <Box
       sx={{
         display: 'grid',
         gap: 3,
-        gridTemplateColumns: {
-          xs: 'repeat(1, 1fr)',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(3, 1fr)',
-          lg: 'repeat(4, 1fr)',
-        },
+        gridTemplateColumns: isSearch
+          ? 'repeat(3, 1fr)'
+          : {
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)',
+              lg: 'repeat(4, 1fr)',
+            },
       }}
     >
       {(loading ? [...Array(12)] : products)?.map((product, index) =>

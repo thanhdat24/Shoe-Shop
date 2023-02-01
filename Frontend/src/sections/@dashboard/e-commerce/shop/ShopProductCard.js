@@ -34,7 +34,6 @@ export default function ShopProductCard({ product }) {
     .map((value, key) => ({ size: key, productDetail: value }))
     .value();
 
-
   groupByColor.map((item) => {
     return colors.push(item.color);
   });
@@ -42,7 +41,6 @@ export default function ShopProductCard({ product }) {
   groupBySizes.map((item) => {
     return sizes.push(Number(item.size));
   });
-
 
   return (
     <Card>

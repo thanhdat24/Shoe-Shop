@@ -5,28 +5,31 @@ export default function getColorName(hex) {
 
   switch (hex) {
     case '#00AB55':
-      color = 'Green';
+      color = 'Xanh lá';
       break;
     case '#000000':
-      color = 'Black';
+      color = 'Đen';
       break;
     case '#FFFFFF':
-      color = 'White';
+      color = 'Trắng';
       break;
     case '#FFC0CB':
-      color = 'Pink';
+      color = 'Hồng';
       break;
     case '#FF4842':
-      color = 'Red';
+      color = 'Đỏ';
       break;
     case '#1890FF':
-      color = 'Blue';
+      color = 'Xanh dương';
       break;
     case '#94D82D':
       color = 'Greenyellow';
       break;
+    case '#FFE700':
+      color = 'Vàng';
+      break;
     case '#FFC107':
-      color = 'Orange';
+      color = 'Cam';
       break;
     default:
       color = hex;

@@ -18,6 +18,7 @@ const initialState = {
   colors: [],
   productList: null,
   product: null,
+  searchList: null,
   sortBy: null,
   successCreate: null,
   filters: {
@@ -92,6 +93,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.successCreate = [...state.successCreate, newProduct];
     },
+    searchProductSuccess(state, action) {
+      state.isLoading = false;
+      state.searchList = action.payload;
+    },
 
     // CATE
     // getAllCate(){
@@ -149,7 +154,6 @@ const slice = createSlice({
         } else {
           state.checkout.cart = [...state.checkout.cart, product];
         }
-      
       }
     },
 
@@ -338,6 +342,19 @@ export function createProduct(newProduct) {
     try {
       const response = await axios.post('/api/v1/products', newProduct);
       // dispatch(slice.actions.createProductSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function searchProduct(search) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/products/search', { params: { search } });
+      console.log('response', response);
+      dispatch(slice.actions.searchProductSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

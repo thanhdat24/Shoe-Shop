@@ -1,4 +1,8 @@
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
+import { paramCase } from 'change-case';
+import { useSearchParams } from 'react-router-dom';
 // form
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
@@ -14,14 +18,22 @@ import {
   Typography,
   RadioGroup,
   FormControlLabel,
+  Slider as MuiSlider,
+  FormControl,
+  InputLabel,
+  InputBase,
+  FormHelperText,
 } from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
+// lodash;
+import _ from 'lodash';
 // @types
 import { NAVBAR } from '../../../../config';
 // components
-import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup } from '../../../../components/hook-form';
+import { RHFMultiCheckbox, RHFRadioGroupName } from '../../../../components/hook-form';
+import { PATH_HOME } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -32,10 +44,6 @@ export const SORT_BY_OPTIONS = [
   { value: 'priceAsc', label: 'Price: Low-High' },
 ];
 
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Kids'];
-
-export const FILTER_CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
-
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 
 export const FILTER_PRICE_OPTIONS = [
@@ -44,18 +52,45 @@ export const FILTER_PRICE_OPTIONS = [
   { value: 'above', label: 'Above $75' },
 ];
 
-export const FILTER_COLOR_OPTIONS = [
-  '#00AB55',
-  '#000000',
-  '#FFFFFF',
-  '#FFC0CB',
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
-];
+// ---------------------------------------------------
 
-// ----------------------------------------------------------------------
+const MIN_AMOUNT = 1000000;
+const MAX_AMOUNT = 10000000;
+const STEP = 1000000;
+
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  'label + &': {
+    marginTop: theme.spacing(3),
+  },
+  '& .MuiInputBase-input': {
+    borderRadius: 4,
+    position: 'relative',
+    backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
+    border: '1px solid #ced4da',
+    fontSize: 13,
+    fontWeight: 700,
+    width: 'auto',
+    padding: '10px 12px',
+    transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join('.'),
+    '&:focus': {
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
 
 const onSelected = (selected, item) =>
   selected.includes(item) ? selected.filter((value) => value !== item) : [...selected, item];
@@ -67,30 +102,52 @@ ShopFilterSidebar.propTypes = {
   onClose: PropTypes.func,
 };
 
-export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose }) {
+export default function ShopFilterSidebar({
+  onResetAll,
+  FILTER_CATEGORY_OPTIONS,
+  FILTER_COLOR_OPTIONS,
+  FILTER_GENDER_OPTIONS,
+}) {
   const { control } = useFormContext();
+  const [value1, setValue1] = React.useState([1000000, 10000000]);
+  const navigate = useNavigate();
+  const valueText = (value) => {
+    return `${value}`;
+  };
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get('q');
+  const handleChange = (event, newValue, activeThumb) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+    if (activeThumb === 0) {
+      setValue1([Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]]);
+      navigate(PATH_HOME.search.viewPrice(paramCase(search), Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]));
+    } else {
+      setValue1([value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)]);
+      navigate(PATH_HOME.search.viewPrice(paramCase(search), value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)));
+    }
+  };
 
+  const handleChangeMin = (e) => {
+    setValue1([Number(e.target.value.substring(1)), value1[1]]);
+  };
+
+  const handleChangeMax = (e) => {
+    setValue1([value1[0], Number(e.target.value.substring(1))]);
+  };
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'VND',
+  });
   return (
     <>
-      <Button disableRipple color="inherit" endIcon={<Iconify icon={'ic:round-filter-list'} />} onClick={onOpen}>
-        Filters
-      </Button>
-
-      <Drawer
-        anchor="right"
-        open={isOpen}
-        onClose={onClose}
-        PaperProps={{
-          sx: { width: NAVBAR.BASE_WIDTH },
-        }}
-      >
+      <Box>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 1, py: 2 }}>
           <Typography variant="subtitle1" sx={{ ml: 1 }}>
-            Filters
+            Bộ lọc
           </Typography>
-          <IconButton onClick={onClose}>
-            <Iconify icon={'eva:close-fill'} width={20} height={20} />
-          </IconButton>
         </Stack>
 
         <Divider />
@@ -98,17 +155,76 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Gender</Typography>
-              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
+              <Typography variant="subtitle1">Khoảng giá</Typography>
+              <Box sx={{ width: 'auto', padding: '10px 12px' }}>
+                <MuiSlider
+                  getAriaLabel={() => 'Minimum distance'}
+                  value={value1}
+                  onChange={handleChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valueText}
+                  disableSwap
+                  min={MIN_AMOUNT}
+                  max={MAX_AMOUNT}
+                  marks
+                  step={STEP}
+                />
+
+                <Box>
+                  <Box
+                    component="form"
+                    noValidate
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { sm: '1fr 1fr' },
+                      gap: 2,
+                    }}
+                  >
+                    <FormControl variant="standard">
+                      <InputLabel shrink htmlFor="bootstrap-input" sx={{ fontWeight: 'bold' }}>
+                        Từ
+                      </InputLabel>
+                      <BootstrapInput
+                        onChange={handleChangeMin}
+                        defaultValue="0"
+                        value={`${formatter.format(value1[0])}`}
+                        id="bootstrap-input"
+                      />
+                    </FormControl>
+                    <FormControl variant="standard">
+                      <InputLabel shrink htmlFor="bootstrap-input" sx={{ fontWeight: 'bold' }}>
+                        Đến
+                      </InputLabel>
+                      {/* {value1.split(",")} */}
+                      <BootstrapInput
+                        defaultValue="500.000"
+                        onChange={handleChangeMax}
+                        value={`${formatter.format(value1[1])}`}
+                        id="bootstrap-input"
+                      />
+                    </FormControl>
+                  </Box>
+                </Box>
+              </Box>
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Category</Typography>
-              <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
+              <Typography variant="subtitle1">Giới tính</Typography>
+              <RHFMultiCheckbox
+                name="gender"
+                options={FILTER_GENDER_OPTIONS}
+                getOptionLabel={(option) => option.name}
+                sx={{ width: 1 }}
+              />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Colour</Typography>
+              <Typography variant="subtitle1">Loại sản phẩm</Typography>
+              <RHFRadioGroupName name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
+            </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Màu sắc</Typography>
 
               <Controller
                 name="colors"
@@ -123,7 +239,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               />
             </Stack>
 
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <Typography variant="subtitle1">Price</Typography>
               <RHFRadioGroup
                 name="priceRange"
@@ -169,11 +285,11 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                   </RadioGroup>
                 )}
               />
-            </Stack>
+            </Stack> */}
           </Stack>
         </Scrollbar>
 
-        <Box sx={{ p: 3 }}>
+        {/* <Box sx={{ p: 3 }}>
           <Button
             fullWidth
             size="large"
@@ -185,8 +301,8 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
           >
             Clear All
           </Button>
-        </Box>
-      </Drawer>
+        </Box> */}
+      </Box>
     </>
   );
 }

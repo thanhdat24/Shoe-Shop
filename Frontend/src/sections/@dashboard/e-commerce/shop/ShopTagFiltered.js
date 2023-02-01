@@ -76,7 +76,7 @@ export default function ShopTagFiltered({
     <RootStyle>
       {gender.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Gender:</LabelStyle>
+          <LabelStyle>Giới tinh:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {gender.map((_gender) => (
               <Chip
@@ -93,7 +93,7 @@ export default function ShopTagFiltered({
 
       {category !== 'All' && (
         <WrapperStyle>
-          <LabelStyle>Category:</LabelStyle>
+          <LabelStyle>Loại sản phẩm:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip size="small" label={category} onDelete={onRemoveCategory} sx={{ m: 0.5 }} />
           </Stack>
@@ -102,7 +102,7 @@ export default function ShopTagFiltered({
 
       {colors.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Colors:</LabelStyle>
+          <LabelStyle>Màu sắc:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {colors.map((color) => (
               <Chip
@@ -147,7 +147,7 @@ export default function ShopTagFiltered({
 
       {isShowReset && (
         <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-clear-all'} />}>
-          Clear All
+          Xoá tất cả
         </Button>
       )}
     </RootStyle>
