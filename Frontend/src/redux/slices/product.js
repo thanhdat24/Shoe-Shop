@@ -97,7 +97,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.searchList = action.payload;
     },
-
+    searchGenderSuccess(state, action) {
+      state.isLoading = false;
+      state.searchList = action.payload;
+    },
     // CATE
     // getAllCate(){
     getCateSuccess(state, action) {
@@ -361,6 +364,18 @@ export function searchProduct(search) {
   };
 }
 
+export function searchGender(search) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/products/search-gender', { params: { search } });
+      console.log('response', response);
+      dispatch(slice.actions.searchGenderSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 // Category
 export function getAllCate() {
   return async () => {

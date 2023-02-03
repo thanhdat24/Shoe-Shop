@@ -4,6 +4,7 @@ const productRouters = require('../controllers/productController');
 const router = express.Router();
 
 router.get('/search', productRouters.searchProduct);
+router.get('/search-gender', productRouters.searchGender);
 
 router
   .route('/')

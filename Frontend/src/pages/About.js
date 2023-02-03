@@ -1,37 +1,40 @@
-// @mui
-import { styled } from '@mui/material/styles';
-import { Divider } from '@mui/material';
-// components
-import Page from '../components/Page';
-import { AboutHero, AboutWhat, AboutTeam, AboutVision, AboutTestimonials } from '../sections/about';
-
-// ----------------------------------------------------------------------
-
-const RootStyle = styled('div')(({ theme }) => ({
-  paddingTop: theme.spacing(8),
-  [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(11),
-  },
-}));
-
-// ----------------------------------------------------------------------
+import React from 'react';
+import MicIcon from '@mui/icons-material/Mic';
+import { Box } from '@mui/material';
+import Image from '../components/Image';
 
 export default function About() {
+  const [listening, setListening] = React.useState(false);
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  const startListening = () => {
+    setListening(true);
+    recognition.start();
+    recognition.onresult = (event) => {
+      setListening(false);
+      console.log(event.results[0][0].transcript);
+      // Perform a search based on the transcript
+    };
+  };
+
+  const stopListening = () => {
+    setListening(false);
+    recognition.stop();
+  };
+
   return (
-    <Page title="About us">
-      <RootStyle>
-        <AboutHero />
+    <div>
+      <button className="mt-24" onClick={listening ? stopListening : startListening}>
+        {listening ? (
+          <Box className="bg-red-500 w-9 h-9 rounded-full flex justify-center items-center">
+            <MicIcon sx={{ color: 'white', width: 30, height: 30 }} />
+          </Box>
+        ) : (
+          <Image alt="sketch icon" src="/icons/ic_mic.svg" sx={{ width: 30, height: 30, mr: 1 }} />
+        )}
+      </button>
 
-        <AboutWhat />
-
-        <AboutVision />
-
-        <Divider orientation="vertical" sx={{ my: 10, mx: 'auto', width: 2, height: 40 }} />
-
-        <AboutTeam />
-
-        <AboutTestimonials />
-      </RootStyle>
-    </Page>
+      {listening && <p>Listening...</p>}
+    </div>
   );
 }

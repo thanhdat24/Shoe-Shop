@@ -28,6 +28,12 @@ export const PATH_HOME = {
     viewPrice: (name, priceGte, priceLte) =>
       path(ROOTS, `search?q=${name}&price_gte=${priceGte}&price_lte=${priceLte}`),
   },
+  gender: {
+    root: path(ROOTS, '/gender'),
+    view: (name) => path(ROOTS, `gender/?q=${name}`),
+    viewPrice: (name, priceGte, priceLte) =>
+      path(ROOTS, `gender/?q=${name}&price_gte=${priceGte}&price_lte=${priceLte}`),
+  },
   product: {
     root: path(ROOTS, '/product'),
     view: (name) => path(ROOTS, `product/${name}`),

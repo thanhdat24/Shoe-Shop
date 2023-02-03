@@ -93,3 +93,17 @@ exports.searchProduct = catchAsync(async (req, res, next) => {
       });
     });
 });
+
+exports.searchGender = catchAsync(async (req, res, next) => {
+  const { search } = req.query;
+
+  const product = await Product.find().populate('productImages productDetail');
+
+  const newProduct = product.filter((item) => item.idObjectUse.name === search);
+
+  res.status(200).json({
+    status: 'success',
+    result: newProduct.length,
+    data: newProduct,
+  });
+});

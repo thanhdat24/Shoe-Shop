@@ -209,6 +209,11 @@ export default function Router() {
           path: 'search',
           element: <Search />,
         },
+
+        {
+          path: 'gender',
+          element: <SearchGender />,
+        },
         {
           path: 'account',
           element: <AccountLayoutLayout />,
@@ -320,6 +325,7 @@ const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Product = Loadable(lazy(() => import('../pages/Product')));
 const Search = Loadable(lazy(() => import('../pages/Search')));
+const SearchGender = Loadable(lazy(() => import('../pages/SearchGender')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

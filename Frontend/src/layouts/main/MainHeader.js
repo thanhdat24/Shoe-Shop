@@ -19,6 +19,8 @@ import {
   Typography,
   Popper,
 } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -52,6 +54,7 @@ import InputStyle from '../../components/InputStyle';
 import Iconify from '../../components/Iconify';
 import Image from '../../components/Image';
 import { fCurrency } from '../../utils/formatNumber';
+import NotificationsPopover from '../dashboard/header/NotificationsPopover';
 
 // ----------------------------------------------------------------------
 
@@ -135,9 +138,9 @@ export default function MainHeader() {
           params: { query: value },
         });
         console.log('response', response);
-        if (isMountedRef.current) {
-          setSearchResults(response.data.data);
-        }
+        // if (isMountedRef.current) {
+        //   setSearchResults(response.data.data);
+        // }
       }
     } catch (error) {
       console.error(error);
@@ -154,6 +157,29 @@ export default function MainHeader() {
       console.log('searchQuery', searchQuery);
     }
   };
+
+  const [listening, setListening] = useState(false);
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+
+  const startListening = () => {
+    setListening(true);
+    recognition.start();
+    recognition.onresult = (event) => {
+      setListening(false);
+      console.log(event.results[0][0].transcript);
+
+        navigate(PATH_HOME.search.view(paramCase(event.results[0][0].transcript)));
+      // Perform a search based on the transcript
+    };
+  };
+  const stopListening = () => {
+    setListening(false);
+    recognition.stop();
+  };
+
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle
@@ -178,70 +204,89 @@ export default function MainHeader() {
             v3.3.0
           </Label>
 
-          <Autocomplete
-            size="small"
-            // autoHighlight
-            popupIcon={null}
-            PopperComponent={PopperStyle}
-            options={searchResults}
-            onInputChange={(event, value) => handleChangeSearch(value)}
-            getOptionLabel={(product) => product.name}
-            noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => (
-              <InputStyle
-                {...params}
-                name="search"
-                stretchStart={450}
-                placeholder="Bạn tìm gì hôm nay"
-                onKeyUp={handleKeyUp}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={'eva:search-fill'} sx={{ ml: 1, width: 20, height: 20, color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
-            renderOption={(props, product, { inputValue }) => {
-              const { name, productImages, price } = product;
-              const matches = match(name, inputValue);
-              const parts = parse(name, matches);
-              console.log('parts', parts);
-              return (
-                <Link underline="none" component={RouterLink} to={PATH_HOME.product.view(paramCase(name))}>
-                  <li {...props}>
-                    <Image
-                      alt={productImages[0].url[0]}
-                      src={productImages[0].url[0]}
-                      sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }}
-                    />
-                    <Box className="flex flex-col">
-                      <Box>
-                        {parts.map((part, index) => (
-                          <Typography
-                            key={index}
-                            component="span"
-                            variant="subtitle1"
-                            color={part.highlight ? 'primary' : 'textPrimary'}
-                          >
-                            {part.text}
-                          </Typography>
-                        ))}
+          <Box className="flex relative justify-center items-center">
+            <Autocomplete
+              size="small"
+              // autoHighlight
+              popupIcon={null}
+              PopperComponent={PopperStyle}
+              options={searchResults}
+              onInputChange={(event, value) => handleChangeSearch(value)}
+              getOptionLabel={(product) => product.name}
+              noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderInput={(params) => (
+                <InputStyle
+                  {...params}
+                  name="search"
+                  stretchStart={450}
+                  placeholder="Bạn tìm gì hôm nay"
+                  onKeyUp={handleKeyUp}
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify
+                          icon={'eva:search-fill'}
+                          sx={{ ml: 1, width: 20, height: 20, color: 'text.disabled' }}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+              renderOption={(props, product, { inputValue }) => {
+                const { name, productImages, price } = product;
+                const matches = match(name, inputValue);
+                const parts = parse(name, matches);
+                console.log('parts', parts);
+                return (
+                  <Link underline="none" component={RouterLink} to={PATH_HOME.product.view(paramCase(name))}>
+                    <li {...props}>
+                      <Image
+                        alt={productImages[0].url[0]}
+                        src={productImages[0].url[0]}
+                        sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }}
+                      />
+                      <Box className="flex flex-col">
+                        <Box>
+                          {parts.map((part, index) => (
+                            <Typography
+                              key={index}
+                              component="span"
+                              variant="subtitle1"
+                              color={part.highlight ? 'primary' : 'textPrimary'}
+                            >
+                              {part.text}
+                            </Typography>
+                          ))}
+                        </Box>
+                        <Typography
+                          component="div"
+                          variant="subtitle3"
+                          sx={{ color: 'rgba(254, 52, 100,1) !important' }}
+                        >
+                          {fCurrency(price)}
+                        </Typography>
                       </Box>
-                      <Typography component="div" variant="subtitle3" sx={{ color: 'rgba(254, 52, 100,1) !important' }}>
-                        {fCurrency(price)}
-                      </Typography>
-                    </Box>
-                  </li>
-                </Link>
-              );
-            }}
-          />
+                    </li>
+                  </Link>
+                );
+              }}
+            />
+            <button className="absolute right-1" onClick={listening ? stopListening : startListening}>
+              {listening ? (
+                <Box className="bg-red-500 w-9 h-9 rounded-full flex justify-center items-center">
+                  <MicIcon sx={{ color: 'white', width: 30, height: 30 }} />
+                </Box>
+              ) : (
+                <Image alt="sketch icon" src="/icons/ic_mic.svg" sx={{ width: 30, height: 30 }} />
+              )}
+            </button>
+          </Box>
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
+          <NotificationsPopover />
           {user.email !== undefined ? (
             <AccountPopover />
           ) : (

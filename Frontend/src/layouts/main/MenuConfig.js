@@ -59,17 +59,17 @@ const menuConfig = [
   },
   {
     title: 'Nam',
-    path: '/men',
+    path: '/gender?q=Nam',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
   {
     title: 'Nữ',
-    path: '/women',
+    path: '/gender?q=Nữ',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
   {
     title: 'Trẻ em',
-    path: '/kids',
+    path: '/gender?q=Trẻ em',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
   // {
