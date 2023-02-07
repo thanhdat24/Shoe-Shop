@@ -20,13 +20,17 @@ ProductDetailsReviewList.propTypes = {
 
 export default function ProductDetailsReviewList({ product }) {
   // const { reviews } = product;
-
+  console.log('productrewr', product);
+  // const {}
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
       <List disablePadding>
-        {product?.map((review) => (
-          <ReviewItem key={review.id} review={review} />
-        ))}
+        {product?.map((review) => {
+          if (review.active) {
+            return <ReviewItem key={review.id} review={review} />;
+          }
+           return <></>
+        })}
       </List>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Pagination count={10} color="primary" />

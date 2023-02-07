@@ -17,11 +17,6 @@ import AccountLayoutLayout from '../layouts/account';
 import OrderDetail from '../pages/Shipper/OrderDetail';
 import ShipperLayout from '../layouts/shipper';
 
-// import PromotionCreate from '../pages/dashboard/PromotionCreate';
-// import BrandList from '../pages/dashboard/BrandList';
-// import BrandCreate from '../pages/dashboard/BrandCreate';
-// import ColorList from '../pages/dashboard/ColorList';
-
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -174,6 +169,13 @@ export default function Router() {
             { path: ':id', element: <InvoiceDetails /> },
             { path: ':id/edit', element: <InvoiceEdit /> },
             { path: 'new', element: <InvoiceCreate /> },
+          ],
+        },
+        {
+          path: 'rating',
+          children: [
+            { element: <Navigate to="/admin/rating/list" replace />, index: true },
+            { path: 'list', element: <RatingList /> },
           ],
         },
       ],
@@ -336,3 +338,6 @@ const LoginShipper = Loadable(lazy(() => import('../pages/Shipper/login/LoginShi
 const OrderListShipper = Loadable(lazy(() => import('../pages/Shipper/OrderListShipper')));
 const AccountShipper = Loadable(lazy(() => import('../pages/Shipper/Account')));
 const ChangePassword = Loadable(lazy(() => import('../pages/Shipper/ChangePassword')));
+
+// Rating
+const RatingList = Loadable(lazy(() => import('../pages/dashboard/RatingList')));

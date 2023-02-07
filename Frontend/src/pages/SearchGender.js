@@ -210,7 +210,6 @@ export default function SearchGender() {
 
           {(productPrice?.length === 0 || filteredProducts?.length === 0) && (
             <Box className="flex flex-col w-full mt-3">
-              <div className="my-6 flex  justify-center "></div>
               <p className="text-center text-2xl ">Không tìm thấy sản phẩm nào</p>
             </Box>
           )}

@@ -11,12 +11,12 @@ const initialState = {
 
   error: null,
   success: '',
-
+  allRating: null,
   ratingList: [],
   productRatingList: null,
   content: [],
   imageRating: [],
-
+  updateRatingSSuccess: null,
   successRating: null,
 };
 
@@ -33,7 +33,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // OPEN MODAL
@@ -46,6 +45,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.successRating = action.payload;
     },
+    // update
+    updateRatingSuccess(state, action) {
+      state.isLoading = false;
+      state.updateRatingSSuccess = action.payload;
+    },
 
     // CREATE RATING
     getProductRatingSuccess(state, action) {
@@ -53,6 +57,10 @@ const slice = createSlice({
       state.productRatingList = action.payload;
     },
 
+    getAllRatingSuccess(state, action) {
+      state.isLoading = false;
+      state.allRating = action.payload;
+    },
     changeRating(state, action) {
       //   const dataRating = action.payload;
       const { rating, idProduct, content, imageRating, resetRatingList } = action.payload;
@@ -112,9 +120,21 @@ export function createRating(ratingList) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-
       const response = await axios.post('/api/v1/ratings', ratingList);
       dispatch(slice.actions.createRatingSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function updateRating(id, updateRating) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+console.log('respon ');
+    try {
+      const response = await axios.patch(`/api/v1/ratings/${id}`, updateRating);
+      dispatch(slice.actions.updateRatingSuccess(response.data.data));
+      console.log('respon update', response);
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -127,6 +147,17 @@ export function getProductRating(id) {
     try {
       const response = await axios.get(`/api/v1/ratings/product-rating/${id}`);
       dispatch(slice.actions.getProductRatingSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getAllRating() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/v1/ratings`);
+      dispatch(slice.actions.getAllRatingSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

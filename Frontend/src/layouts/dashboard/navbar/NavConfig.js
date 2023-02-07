@@ -21,6 +21,7 @@ const ICONS = {
   // kanban: getIcon('ic_kanban'),
   promotion: getIcon('ic_promotion'),
   invoice: getIcon('ic_invoice'),
+  rating: getIcon('ic_rating'),
 
   ecommerce: getIcon('ic_ecommerce'),
   analytics: getIcon('ic_analytics'),
@@ -151,6 +152,13 @@ const navConfig = [
           { title: 'Tạo', path: PATH_DASHBOARD.invoice.new },
           { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
         ],
+      },
+      // Đánh giá
+      {
+        title: 'Đánh giá',
+        path: PATH_DASHBOARD.rating.root,
+        icon: ICONS.rating,
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.rating.list }],
       },
 
       // BLOG
