@@ -7,12 +7,13 @@ export default function About() {
   const [listening, setListening] = React.useState(false);
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
+
   const startListening = () => {
     setListening(true);
     recognition.start();
     recognition.onresult = (event) => {
       setListening(false);
-      console.log(event.results[0][0].transcript);
+      console.log('12345', event.results[0][0].transcript);
       // Perform a search based on the transcript
     };
   };

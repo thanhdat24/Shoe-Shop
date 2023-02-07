@@ -6,7 +6,6 @@ import { LoadingButton } from '@mui/lab';
 // firebase
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useSnackbar } from 'notistack';
-
 import { RHFCheckbox, RHFRadioGroup, RHFSelect, RHFTextField, FormProvider } from '../../components/hook-form';
 import { LoginForm } from '../../sections/auth/login';
 import { RegisterForm } from '../../sections/auth/register';
@@ -64,6 +63,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
   const dispatch = useDispatch();
   useEffect(() => {
     console.log('userForm', user);
+
     try {
       if (user.displayName !== undefined && user.googleId !== undefined && user.role === 'khách hàng') {
         registerUser(user);

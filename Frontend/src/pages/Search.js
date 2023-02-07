@@ -18,10 +18,6 @@ import { getBrands } from '../redux/slices/brand';
 
 // ---------------------------------------------------
 
-const MIN_AMOUNT = 1000000;
-const MAX_AMOUNT = 10000000;
-const STEP = 1000000;
-
 export default function Search() {
   const [searchParams] = useSearchParams();
 

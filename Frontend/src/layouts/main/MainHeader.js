@@ -171,7 +171,7 @@ export default function MainHeader() {
       setListening(false);
       console.log(event.results[0][0].transcript);
 
-        navigate(PATH_HOME.search.view(paramCase(event.results[0][0].transcript)));
+      navigate(PATH_HOME.search.view(event.results[0][0].transcript));
       // Perform a search based on the transcript
     };
   };
