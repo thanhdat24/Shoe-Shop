@@ -11,6 +11,7 @@ import ShopProductCard from './ShopProductCard';
 ShopProductList.propTypes = {
   products: PropTypes.array.isRequired,
   loading: PropTypes.bool,
+  isSearch: PropTypes.bool,
 };
 
 export default function ShopProductList({ products, loading, isSearch }) {

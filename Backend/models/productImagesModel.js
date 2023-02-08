@@ -6,6 +6,9 @@ const productImagesSchema = new mongoose.Schema(
       required: [true, 'Please tell us url'],
       trim: true,
     },
+    cover: {
+      type: String,
+    },
     idProduct: {
       type: mongoose.Schema.ObjectId,
       ref: 'Product',

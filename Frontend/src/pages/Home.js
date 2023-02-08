@@ -14,6 +14,7 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
+import BestSeller from './BestSeller';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ export default function HomePage() {
         <ContentStyle>
           <HomeMinimal />
 
-          <HomeHugePackElements />
+          <BestSeller />
 
           <HomeDarkMode />
 

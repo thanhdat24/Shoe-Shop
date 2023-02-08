@@ -12,6 +12,7 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
+  bestSeller:null,
   products: [],
   cates: [],
   sizes: [],
@@ -70,6 +71,10 @@ const slice = createSlice({
     getProductSuccess(state, action) {
       state.isLoading = false;
       state.product = action.payload;
+    },
+    getBestSellerSuccess(state, action) {
+      state.isLoading = false;
+      state.bestSeller = action.payload;
     },
 
     //  SORT & FILTER PRODUCTS
@@ -333,6 +338,18 @@ export function getAllProduct() {
     try {
       const response = await axios.get('/api/v1/products');
       dispatch(slice.actions.getAllProductSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getBestSeller() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/products/best-seller-products');
+      dispatch(slice.actions.getBestSellerSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
