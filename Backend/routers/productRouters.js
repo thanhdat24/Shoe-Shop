@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/search', productRouters.searchProduct);
 router.get('/search-gender', productRouters.searchGender);
+router.get('/best-seller-products', productRouters.bestSellerProduct);
 
 router
   .route('/')

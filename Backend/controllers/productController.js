@@ -107,3 +107,16 @@ exports.searchGender = catchAsync(async (req, res, next) => {
     data: newProduct,
   });
 });
+
+exports.bestSellerProduct = catchAsync(async (req, res, next) => {
+  let products = await Product.find().populate('productDetail productImages');
+  products.sort((a, b) => b.soldQuality - a.soldQuality);
+
+  let top3 = products.slice(0, 3);
+
+  res.status(200).json({
+    status: 'success',
+    result: top3.length,
+    data: top3,
+  });
+});
