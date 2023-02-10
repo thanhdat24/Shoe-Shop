@@ -39,7 +39,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function ProductTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, inventoryType, productDetail, productImages, price, idCate, supplier } = row;
+  const { name, inventoryType, productDetail, productImages, price, idCate,idSupplier } = row;
   const color = _(productDetail)
     .groupBy((x) => x.idColor.color)
     .map((value, key) => ({
@@ -98,7 +98,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
         <div className="flex"> {sizes.map((size, index) => size.name).join(', ')}</div>
       </TableCell>
       <TableCell> {idCate.name}</TableCell>
-      <TableCell> {supplier}</TableCell>
+      <TableCell> {idSupplier.name}</TableCell>
 
       <TableCell align="center">
         <Label

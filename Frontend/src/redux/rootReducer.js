@@ -19,6 +19,7 @@ import addressReducer from './slices/address';
 import paymentReducer from './slices/payment';
 import orderReducer from './slices/order';
 import ratingReducer from './slices/rating';
+import supplierReducer from './slices/supplier';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -53,6 +54,7 @@ const rootReducer = combineReducers({
   payment: paymentReducer,
   order: orderReducer,
   rating: ratingReducer,
+  supplier: supplierReducer,
 });
 
 export { rootPersistConfig, rootReducer };

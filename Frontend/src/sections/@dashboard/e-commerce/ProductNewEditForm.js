@@ -50,6 +50,7 @@ import ProductDetailTableRow from './ProductDetailTableRow';
 import useTable from '../../../hooks/useTable';
 import { getObjects } from '../../../redux/slices/objectUse';
 import { getBrands } from '../../../redux/slices/brand';
+import { getSuppliers } from '../../../redux/slices/supplier';
 
 // ----------------------------------------------------------------------
 
@@ -112,19 +113,17 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     dispatch(getAllColor());
     dispatch(getObjects());
     dispatch(getBrands());
+    dispatch(getSuppliers());
   }, [dispatch]);
 
   const { cates, sizes, colors, productSave } = useSelector((state) => state.product);
   const { objects } = useSelector((state) => state.objectUse);
   const { brandList } = useSelector((state) => state.brand);
+  const { supplierList } = useSelector((state) => state.supplier);
   const GENDER_OPTION = objects;
   const BRAND_OPTION = brandList;
-
-  // cate
-  const cateName = [];
-  cates.map((item) => {
-    return cateName.push(item.name);
-  });
+  const SUPPLIER_OPTION = supplierList;
+  const CATEGORY_OPTION = cates;
   // size
 
   const nameSize = [];
@@ -132,7 +131,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     return nameSize.push(item.name);
   });
 
-  const CATEGORY_OPTION = cates;
   const SIZE_OPTION = sizes;
 
   // color
@@ -199,7 +197,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       category: currentProduct?.category || '63a7121263850a28288a0449',
       origin: currentProduct?.origin || '',
       material: currentProduct?.material || '',
-      supplier: currentProduct?.supplier || '',
+      supplier: currentProduct?.supplier || '63e524118c060f3b14d32fef',
       quantity: Number(currentProduct?.quantity) || 0,
       style: currentProduct?.style || '',
     }),
@@ -262,7 +260,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               idBrand: newProduct.brand,
               origin: newProduct.origin,
               material: newProduct.material,
-              supplier: newProduct.supplier,
+              idSupplier: newProduct.supplier,
               quantity: newProduct.quantity,
               style: newProduct.style,
               idColor: newProduct.color[j],
@@ -280,7 +278,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       console.error(error);
     }
   };
-  // console.log('ArrayNewProduct', arrayNewProduct);
+
 
   const [images, setImages] = useState([]);
   const imageTypeRegex = /image\/(png|jpg|jpeg|svg)/gm;
@@ -378,7 +376,13 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                     </Grid>
                     <Grid xs={8}>
                       <RHFTextField name="style" label="Kiểu dáng" />
-                      <RHFTextField name="supplier" label="Nhà cung cấp" sx={{ margin: '10px 0' }} />
+                      <RHFSelect name="supplier" label="Nhà cung cấp" sx={{ margin: '10px 0' }}>
+                        {SUPPLIER_OPTION?.map((supplier) => (
+                          <option key={supplier._id} value={supplier._id}>
+                            {supplier.name}
+                          </option>
+                        ))}
+                      </RHFSelect>
                       <RHFTextField
                         name="quantity"
                         label="Số lượng"
@@ -427,14 +431,21 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                           {category.name}
                         </option>
                       ))}
-                    </RHFSelect>{' '}
-                    <RHFSelect name="brand" label="Thương hiệu">
+                    </RHFSelect>
+                    <RHFSelect name="brand" label="Loại giày">
                       {BRAND_OPTION?.map((category) => (
-                        <option key={category.id} value={category._id}>
+                        <option key={category._id} value={category._id}>
                           {category.name}
                         </option>
                       ))}
-                    </RHFSelect>
+                    </RHFSelect>{' '}
+                    {/* <RHFSelect name="brand" label="Thương hiệu">
+                      {BRAND_OPTION?.map((category) => (
+                        <option key={category._id} value={category._id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </RHFSelect> */}
                     <Controller
                       name="size"
                       control={control}
