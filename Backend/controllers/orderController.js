@@ -7,6 +7,8 @@ const Promotion = require('../models/promotionModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const _ = require('lodash');
+const moment = require('moment');
 
 exports.getAllOrder = factory.getAll(Order, { path: 'orderDetail' });
 exports.getMeOrder = catchAsync(async (req, res, next) => {
@@ -23,58 +25,6 @@ exports.getMeOrder = catchAsync(async (req, res, next) => {
   });
 });
 exports.getDetailOrder = factory.getOne(Order, { path: 'orderDetail' });
-
-// exports.getDetailOrder = catchAsync(async (req, res, next) => {
-//   let query = Order.findById(req.params.id).populate('orderDetail');
-//   // if (populateOptions) query = query.populate(populateOptions);
-//   let doc = await query;
-//   let productImages = [];
-//   if (!doc) {
-//     return next(new AppError('No document found with that ID', 404));
-//   }
-//   let queryProductImages = await ProductImages.find({
-//     idProduct: doc.orderDetail[0].idProduct.id,
-//   }).populate('productDetail queryProductImages');
-
-//   if (queryProductImages) {
-//     queryProductImages[0].url.map((item) => {
-//       productImages.push(item);
-//     });
-//   }
-//   const address = doc.address;
-//   const status = doc.status;
-//   const notes = doc.notes;
-//   const _id = doc._id;
-//   const total = doc.total;
-//   const idPromotion = doc.idPromotion;
-//   const paymentMethod = doc.paymentMethod;
-//   const idUser = doc.idUser;
-//   const createdAt = doc.createdAt;
-//   const updatedAt = doc.updatedAt;
-//   const orderDetail = doc.orderDetail;
-//   const id = doc.id;
-
-//   const data = {
-//     address,
-//     status,
-//     notes,
-//     _id,
-//     createdAt,
-//     updatedAt,
-//     total,
-//     idPromotion,
-//     paymentMethod,
-//     idUser,
-//     orderDetail,
-//     id,
-//     productImages,
-//   };
-//   res.status(200).json({
-//     status: 'success',
-//     length: 1,
-//     data: data,
-//   });
-// });
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -234,4 +184,119 @@ exports.updateOrder = catchAsync(async (req, res, next) => {
       data: doc,
     });
   }
+});
+
+exports.monthlyProductRevenue = catchAsync(async (req, res, next) => {
+  // let a = { status: 'Đã nhận' };
+  let idProduct = req.params.id;
+  let doc = await OrderDetail.find({ idProduct });
+
+  doc = doc.filter(
+    (item) =>
+      item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
+  );
+  let result1 = _(doc)
+    .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
+    .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
+    .value();
+
+  let result = _(result1)
+    .groupBy((x) => moment(x.orderRevenueDay[0].createdAt).format('MM-YYYY'))
+    .map((value, key) => ({
+      name: key,
+      orderRevenueMonth: value,
+    }))
+    .value();
+
+  // lấy ra tháng hiện tại để filter
+  const currentDate = moment();
+  const formattedDate = currentDate.format('MM-YYYY');
+
+  result = result.filter((item) => item.name === formattedDate);
+
+  const arrayMonth = [];
+
+  result.map((item) =>
+    item.orderRevenueMonth.map((item2) => arrayMonth.push(item2.nameYear))
+  );
+
+  let totalQuality = result.map((item) =>
+    item.orderRevenueMonth.map((item1) =>
+      item1.orderRevenueDay.reduce((total, item2) => {
+        return (total += item2.quantity);
+      }, 0)
+    )
+  );
+
+  let totalPrice = result.map((item) =>
+    item.orderRevenueMonth.map((item1) =>
+      item1.orderRevenueDay.reduce((total, item2) => {
+        return (total += item2.total);
+      }, 0)
+    )
+  );
+
+  res.status(200).json({
+    status: 'success',
+    result: result.length,
+    arrayMonth: arrayMonth.sort(),
+    totalQuality: totalQuality[0],
+    totalPrice: totalPrice[0],
+    data: result,
+  });
+});
+
+exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
+  let idProduct = req.params.id;
+  let doc = await OrderDetail.find({ idProduct });
+  doc = doc.filter(
+    (item) =>
+      item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
+  );
+  let result1 = _(doc)
+    .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
+    .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
+    .value();
+
+  let result = _(result1)
+    .groupBy((x) => moment(x.orderRevenueDay[0].createdAt).format('MM-YYYY'))
+    .map((value, key) => ({
+      // name: moment(new Date(key)).format('MM'),
+      name: key,
+      orderRevenueMonth: value,
+    }))
+    .value();
+
+  // result = result.filter((item) => item.name === '11-2022');
+
+  const arrayMonth = [];
+
+  result.map((item) =>
+    item.orderRevenueMonth.map((item2) => arrayMonth.push(item2.nameYear))
+  );
+
+  let totalQuality = result.map((item) =>
+    item.orderRevenueMonth.map((item1) =>
+      item1.orderRevenueDay.reduce((total, item2) => {
+        return (total += item2.quantity);
+      }, 0)
+    )
+  );
+
+  let totalPrice = result.map((item) =>
+    item.orderRevenueMonth.map((item1) =>
+      item1.orderRevenueDay.reduce((total, item2) => {
+        return (total += item2.totalPrice);
+      }, 0)
+    )
+  );
+
+  res.status(200).json({
+    status: 'success',
+    result: result.length,
+    arrayMonth: arrayMonth.sort(),
+    totalQuality: totalQuality[0],
+    totalPrice: totalPrice[0],
+    data: result,
+  });
 });

@@ -14,6 +14,14 @@ router.get(
 );
 
 router
+  .route('/monthly-product-revenue/:id')
+  .get(orderController.monthlyProductRevenue);
+
+router
+  .route('/yearly-product-revenue/:id')
+  .get(orderController.yearlyProductRevenue);
+
+router
   .route('/:id')
   .get(orderController.getDetailOrder)
   .put(orderController.updateOrder);
