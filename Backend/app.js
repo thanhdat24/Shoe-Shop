@@ -18,6 +18,7 @@ const productRouters = require('./routers/productRouters');
 const colorRouters = require('./routers/colorRouters');
 const sizeRouters = require('./routers/sizeRouters');
 const shipperRouters = require('./routers/shipperRouters');
+const supplierRouters = require('./routers/supplierRouters');
 const productDetailRouters = require('./routers/productDetailRouters');
 const promotionRouters = require('./routers/promotionRouters');
 const orderRouters = require('./routers/orderRouters');
@@ -25,6 +26,8 @@ const orderDetailRouters = require('./routers/orderDetailRouters');
 const addressRouters = require('./routers/addressRouters');
 const paymentRouters = require('./routers/paymentRouters');
 const ratingRouters = require('./routers/ratingRouters');
+const receiptRouters = require('./routers/receiptRouters');
+const receiptDetailRouters = require('./routers/receiptDetailRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -63,6 +66,7 @@ app.use('/api/v1/objectUses', objUseRouters);
 app.use('/api/v1/products', productRouters);
 app.use('/api/v1/colors', colorRouters);
 app.use('/api/v1/sizes', sizeRouters);
+app.use('/api/v1/suppliers', supplierRouters);
 app.use('/api/v1/productDetail', productDetailRouters);
 app.use('/api/v1/promotions', promotionRouters);
 app.use('/api/v1/orders', orderRouters);
@@ -70,6 +74,8 @@ app.use('/api/v1/order-details', orderDetailRouters);
 app.use('/api/v1/address', addressRouters);
 app.use('/api/v1/payments', paymentRouters);
 app.use('/api/v1/ratings', ratingRouters);
+app.use('/api/v1/receipts', receiptRouters);
+app.use('/api/v1/receipt-details', receiptDetailRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {

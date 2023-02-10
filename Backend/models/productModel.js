@@ -47,10 +47,9 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Please tell us your material'],
       trim: true,
     },
-    supplier: {
-      type: String,
-      required: [true, 'Please tell us your supplier'],
-      trim: true,
+    idSupplier: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Supplier',
     },
     inventoryType: {
       type: String,
@@ -96,6 +95,9 @@ productSchema.pre(/^find/, function (next) {
     })
     .populate({
       path: 'idProductImages',
+    })
+    .populate({
+      path: 'idSupplier',
     });
 
   next();
