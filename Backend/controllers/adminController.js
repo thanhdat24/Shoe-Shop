@@ -1,4 +1,5 @@
 const Admin = require('../models/adminModel');
+const User = require('../models/userModel');
 const factory = require('../controllers/handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -122,8 +123,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-exports.getAllAccount = catchAsync(async (req, res, next) => {
-  let queryAdmin = Admin.find(req.query).populate('idRole');
+exports.getAllAccounts = catchAsync(async (req, res, next) => {
+  let queryAdmin = Admin.find(req.query);
   const admin = await queryAdmin;
 
   let queryUser = User.find(req.query);

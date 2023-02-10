@@ -8,6 +8,7 @@ const router = express.Router();
 router.use(authController.protect);
 
 router.get('/getMe', authController.getMe, adminController.getDetail);
+router.get('/get-all-accounts', adminController.getAllAccounts);
 
 router.put(
   '/updateMe',

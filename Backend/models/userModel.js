@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: 'Khách hàng',
+      default: 'khách hàng',
     },
     active: {
       type: Boolean,

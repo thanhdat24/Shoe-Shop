@@ -8,7 +8,6 @@ import {
   Tabs,
   Card,
   Table,
-  Switch,
   Button,
   Tooltip,
   Divider,
@@ -17,9 +16,8 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
-  FormControlLabel,
 } from '@mui/material';
-import { getUsers } from '../../redux/slices/admin';
+import { getAllAccounts } from '../../redux/slices/admin';
 import { useDispatch, useSelector } from '../../redux/store';
 
 // routes
@@ -28,8 +26,6 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -43,7 +39,7 @@ import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/l
 
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
-const ROLE_OPTIONS = ['all', 'Quản trị', 'Khách hàng'];
+const ROLE_OPTIONS = ['all', 'quản trị', 'khách hàng'];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Tên', align: 'left' },
@@ -57,12 +53,12 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  const { accountList } = useSelector((state) => state.admin);
+  const { allAccountsList } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getUsers());
+    dispatch(getAllAccounts());
   }, [dispatch]);
-  console.log('accountList', accountList);
+  console.log('allAccountsList', allAccountsList);
   const {
     dense,
     page,
@@ -86,7 +82,7 @@ export default function UserList() {
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
@@ -99,10 +95,10 @@ export default function UserList() {
     setPage(0);
   };
   useEffect(() => {
-    if (accountList?.length) {
-      setTableData(accountList);
+    if (allAccountsList?.length) {
+      setTableData(allAccountsList);
     }
-  }, [accountList]);
+  }, [allAccountsList]);
 
   const handleFilterRole = (event) => {
     setFilterRole(event.target.value);
@@ -113,9 +109,6 @@ export default function UserList() {
     setSelected([]);
     setTableData(deleteRow);
   };
-
- 
-
 
   const handleDeleteRows = (selected) => {
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
@@ -267,7 +260,6 @@ export default function UserList() {
 // ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
-  console.log('filterRole', filterRole);
   // filterStatus = filterStatus === 'active' ? true : (filterStatus === 'banned' || filterStatus !== 'all') && false;
 
   if (filterStatus === 'active') {
@@ -276,7 +268,6 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
     filterStatus = false;
   }
 
-  console.log('filterStatus say', filterStatus);
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -296,7 +287,7 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   }
 
   if (filterRole !== 'all') {
-    if (filterRole === 'Quản trị') {
+    if (filterRole === 'quản trị') {
       tableData = tableData.filter((item) => item.role !== 'khách hàng');
     } else {
       tableData = tableData.filter((item) => item.role === filterRole);

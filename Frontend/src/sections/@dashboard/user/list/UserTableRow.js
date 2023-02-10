@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -38,7 +38,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   const { error, adminUpdate } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const { name, displayName, email, role, gender, active, avatar, status, _id } = row;
+  const { name, displayName, email, role, gender, active, photoURL, _id } = row;
   const [openMenu, setOpenMenuActions] = useState(null);
   const [checked, setChecked] = useState(active);
   const handleOpen = () => {
@@ -83,7 +83,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={avatar} sx={{ mr: 2 }} />
+        <Avatar alt={name} src={photoURL} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           {displayName}
         </Typography>

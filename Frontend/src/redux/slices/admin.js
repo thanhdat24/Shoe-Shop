@@ -15,6 +15,7 @@ const initialState = {
   success: '',
   accountList: null,
   adminUpdate: null,
+  allAccountsList: null,
 };
 
 const slice = createSlice({
@@ -30,7 +31,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
@@ -51,8 +51,12 @@ const slice = createSlice({
     },
     getAccountsSuccess(state, action) {
       state.isLoading = false;
-
       state.accountList = action.payload;
+    },
+
+    getAllAccounts(state, action) {
+      state.isLoading = false;
+      state.allAccountsList = action.payload;
     },
 
     // OPEN MODAL
@@ -124,6 +128,18 @@ export function getUsers() {
     try {
       const response = await axios.get('/api/v1/admin');
       dispatch(slice.actions.getAccountsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getAllAccounts() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/v1/admin/get-all-accounts');
+      dispatch(slice.actions.getAllAccounts(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
