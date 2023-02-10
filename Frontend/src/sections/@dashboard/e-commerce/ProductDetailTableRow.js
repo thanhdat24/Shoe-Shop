@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { useTheme, alpha, styled } from '@mui/material/styles';
 import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
 import { fCurrency } from '../../../utils/formatNumber';
+import Label from '../../../components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -27,9 +28,10 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function ProductDetailTableRow({ row, selected }) {
   const theme = useTheme();
   console.log('row123', row);
+  console.log('selected', selected);
   const {
-    color: { name: nameColor },
-    size: { name: nameSize },
+    idColor: { name: nameColor },
+    idSize: { name: nameSize },
     gender,
     price,
     priceSale,
@@ -56,7 +58,16 @@ export default function ProductDetailTableRow({ row, selected }) {
           {`${nameSize}/${nameColor}/${objectUseName}`}
         </Typography>
       </TableCell>
-      <TableCell> {quantity}</TableCell>
+      <TableCell>
+        <Label
+          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+          // color={active ? 'success' : 'error'}
+          color={(quantity > 5 && 'success') || (quantity === 0 && 'error') || 'warning'}
+          sx={{ textTransform: 'capitalize' }}
+        >
+          {quantity}
+        </Label>
+      </TableCell>
       <TableCell> {fCurrency(price)} ₫</TableCell>
       <TableCell> {fCurrency(priceSale)} ₫</TableCell>
     </TableRow>

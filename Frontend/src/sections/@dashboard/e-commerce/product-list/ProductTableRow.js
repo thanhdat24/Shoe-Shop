@@ -1,20 +1,22 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
+import { sentenceCase, paramCase } from 'change-case';
 import _ from 'lodash';
 // @mui
 
 import { useTheme, alpha, styled } from '@mui/material/styles';
-import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
+import { TableRow, Checkbox, TableCell, Typography, MenuItem, Link } from '@mui/material';
 // utils
 
+import { Link as RouterLink } from 'react-router-dom';
+//
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-//
 
 // ----------------------------------------------------------------------
 
@@ -77,7 +79,9 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
           sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }}
         />
         <Typography variant="subtitle2" noWrap>
-          {name}
+          <Link variant="subtitle2" component={RouterLink} to={PATH_DASHBOARD.eCommerce.view(paramCase(name))}>
+            {name}
+          </Link>
         </Typography>
       </TableCell>
       <TableCell>
@@ -102,7 +106,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
           color={inventoryType === 'còn hàng' ? 'success' : 'error'}
           sx={{ textTransform: 'capitalize' }}
         >
-          {inventoryType }
+          {inventoryType}
         </Label>
       </TableCell>
       <TableCell align="right">{fCurrency(price)}₫</TableCell>

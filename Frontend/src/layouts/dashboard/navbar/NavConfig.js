@@ -138,6 +138,7 @@ const navConfig = [
           { title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list },
 
           { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
+          // { title: 'view', path: PATH_DASHBOARD.eCommerce.view },
         ],
       },
 

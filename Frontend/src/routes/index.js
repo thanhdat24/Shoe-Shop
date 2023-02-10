@@ -16,6 +16,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import AccountLayoutLayout from '../layouts/account';
 import OrderDetail from '../pages/Shipper/OrderDetail';
 import ShipperLayout from '../layouts/shipper';
+import ProductDetail from '../pages/dashboard/ProductDetail';
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +84,7 @@ export default function Router() {
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
+            { path: 'product/:name/view', element: <ProductDetail /> },
             { path: 'checkout', element: <EcommerceCheckout /> },
           ],
         },

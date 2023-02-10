@@ -238,7 +238,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     newProduct = {
       ...product,
     };
-
+    console.log('newProduct', newProduct);
     try {
       if (newProduct !== undefined) {
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -265,8 +265,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               supplier: newProduct.supplier,
               quantity: newProduct.quantity,
               style: newProduct.style,
-              color: newProduct.color[j],
-              size: newProduct.size[i],
+              idColor: newProduct.color[j],
+              idSize: newProduct.size[i],
             };
             arrayItemProduct.push(itemProduct);
           }
@@ -280,7 +280,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       console.error(error);
     }
   };
-
+  // console.log('ArrayNewProduct', arrayNewProduct);
 
   const [images, setImages] = useState([]);
   const imageTypeRegex = /image\/(png|jpg|jpeg|svg)/gm;
