@@ -238,7 +238,6 @@ exports.monthlyProductRevenue = catchAsync(async (req, res, next) => {
     arrayMonth,
     totalQuality,
     totalPrice,
-    data: result,
   });
 });
 
@@ -250,7 +249,7 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
       item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
   );
   let result = _(doc)
-    .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
+    .groupBy((x) => moment(x.createdAt).format('MM-YYYY'))
     .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
     .value();
 
@@ -287,19 +286,22 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
     arrayMonth,
     totalQuality,
     totalPrice,
-    data: result,
   });
 });
 
 exports.getNotifications = catchAsync(async (req, res, next) => {
-  let doc = await Order.find().sort({ createdAt: -1 });
+  let doc = await Order.find({ status: 'Đang xử lí' }).sort({ createdAt: -1 });
 
-  let filteredDoc = doc.map(({ idUser, _id, total, createdAt }) => ({
-    idUser: { displayName: idUser.displayName, photoURL: idUser.photoURL },
-    _id,
-    total,
-    createdAt: moment(createdAt).format('HH:mm DD-MM-YY'),
-  }));
+  let filteredDoc = doc.map(
+    ({ idUser, _id, total, createdAt, isRead, status }) => ({
+      idUser: { displayName: idUser.displayName, photoURL: idUser.photoURL },
+      _id,
+      total,
+      createdAt: moment(createdAt).format('HH:mm DD-MM-YY'),
+      isRead,
+      status,
+    })
+  );
 
   res.status(200).json({
     status: 'success',
