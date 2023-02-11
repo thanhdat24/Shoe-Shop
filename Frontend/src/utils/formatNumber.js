@@ -10,12 +10,12 @@ export function fPercent(number) {
   return numeral(number / 100).format('0.0%');
 }
 
-export function fNumber(number) {
+export function fNumber(number) { 
   return numeral(number).format();
 }
 
 export function fShortenNumber(number) {
-  return numeral(number).format('0.00a').replace('.00', '');
+  return numeral(number).format('0.0a').replace('0.0', '');
 }
 
 export function fData(number) {

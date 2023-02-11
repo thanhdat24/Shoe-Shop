@@ -62,7 +62,7 @@ export default function ProductDetail() {
               name: 'Sản phẩm',
               href: PATH_DASHBOARD.eCommerce.list,
             },
-            { name: 'Chi tiết' },
+            { name: product?.name },
           ]}
         />
         <Box>
@@ -70,7 +70,7 @@ export default function ProductDetail() {
             <TableContainer sx={{ minWidth: 800 }}>
               {' '}
               <Typography variant="h4" className="text-green-500 uppercase " ml={2} mt={2} mb={2}>
-                Chi tiết {product.name}
+                Chi tiết {product?.name}
               </Typography>
               {/* {productUpdate.name} */}
               {/* <div style={{ height: 400, width: '100%' }}>

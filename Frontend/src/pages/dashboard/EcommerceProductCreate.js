@@ -28,9 +28,6 @@ export default function EcommerceProductCreate() {
 
   useEffect(() => {
     dispatch(getProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getAllSize());
   }, [dispatch]);
 

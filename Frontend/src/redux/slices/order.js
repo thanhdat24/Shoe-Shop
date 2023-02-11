@@ -15,6 +15,8 @@ const initialState = {
   orderUser: null,
   orderDetail: null,
   orderUpdate: null,
+  staticProductDetail: null,
+  staticProductDetailMonth:null
 };
 
 const slice = createSlice({
@@ -57,6 +59,14 @@ const slice = createSlice({
       state.orderUpdate = action.payload;
     },
 
+    getStaticProductDetailYearSuccess(state, action) {
+      state.isLoading = false;
+      state.staticProductDetail = action.payload;
+    },
+    getStaticProductDetailMonthSuccess(state, action) {
+      state.isLoading = false;
+      state.staticProductDetailMonth = action.payload;
+    },
     // OPEN MODAL
     openModal(state) {
       state.isOpenModal = true;
@@ -142,6 +152,34 @@ export function updateOrder(id, updateOrder) {
       dispatch(slice.actions.updateOrderSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getStaticProductDetailYear(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+
+    try {
+      const response = await axios.get(`/api/v1/orders/yearly-product-revenue/${id}`);
+      console.log('response getStaticProductDetailYearSuccess', response);
+      dispatch(slice.actions.getStaticProductDetailYearSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.log('error', error);
+    }
+  };
+}
+export function getStaticProductDetailMonth(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+
+    try {
+      const response = await axios.get(`/api/v1/orders/monthly-product-revenue/${id}`);
+      console.log('response', response);
+      dispatch(slice.actions.getStaticProductDetailMonthSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.log('error', error);
     }
   };
 }
