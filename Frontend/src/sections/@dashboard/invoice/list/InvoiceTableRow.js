@@ -39,7 +39,6 @@ export default function InvoiceTableRow({
 
   const { address, _id, createdAt, status, total, paymentMethod, idUser, idShipper } = row;
 
-
   // setIdShipper === _id;
   // setIdShipper(_id);
 
@@ -97,12 +96,6 @@ export default function InvoiceTableRow({
           {status}
         </Label>
       </TableCell>
-      {/* <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
-        {status}
-      </TableCell> */}
-      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {fCurrency(total)}₫
-      </TableCell>
       <TableCell align="center">
         {' '}
         <Label
@@ -116,6 +109,9 @@ export default function InvoiceTableRow({
             (paymentMethod.resultCode === 1000 && 'Chờ thanh toán') ||
             'Đã hủy'}
         </Label>
+      </TableCell>
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {fCurrency(total)}₫
       </TableCell>
       <TableCell align="right">
         <TableMoreMenu

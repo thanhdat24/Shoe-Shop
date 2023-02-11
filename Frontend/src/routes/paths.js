@@ -163,7 +163,6 @@ export const PATH_DASHBOARD = {
   rating: {
     root: path(ROOTS_DASHBOARD, '/rating'),
     list: path(ROOTS_DASHBOARD, '/rating/list'),
-  
   },
   blog: {
     root: path(ROOTS_DASHBOARD, '/blog'),

@@ -56,8 +56,8 @@ const TABLE_HEAD = [
   { id: 'phone', label: 'Số điện thoại', align: 'center' },
   { id: 'createDay', label: 'Ngày đặt ', align: 'center', width: 140 },
   { id: 'status', label: 'Trạng thái', align: 'center', width: 140 },
-  { id: 'price', label: 'Giá tiền', align: 'left' },
   { id: 'payment', label: 'Thanh toán', align: 'center' },
+  { id: 'price', label: 'Giá tiền', align: 'center' },
   { id: '' },
 ];
 

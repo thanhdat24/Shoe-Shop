@@ -133,11 +133,12 @@ const navConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
         children: [
-          { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
-          { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
+          // { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
+          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
           { title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list },
+          { title: 'Tạo', path: PATH_DASHBOARD.eCommerce.new },
 
-          { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
+          // { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
           // { title: 'view', path: PATH_DASHBOARD.eCommerce.view },
         ],
       },

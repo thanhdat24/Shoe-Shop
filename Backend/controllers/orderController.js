@@ -290,7 +290,7 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
 });
 
 exports.getNotifications = catchAsync(async (req, res, next) => {
-  let doc = await Order.find({ status: 'Đang xử lí' }).sort({ createdAt: -1 });
+  let doc = await Order.find({ status: 'Đang xử lý' }).sort({ createdAt: -1 });
 
   let filteredDoc = doc.map(
     ({ idUser, _id, total, createdAt, isRead, status }) => ({

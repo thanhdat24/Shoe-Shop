@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { noCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -15,6 +16,7 @@ import {
   ListSubheader,
   ListItemAvatar,
   ListItemButton,
+  Link,
 } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
@@ -25,15 +27,29 @@ import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
-
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getNotifications } from '../../../redux/slices/notification';
+import { PATH_DASHBOARD } from '../../../routes/paths';
+import { updateOrder } from '../../../redux/slices/order';
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(_notifications);
+  const dispatch = useDispatch();
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  // const [notifications, setNotifications] = useState(_notifications);
+
+  const { notifications } = useSelector((state) => state.notification);
+  const { orderUpdate } = useSelector((state) => state.order);
+
+  console.log('notifications', notifications);
+
+  const totalUnRead = notifications?.filter((item) => !item.isRead).length;
 
   const [open, setOpen] = useState(null);
+
+  useEffect(() => {
+    dispatch(getNotifications());
+  }, [dispatch, orderUpdate]);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -43,14 +59,14 @@ export default function NotificationsPopover() {
     setOpen(null);
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
-    );
-  };
+  // const handleMarkAllAsRead = () => {
+  //   setNotifications(
+  //     notifications.map((notification) => ({
+  //       ...notification,
+  //       isUnRead: false,
+  //     }))
+  //   );
+  // };
 
   return (
     <>
@@ -68,15 +84,18 @@ export default function NotificationsPopover() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">Notifications</Typography>
+            <Typography variant="subtitle1">Thông báo</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {totalUnRead} unread messages
+              Bạn có {totalUnRead} tin nhắn chưa đọc
             </Typography>
           </Box>
 
           {totalUnRead > 0 && (
             <Tooltip title=" Mark all as read">
-              <IconButtonAnimate color="primary" onClick={handleMarkAllAsRead}>
+              <IconButtonAnimate
+                color="primary"
+                // onClick={handleMarkAllAsRead}
+              >
                 <Iconify icon="eva:done-all-fill" width={20} height={20} />
               </IconButtonAnimate>
             </Tooltip>
@@ -90,26 +109,30 @@ export default function NotificationsPopover() {
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                New
+                Mới
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
+            {notifications
+              ?.filter((item) => !item.isRead)
+              .map((notification) => (
+                <NotificationItem setOpen={setOpen} key={notification._id} notification={notification} />
+              ))}
           </List>
 
           <List
             disablePadding
             subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                Before that
+              <ListSubheader setOpen={setOpen} disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+                Trước đó
               </ListSubheader>
             }
           >
-            {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
+            {notifications
+              ?.filter((item) => item.isRead)
+              .map((notification) => (
+                <NotificationItem key={notification._id} notification={notification} />
+              ))}
           </List>
         </Scrollbar>
 
@@ -117,7 +140,7 @@ export default function NotificationsPopover() {
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth disableRipple>
-            View All
+            Xem tất cả
           </Button>
         </Box>
       </MenuPopover>
@@ -129,51 +152,64 @@ export default function NotificationsPopover() {
 
 NotificationItem.propTypes = {
   notification: PropTypes.shape({
-    createdAt: PropTypes.instanceOf(Date),
-    id: PropTypes.string,
-    isUnRead: PropTypes.bool,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    type: PropTypes.string,
-    avatar: PropTypes.any,
+    createdAt: PropTypes.string,
+    _id: PropTypes.string,
+    isRead: PropTypes.bool,
+    status: PropTypes.string,
+    idUser: PropTypes.object,
   }),
+  setOpen: PropTypes.func,
 };
 
-function NotificationItem({ notification }) {
-  const { avatar, title } = renderContent(notification);
+function NotificationItem({ notification, setOpen }) {
+const dispatch = useDispatch()
 
+  const { photoURL, title } = renderContent(notification);
+
+  const handleRead = async (id) => {
+    console.log(id);
+   await dispatch(updateOrder(id,{isRead:true}))
+    setOpen(null);
+  };
   return (
-    <ListItemButton
-      sx={{
-        py: 1.5,
-        px: 2.5,
-        mt: '1px',
-        ...(notification.isUnRead && {
-          bgcolor: 'action.selected',
-        }),
-      }}
+    <Link
+      component={RouterLink}
+      to={PATH_DASHBOARD.invoice.view(notification._id)}
+      sx={{ textDecoration: 'none !important' }}
+      onClick={() => handleRead(notification._id)}
     >
-      <ListItemAvatar>
-        <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={title}
-        secondary={
-          <Typography
-            variant="caption"
-            sx={{
-              mt: 0.5,
-              display: 'flex',
-              alignItems: 'center',
-              color: 'text.disabled',
-            }}
-          >
-            <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-            {fToNow(notification.createdAt)}
-          </Typography>
-        }
-      />
-    </ListItemButton>
+      <ListItemButton
+        sx={{
+          py: 1.5,
+          px: 2.5,
+          mt: '1px',
+          ...(!notification.isRead && {
+            bgcolor: 'action.selected',
+          }),
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar sx={{ bgcolor: 'background.neutral' }}>{photoURL}</Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={title}
+          secondary={
+            <Typography
+              variant="caption"
+              sx={{
+                mt: 0.5,
+                display: 'flex',
+                alignItems: 'center',
+                color: 'text.disabled',
+              }}
+            >
+              <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
+              {notification.createdAt}
+            </Typography>
+          }
+        />
+      </ListItemButton>
+    </Link>
   );
 }
 
@@ -182,59 +218,17 @@ function NotificationItem({ notification }) {
 function renderContent(notification) {
   const title = (
     <Typography variant="subtitle2">
-      {notification.title}
+      {notification.idUser.displayName}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        &nbsp; {notification.status === 'Đang xử lý' && 'đã đặt thành công đơn hàng mới'}
       </Typography>
     </Typography>
   );
 
-  if (notification.type === 'order_placed') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_package.svg"
-        />
-      ),
-      title,
-    };
-  }
-  if (notification.type === 'order_shipped') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_shipping.svg"
-        />
-      ),
-      title,
-    };
-  }
-  if (notification.type === 'mail') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_mail.svg"
-        />
-      ),
-      title,
-    };
-  }
-  if (notification.type === 'chat_message') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_chat.svg"
-        />
-      ),
-      title,
-    };
-  }
   return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
+    photoURL: notification.idUser.photoURL ? (
+      <img alt={notification.displayName} src={notification.idUser.photoURL} />
+    ) : null,
     title,
   };
 }
