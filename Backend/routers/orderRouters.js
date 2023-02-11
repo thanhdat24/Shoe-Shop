@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/', authController.protectUser, orderController.createOrder);
 
 router.route('/').get(orderController.getAllOrder);
+router.route('/notifications').get(orderController.getNotifications);
 
 router.get(
   '/getMeOrder',

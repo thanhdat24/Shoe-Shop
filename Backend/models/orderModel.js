@@ -66,18 +66,10 @@ const orderModelSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Promotion',
     },
-    // user: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: 'User',
-    // },
-    // shipper: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: 'Shipper',
-    // },
-    // isSeen: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
     notes: {
       type: String,
       default: '',

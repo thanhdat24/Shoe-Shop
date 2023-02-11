@@ -195,12 +195,12 @@ exports.monthlyProductRevenue = catchAsync(async (req, res, next) => {
     (item) =>
       item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
   );
-  let result1 = _(doc)
+  let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
     .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
     .value();
 
-  let result = _(result1)
+  let array = _(result)
     .groupBy((x) => moment(x.orderRevenueDay[0].createdAt).format('MM-YYYY'))
     .map((value, key) => ({
       name: key,
@@ -212,36 +212,32 @@ exports.monthlyProductRevenue = catchAsync(async (req, res, next) => {
   const currentDate = moment();
   const formattedDate = currentDate.format('MM-YYYY');
 
-  result = result.filter((item) => item.name === formattedDate);
+  array = array.filter((item) => item.name === formattedDate);
 
   const arrayMonth = [];
+  const totalQuality = [];
+  const totalPrice = [];
 
-  result.map((item) =>
-    item.orderRevenueMonth.map((item2) => arrayMonth.push(item2.nameYear))
-  );
-
-  let totalQuality = result.map((item) =>
-    item.orderRevenueMonth.map((item1) =>
-      item1.orderRevenueDay.reduce((total, item2) => {
-        return (total += item2.quantity);
-      }, 0)
-    )
-  );
-
-  let totalPrice = result.map((item) =>
-    item.orderRevenueMonth.map((item1) =>
-      item1.orderRevenueDay.reduce((total, item2) => {
-        return (total += item2.total);
-      }, 0)
-    )
-  );
+  array.forEach((month) => {
+    month.orderRevenueMonth.forEach((order) => {
+      arrayMonth.push(order.nameYear);
+      let quality = 0;
+      let price = 0;
+      order.orderRevenueDay.forEach((day) => {
+        quality += day.quantity;
+        price += day.idOrder.total;
+      });
+      totalQuality.push(quality);
+      totalPrice.push(price);
+    });
+  });
 
   res.status(200).json({
     status: 'success',
-    result: result.length,
-    arrayMonth: arrayMonth.sort(),
-    totalQuality: totalQuality[0],
-    totalPrice: totalPrice[0],
+    result: arrayMonth.length,
+    arrayMonth,
+    totalQuality,
+    totalPrice,
     data: result,
   });
 });
@@ -253,12 +249,12 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
     (item) =>
       item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
   );
-  let result1 = _(doc)
+  let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
     .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
     .value();
 
-  let result = _(result1)
+  let array = _(result)
     .groupBy((x) => moment(x.orderRevenueDay[0].createdAt).format('MM-YYYY'))
     .map((value, key) => ({
       // name: moment(new Date(key)).format('MM'),
@@ -267,36 +263,47 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
     }))
     .value();
 
-  // result = result.filter((item) => item.name === '11-2022');
-
   const arrayMonth = [];
+  const totalQuality = [];
+  const totalPrice = [];
 
-  result.map((item) =>
-    item.orderRevenueMonth.map((item2) => arrayMonth.push(item2.nameYear))
-  );
-
-  let totalQuality = result.map((item) =>
-    item.orderRevenueMonth.map((item1) =>
-      item1.orderRevenueDay.reduce((total, item2) => {
-        return (total += item2.quantity);
-      }, 0)
-    )
-  );
-
-  let totalPrice = result.map((item) =>
-    item.orderRevenueMonth.map((item1) =>
-      item1.orderRevenueDay.reduce((total, item2) => {
-        return (total += item2.totalPrice);
-      }, 0)
-    )
-  );
+  array.forEach((month) => {
+    month.orderRevenueMonth.forEach((order) => {
+      arrayMonth.push(order.nameYear);
+      let quality = 0;
+      let price = 0;
+      order.orderRevenueDay.forEach((day) => {
+        quality += day.quantity;
+        price += day.idOrder.total;
+      });
+      totalQuality.push(quality);
+      totalPrice.push(price);
+    });
+  });
 
   res.status(200).json({
     status: 'success',
-    result: result.length,
-    arrayMonth: arrayMonth.sort(),
-    totalQuality: totalQuality[0],
-    totalPrice: totalPrice[0],
+    result: arrayMonth.length,
+    arrayMonth,
+    totalQuality,
+    totalPrice,
     data: result,
+  });
+});
+
+exports.getNotifications = catchAsync(async (req, res, next) => {
+  let doc = await Order.find().sort({ createdAt: -1 });
+
+  let filteredDoc = doc.map(({ idUser, _id, total, createdAt }) => ({
+    idUser: { displayName: idUser.displayName, photoURL: idUser.photoURL },
+    _id,
+    total,
+    createdAt: moment(createdAt).format('HH:mm DD-MM-YY'),
+  }));
+
+  res.status(200).json({
+    status: 'success',
+    result: filteredDoc.slice(0, 5).length,
+    data: filteredDoc.slice(0, 5),
   });
 });
