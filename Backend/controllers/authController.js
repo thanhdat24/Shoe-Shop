@@ -162,7 +162,6 @@ exports.protectUser = catchAsync(async (req, res, next) => {
         const uid = decodedToken.uid;
 
         const currentUser = await User.find({ googleId: uid });
-        console.log('currentUser', currentUser);
 
         if (!currentUser) {
           return next(
@@ -184,6 +183,7 @@ exports.protectUser = catchAsync(async (req, res, next) => {
       });
   }
 });
+
 
 exports.sendOtp = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTED email

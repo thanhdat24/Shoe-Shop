@@ -55,7 +55,7 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
-exports.uploadUserPhoto = upload.single('avatar');
+exports.uploadUserPhoto = upload.single('photoURL');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};

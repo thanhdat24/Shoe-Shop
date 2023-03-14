@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, }
 );
 
 userSchema.plugin(findOrCreate);

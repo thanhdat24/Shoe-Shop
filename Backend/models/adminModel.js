@@ -45,7 +45,7 @@ const adminSchema = new mongoose.Schema(
       required: [true, 'Please provide your date of birth'],
       allowNull: true,
     },
-    avatar: {
+    photoURL: {
       type: String,
     },
     role: {
@@ -73,7 +73,6 @@ const adminSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: [true, 'Please provide your address'],
       allowNull: true,
     },
     googleId: {
