@@ -180,6 +180,14 @@ export default function Router() {
             { path: 'list', element: <RatingList /> },
           ],
         },
+        {
+          path: 'chat',
+          children: [
+            { element: <Chat />, index: true },
+            { path: 'new', element: <Chat /> },
+            { path: ':conversationKey', element: <Chat /> },
+          ],
+        },
       ],
     },
 
@@ -249,11 +257,7 @@ export default function Router() {
         { path: 'change-password', element: <ChangePassword /> },
       ],
     },
-    // { path: '/shipper/dashboard', element: <OrderListShipper /> },
-    // {
-    //   path: 'shipper',
-    //   children: [{ path: 'order/view/:id', element: <OrderDetail /> }],
-    // },
+
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
@@ -315,7 +319,9 @@ const ShipperCreate = Loadable(lazy(() => import('../pages/dashboard/ShipperCrea
 const CateList = Loadable(lazy(() => import('../pages/dashboard/CateList')));
 // ObjectUse
 const ObjectUseList = Loadable(lazy(() => import('../pages/dashboard/ObjectUseList')));
+
 // APP
+const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));

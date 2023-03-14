@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-
 // routes
 import Router from './routes';
 // theme
@@ -17,18 +16,19 @@ import MotionLazyContainer from './components/animate/MotionLazyContainer';
 import useAuth from './hooks/useAuth';
 import { useDispatch } from './redux/store';
 import { setSession } from './utils/jwt';
+import Chat from './pages/Chat';
 // import style from "./style.css"
 
 // ----------------------------------------------------------------------
 
 export default function App() {
-
   return (
     <ThemeProvider>
       <ThemeColorPresets>
         <RtlLayout>
           <NotistackProvider>
             <MotionLazyContainer>
+              <Chat />
               <ProgressBarStyle />
               <ChartStyle />
               <Settings />
