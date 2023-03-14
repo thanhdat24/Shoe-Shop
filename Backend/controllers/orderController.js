@@ -309,3 +309,21 @@ exports.getNotifications = catchAsync(async (req, res, next) => {
     data: filteredDoc.slice(0, 5),
   });
 });
+
+exports.bestSellingProductsRevenue = catchAsync(async (req, res, next) => {
+  let doc = await Product.find();
+
+  const arrayQuality = [];
+  const arrayName = [];
+
+  doc.forEach((product) => {
+    arrayQuality.push(product.soldQuality);
+    arrayName.push(product.name);
+  });
+
+  res.status(200).json({
+    status: 'success',
+    arrayQuality,
+    arrayName,
+  });
+});

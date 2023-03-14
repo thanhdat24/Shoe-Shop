@@ -21,6 +21,11 @@ router
 router
   .route('/yearly-product-revenue/:id')
   .get(orderController.yearlyProductRevenue);
+router
+  .route('/best-selling-products-revenue')
+  .get(orderController.bestSellingProductsRevenue);
+
+
 
 router
   .route('/:id')
