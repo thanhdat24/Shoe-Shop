@@ -180,10 +180,14 @@ exports.protectUser = catchAsync(async (req, res, next) => {
       })
       .catch((error) => {
         // Handle error
+        res.status(404).json({
+          status: 'error',
+          // length: chats.length,
+          data: error.message,
+        });
       });
   }
 });
-
 
 exports.sendOtp = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTED email

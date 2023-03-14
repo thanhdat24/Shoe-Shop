@@ -4,10 +4,15 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
+router.route('/').get(chatController.getAllChat);
+
 router
-  .route('/')
-  .post(authController.protectUser, chatController.createChat)
-  .get(chatController.getAllChat);
+  .route('/current')
+  .get(authController.protectUser, chatController.getCurrentChat);
+
+router
+  .route('/contact')
+  .post(authController.protectUser, chatController.createChat);
 
 router.route('/:chatId/send').post(chatController.sendChat);
 
