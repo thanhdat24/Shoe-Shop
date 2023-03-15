@@ -36,7 +36,7 @@ exports.createChat = catchAsync(async (req, res, next) => {
   });
   if (chats !== null) {
     res.status(201).json({
-      status: 'success',
+      message: 'contact exists',
       length: chats.length,
       data: chats,
     });

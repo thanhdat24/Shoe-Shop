@@ -26,6 +26,7 @@ export default function AccountGeneral() {
   useEffect(() => {}, []);
   useEffect(() => {
     if (error) {
+      console.log('error', error);
       enqueueSnackbar('Cập nhật không thành công!', { variant: 'error' });
     } else if (success) {
       enqueueSnackbar('Cập nhật thành công!');
@@ -44,7 +45,7 @@ export default function AccountGeneral() {
   const defaultValues = {
     displayName: user?.displayName || '',
     email: user?.email || '',
-    avatar: user?.photoURL || '',
+    photoURL: user?.photoURL || '',
     phoneNumber: user?.phoneNumber || '',
     address: user?.address || '',
   };
@@ -76,17 +77,16 @@ export default function AccountGeneral() {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       const reader = new FileReader();
-       reader.readAsDataURL(file);
-       reader.onload = function (e) {
-         // sau khi thực hiên xong lênh trên thì set giá trị có được
-         setValue('avatar',e.target.result);
-
-       };
+      reader.readAsDataURL(file);
+      reader.onload = function (e) {
+        // sau khi thực hiên xong lênh trên thì set giá trị có được
+        setValue('photoURL', e.target.result);
+      };
       // Đem dữ liệu file lưu vào formik
       //  formik.setFieldValue('photo', file);
       // if (file) {
       //   setValue(
-      //     'avatar',
+      //     'photoURL',
       //     Object.assign(file, {
       //       preview: URL.createObjectURL(file),
       //     })
@@ -102,7 +102,7 @@ export default function AccountGeneral() {
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
-              name="avatar"
+              name="photoURL"
               accept="image/*"
               maxSize={3145728}
               onDrop={handleDrop}

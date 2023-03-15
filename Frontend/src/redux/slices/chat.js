@@ -22,7 +22,8 @@ const initialState = {
   activeConversationId: null,
   participants: [],
   recipients: [],
-  sendChatSuccess:null
+  sendChatSuccess: null,
+  contactSuccess: null,
 };
 
 const slice = createSlice({
@@ -46,7 +47,9 @@ const slice = createSlice({
 
       state.activeConversationId = state.contact._id;
     },
-
+    createContactSuccess(state, action) {
+      state.contactSuccess = action.payload;
+    },
     // GET CONVERSATIONS
     getConversationsSuccess(state, action) {
       const conversations = action.payload;
@@ -205,6 +208,18 @@ export function sendChat(data) {
     try {
       const response = await axios.post(`/api/v1/chats/${data.chatId}/send`, data);
       dispatch(slice.actions.sendChatSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function createContact() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/v1/chats/contact');
+      dispatch(slice.actions.createContactSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

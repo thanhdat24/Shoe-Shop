@@ -32,7 +32,6 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState('');
   const { user } = useAuth();
-  console.log('user123', user);
   const handleAttach = () => {
     fileInputRef.current?.click();
   };

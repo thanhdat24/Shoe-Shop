@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 // @mui
 import { Box, Divider, Stack } from '@mui/material';
@@ -25,6 +26,11 @@ import ChatAccount from './ChatAccount';
 
 // ----------------------------------------------------------------------
 
+ChatWindowClient.propTypes = {
+  handleCloseChat: PropTypes.func,
+};
+
+
 const conversationSelector = (state) => {
   const { conversations, activeConversationId } = state.chat;
   const conversation = activeConversationId ? conversations.byId[activeConversationId] : null;
@@ -41,7 +47,8 @@ const conversationSelector = (state) => {
   return initState;
 };
 
-export default function ChatWindowClient() {
+
+export default function ChatWindowClient({ handleCloseChat }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -91,7 +98,7 @@ export default function ChatWindowClient() {
 
   return (
     <Stack sx={{ flexGrow: 1, minWidth: '1px' }}>
-      <ChatHeaderDetail participants={displayParticipants} />
+      <ChatHeaderDetail handleCloseChat={handleCloseChat} participants={displayParticipants} />
       <Divider />
 
       <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>

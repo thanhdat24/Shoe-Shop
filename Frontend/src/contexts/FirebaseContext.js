@@ -87,41 +87,41 @@ function AuthProvider({ children }) {
         if (user) {
           const { accessToken } = user;
           setSession(accessToken);
-          const hmacDigest = Hex.stringify(hmacSHA256(user?.email, secretKey));
+          // const hmacDigest = Hex.stringify(hmacSHA256(user?.email, secretKey));
 
-          window.$crisp?.push(['set', 'user:email', [user?.email, hmacDigest]]);
-          setProfile(user);
+          // window.$crisp?.push(['set', 'user:email', [user?.email, hmacDigest]]);
+          // setProfile(user);
           dispatch({
             type: 'INITIALISE',
             payload: { isAuthenticated: true, user },
           });
 
-          window.CRISP_TOKEN_ID = crispTokenIdUser;
-          window.CRISP_WEBSITE_ID = '3ff4579a-29ac-4939-93d5-612cabb088c6';
-          // (function () {
-          const d = document;
-          const s = d.createElement('script');
-          s.src = 'https://client.crisp.chat/l.js';
-          s.async = 1;
-          d.getElementsByTagName('head')[0].appendChild(s);
-        } else {
-          window.CRISP_TOKEN_ID = crispTokenIdGuest;
-          setTimeout(() => {
-            window.CRISP_WEBSITE_ID = '3ff4579a-29ac-4939-93d5-612cabb088c6';
-            // (function () {
-            const d = document;
-            const s = d.createElement('script');
-            s.src = 'https://client.crisp.chat/l.js';
-            s.async = 1;
-            d.getElementsByTagName('head')[0].appendChild(s);
-          }, 1000);
+        //   window.CRISP_TOKEN_ID = crispTokenIdUser;
+        //   window.CRISP_WEBSITE_ID = '3ff4579a-29ac-4939-93d5-612cabb088c6';
+        //   // (function () {
+        //   const d = document;
+        //   const s = d.createElement('script');
+        //   s.src = 'https://client.crisp.chat/l.js';
+        //   s.async = 1;
+        //   d.getElementsByTagName('head')[0].appendChild(s);
+        // } else {
+        //   window.CRISP_TOKEN_ID = crispTokenIdGuest;
+        //   setTimeout(() => {
+        //     window.CRISP_WEBSITE_ID = '3ff4579a-29ac-4939-93d5-612cabb088c6';
+        //     // (function () {
+        //     const d = document;
+        //     const s = d.createElement('script');
+        //     s.src = 'https://client.crisp.chat/l.js';
+        //     s.async = 1;
+        //     d.getElementsByTagName('head')[0].appendChild(s);
+        //   }, 1000);
         }
-        // else {
-        //   dispatch({
-        //     type: 'INITIALISE',
-        //     payload: { isAuthenticated: false, user: null },
-        //   });
-        // }
+        else {
+          dispatch({
+            type: 'INITIALISE',
+            payload: { isAuthenticated: false, user: null },
+          });
+        }
       }),
 
     [dispatch]

@@ -88,7 +88,7 @@ export default function UploadAvatar({ error, file, helperText, sx, ...other }) 
         >
           <input {...getInputProps()} />
 
-          {file && <Image alt="avatar" src={isString(file) ? file : file.preview} sx={{ zIndex: 8 }} />}
+          {file && <Image alt="photoURL" src={isString(file) ? file : file.preview} sx={{ zIndex: 8 }} />}
 
           <PlaceholderStyle
             className="placeholder"

@@ -93,7 +93,6 @@ export default function MainHeader() {
   const isOffset = useOffSetTop(HEADER.MAIN_DESKTOP_HEIGHT);
 
   const { user } = useAuth();
-  console.log('user123', user);
   const theme = useTheme();
 
   const { pathname } = useLocation();

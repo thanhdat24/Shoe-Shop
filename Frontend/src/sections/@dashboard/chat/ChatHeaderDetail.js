@@ -23,9 +23,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 ChatHeaderDetail.propTypes = {
   participants: PropTypes.array.isRequired,
+  handleCloseChat: PropTypes.func,
 };
 
-export default function ChatHeaderDetail({ participants }) {
+export default function ChatHeaderDetail({ participants, handleCloseChat }) {
   const isGroup = participants.length > 1;
 
   return (
@@ -40,7 +41,7 @@ export default function ChatHeaderDetail({ participants }) {
         <Iconify icon="eva:video-fill" width={20} height={20} />
       </IconButton>
       <IconButton>
-        <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
+        <Iconify onClick={handleCloseChat} icon="eva:minus-fill" width={20} height={20} />
       </IconButton>
     </RootStyle>
   );
