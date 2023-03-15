@@ -1,5 +1,6 @@
 import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
+import { useEffect } from 'react';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
@@ -7,6 +8,8 @@ import { Card, CardHeader } from '@mui/material';
 import { fNumber } from '../../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../../../components/chart';
+import { bestSellingProductsRevenue } from '../../../../redux/slices/order';
+import { useDispatch, useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -31,10 +34,18 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [4344, 5435, 1443, 4443];
-
 export default function AnalyticsCurrentVisits() {
+  const dispatch = useDispatch();
+
   const theme = useTheme();
+
+  const { bestSellingProducts } = useSelector((state) => state.order);
+
+  const CHART_DATA = bestSellingProducts?.arrayQuality;
+
+  useEffect(() => {
+    dispatch(bestSellingProductsRevenue());
+  }, [dispatch]);
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [
@@ -43,7 +54,7 @@ export default function AnalyticsCurrentVisits() {
       theme.palette.chart.violet[0],
       theme.palette.chart.yellow[0],
     ],
-    labels: ['America', 'Asia', 'Europe', 'Africa'],
+    labels: bestSellingProducts?.arrayName,
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
@@ -63,9 +74,9 @@ export default function AnalyticsCurrentVisits() {
 
   return (
     <Card>
-      <CardHeader title="Current Visits" />
+      <CardHeader title="Sản Phẩm Bán Chạy" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
+        <ReactApexChart type="pie" series={CHART_DATA?.length > 0 && CHART_DATA} options={chartOptions} height={280} />
       </ChartWrapperStyle>
     </Card>
   );

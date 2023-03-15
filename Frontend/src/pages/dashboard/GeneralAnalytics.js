@@ -82,7 +82,10 @@ export default function GeneralAnalytics() {
           <Grid item xs={12} sm={6} md={3}>
             <AnalyticsWidgetSummary title="Lượt truy cập" total={234} color="error" icon={'ant-design:eye-filled'} />
           </Grid>
-          <Grid item xs={12} md={12} lg={12}>
+          <Grid item xs={12} md={6} lg={4}>
+            <AnalyticsCurrentVisits />
+          </Grid>
+          <Grid item xs={12} md={12} lg={8}>
             <AnalyticsProduct />
           </Grid>
           <Grid item xs={12} md={6} lg={8}>

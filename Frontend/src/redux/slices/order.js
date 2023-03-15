@@ -16,7 +16,8 @@ const initialState = {
   orderDetail: null,
   orderUpdate: null,
   staticProductDetail: null,
-  staticProductDetailMonth:null
+  staticProductDetailMonth:null,
+  bestSellingProducts:null
 };
 
 const slice = createSlice({
@@ -67,6 +68,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.staticProductDetailMonth = action.payload;
     },
+    bestSellingProductsRevenueSuccess(state, action) {
+      state.isLoading = false;
+      state.bestSellingProducts = action.payload;
+    },
+
     // OPEN MODAL
     openModal(state) {
       state.isOpenModal = true;
@@ -177,6 +183,21 @@ export function getStaticProductDetailMonth(id) {
       const response = await axios.get(`/api/v1/orders/monthly-product-revenue/${id}`);
       console.log('response', response);
       dispatch(slice.actions.getStaticProductDetailMonthSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.log('error', error);
+    }
+  };
+}
+
+
+export function bestSellingProductsRevenue() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+
+    try {
+      const response = await axios.get('/api/v1/orders/best-selling-products-revenue');
+      dispatch(slice.actions.bestSellingProductsRevenueSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       console.log('error', error);

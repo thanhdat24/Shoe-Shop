@@ -43,9 +43,6 @@ export default function AnalyticsProduct() {
     else dispatch(getStaticProductDetailMonth(shoes));
   }, [dispatch, shoes, seriesData]);
 
-  console.log('seriesData', seriesData);
-  console.log('staticProductDetail', staticProductDetail);
-  console.log('staticProductDetailMonth', staticProductDetailMonth);
   const CHART_DATA = [
     // data year
     {
@@ -65,8 +62,16 @@ export default function AnalyticsProduct() {
 
   console.log('CHART_DATA', CHART_DATA);
   const chartOptions = merge(BaseOptionChart(), {
+    legend: { position: 'top', horizontalAlign: 'right' },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return value.toLocaleString().replace(/,/g, '.');
+        },
+      },
+    },
     xaxis: {
-      data:"",
+      data: '',
       categories: seriesData === 2023 ? staticProductDetail?.arrayMonth : staticProductDetailMonth?.arrayMonth,
     },
     colors: ['#2065D1', '#FF6C40'],
@@ -75,15 +80,14 @@ export default function AnalyticsProduct() {
   return (
     <Card>
       <CardHeader
-        title="Thống kê sản phẩm"
+        title="THỐNG KÊ SẢN PHẨM"
         action={
           <div className="flex mr-5">
-            <Box sx={{ minWidth: 225}}>
+            <Box sx={{ minWidth: 'auto' }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Sản phẩm</InputLabel>
                 <Select
                   autoWidth
-                  // sx={{}}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={shoes}

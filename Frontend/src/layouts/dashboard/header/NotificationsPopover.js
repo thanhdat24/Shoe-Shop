@@ -123,7 +123,7 @@ export default function NotificationsPopover() {
           <List
             disablePadding
             subheader={
-              <ListSubheader setOpen={setOpen} disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
                 Trước đó
               </ListSubheader>
             }
@@ -131,7 +131,7 @@ export default function NotificationsPopover() {
             {notifications
               ?.filter((item) => item.isRead)
               .map((notification) => (
-                <NotificationItem key={notification._id} notification={notification} />
+                <NotificationItem setOpen={setOpen} key={notification._id} notification={notification} />
               ))}
           </List>
         </Scrollbar>
