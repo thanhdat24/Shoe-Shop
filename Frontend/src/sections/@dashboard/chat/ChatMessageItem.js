@@ -30,8 +30,20 @@ ChatMessageItem.propTypes = {
 
 export default function ChatMessageItem({ message, conversation, onOpenLightbox }) {
   const sender = conversation.participants.find((participant) => participant.email === message.senderEmail);
-  const senderDetails =
-    message.senderEmail !== 'admin@gmail.com' ? { type: 'me' } : { photoURL: sender?.photoURL, name: sender?.fullName };
+  let senderDetails = {};
+  if (conversation.support === 'Admin') {
+    if (message.senderEmail === 'admin@gmail.com') {
+      senderDetails = { type: 'me' };
+    } else {
+      senderDetails = { photoURL: sender?.photoURL, name: sender?.fullName };
+    }
+  } else if (conversation.support !== 'Admin') {
+    if (message.senderEmail !== 'admin@gmail.com') {
+      senderDetails = { type: 'me' };
+    } else {
+      senderDetails = { photoURL: sender?.photoURL, name: sender?.fullName };
+    }
+  }
 
   const isMe = senderDetails.type === 'me';
   const isImage = message.contentType === 'image';

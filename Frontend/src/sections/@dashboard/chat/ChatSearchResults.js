@@ -13,7 +13,7 @@ ChatSearchResults.propTypes = {
 };
 
 export default function ChatSearchResults({ query, results, onSelectContact }) {
-  const isFound = results.length > 0;
+  const isFound = results?.length > 0;
 
   return (
     <>
@@ -24,7 +24,7 @@ export default function ChatSearchResults({ query, results, onSelectContact }) {
       <List disablePadding>
         {results.map((result) => (
           <ListItemButton
-            key={result.id}
+            key={result._id}
             onClick={() => onSelectContact(result)}
             sx={{
               py: 1.5,
@@ -32,10 +32,10 @@ export default function ChatSearchResults({ query, results, onSelectContact }) {
             }}
           >
             <ListItemAvatar>
-              <Avatar alt={result.name} src={result.avatar} />
+              <Avatar alt={result.displayName} src={result.photoURL} />
             </ListItemAvatar>
             <ListItemText
-              primary={result.name}
+              primary={result.displayName}
               primaryTypographyProps={{
                 noWrap: true,
                 variant: 'subtitle2',

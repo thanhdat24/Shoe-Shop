@@ -28,10 +28,9 @@ ChatHeaderDetail.propTypes = {
 
 export default function ChatHeaderDetail({ participants, handleCloseChat }) {
   const isGroup = participants.length > 1;
-
   return (
     <RootStyle>
-      <OneAvatar />
+      <OneAvatar participants={participants} />
 
       <Box sx={{ flexGrow: 1 }} />
       <IconButton>
@@ -49,18 +48,24 @@ export default function ChatHeaderDetail({ participants, handleCloseChat }) {
 
 // ----------------------------------------------------------------------
 
-function OneAvatar() {
+OneAvatar.propTypes = {
+  participants: PropTypes.array.isRequired,
+};
+
+function OneAvatar({ participants }) {
+  const participant = [...participants][0];
+  if (participant === undefined) {
+    return null;
+  }
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box sx={{ position: 'relative' }}>
-        <Avatar
-          src="https://res.cloudinary.com/web-app-shoes/image/upload/v1678677938/eshsz8kwbbnu0a5krufg.jpg"
-          alt="avatarAdmin"
-        />
+        <Avatar src={participant.photoURL} alt={participant.displayName} />
         <BadgeStatus status="online" sx={{ position: 'absolute', right: 2, bottom: 2 }} />
       </Box>
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">Admin</Typography>
+        <Typography variant="subtitle2">{participant.displayName}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {capitalCase('online')}

@@ -26,14 +26,18 @@ const AvatarWrapperStyle = styled('div')({
 
 // ----------------------------------------------------------------------
 
-const getDetails = (conversation, currentUserId) => {
-  const otherParticipants = conversation.participants.filter((participant) => participant.id !== currentUserId);
-  const displayNames = otherParticipants.reduce((names, participant) => [...names, participant.name], []).join(', ');
+const getDetails = (conversation, currentUserEmail) => {
+  const otherParticipants = conversation?.participants?.filter((participant) => participant.email !== currentUserEmail);
+  const displayNames = otherParticipants;
+  console
+    .log('otherParticipants', otherParticipants)
+    ?.reduce((names, participant) => [...names, participant.displayName], [])
+    .join(', ');
   let displayText = '';
-  const lastMessage = conversation.messages[conversation.messages.length - 1];
+  const lastMessage = conversation?.messages[conversation.messages?.length - 1];
   if (lastMessage) {
-    const sender = lastMessage.senderId === currentUserId ? 'You: ' : '';
-    const message = lastMessage.contentType === 'image' ? 'Sent a photo' : lastMessage.body;
+    const sender = lastMessage?.senderEmail === currentUserEmail ? 'You: ' : '';
+    const message = lastMessage?.contentType === 'image' ? 'Sent a photo' : lastMessage?.body;
     displayText = `${sender}${message}`;
   }
   return { otherParticipants, displayNames, displayText };
@@ -47,13 +51,13 @@ ChatConversationItem.propTypes = {
 };
 
 export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation }) {
-  const details = getDetails(conversation, '8864c717-587d-472a-929a-8e5f298024da-0');
+  const details = getDetails(conversation, 'admin@gmail.com');
 
-  const displayLastActivity = conversation.messages[conversation.messages.length - 1].createdAt;
+  const displayLastActivity = conversation.messages[conversation.messages?.length - 1].createdAt;
 
-  const isGroup = details.otherParticipants.length > 1;
+  const isGroup = details.otherParticipants?.length > 1;
   const isUnread = conversation.unreadCount > 0;
-  const isOnlineGroup = isGroup && details.otherParticipants.map((item) => item.status).includes('online');
+  // const isOnlineGroup = isGroup && details.otherParticipants.map((item) => item.status).includes('online');
 
   return (
     <RootStyle
@@ -87,22 +91,20 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
           }}
         >
           {details.otherParticipants.slice(0, 2).map((participant) => (
-            <AvatarWrapperStyle className="avatarWrapper" key={participant.id}>
-              <Avatar alt={participant.name} src={participant.avatar} />
-              {!isGroup && (
-                <BadgeStatus status={participant.status} sx={{ right: 2, bottom: 2, position: 'absolute' }} />
-              )}
+            <AvatarWrapperStyle className="avatarWrapper" key={participant._id}>
+              <Avatar alt={participant.displayName} src={participant.photoURL} />
+              {!isGroup && <BadgeStatus status="online" sx={{ right: 2, bottom: 2, position: 'absolute' }} />}
             </AvatarWrapperStyle>
           ))}
 
-          {isOnlineGroup && <BadgeStatus status="online" sx={{ right: 2, bottom: 2, position: 'absolute' }} />}
+          {/* {isOnlineGroup && <BadgeStatus status="online" sx={{ right: 2, bottom: 2, position: 'absolute' }} />} */}
         </Box>
       </ListItemAvatar>
 
       {isOpenSidebar && (
         <>
           <ListItemText
-            primary={details.displayNames}
+            primary={details.displayNames[0].displayName}
             primaryTypographyProps={{
               noWrap: true,
               variant: 'subtitle2',

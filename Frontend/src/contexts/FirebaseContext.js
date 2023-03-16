@@ -75,14 +75,14 @@ function AuthProvider({ children }) {
   useEffect(
     () =>
       onAuthStateChanged(AUTH, async (user) => {
-        const secretKey = '2083a81b8586094aa6f24c3b5ce89998';
+        // const secretKey = '2083a81b8586094aa6f24c3b5ce89998';
 
         console.log('userAUTH', user);
 
-        const crispTokenIdUser = `token_${user?.uid}`;
-        console.log('crispTokenIdUser', crispTokenIdUser);
+        // const crispTokenIdUser = `token_${user?.uid}`;
+        // console.log('crispTokenIdUser', crispTokenIdUser);
 
-        const crispTokenIdGuest = `token_${Math.floor(100000000000 + Math.random() * 900000000000)}`;
+        // const crispTokenIdGuest = `token_${Math.floor(100000000000 + Math.random() * 900000000000)}`;
 
         if (user) {
           const { accessToken } = user;

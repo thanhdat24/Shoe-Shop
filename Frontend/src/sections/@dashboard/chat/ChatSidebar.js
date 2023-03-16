@@ -19,7 +19,8 @@ import ChatAccount from './ChatAccount';
 import ChatSearchResults from './ChatSearchResults';
 import ChatContactSearch from './ChatContactSearch';
 import ChatConversationList from './ChatConversationList';
-
+// format
+import { fName } from '../../../utils/formatName';
 // ----------------------------------------------------------------------
 
 const ToggleButtonStyle = styled((props) => <IconButton disableRipple {...props} />)(({ theme }) => ({
@@ -59,7 +60,7 @@ export default function ChatSidebar() {
   const [isSearchFocused, setSearchFocused] = useState(false);
 
   const { conversations, activeConversationId } = useSelector((state) => state.chat);
-
+  console.log('conversations', conversations);
   const isDesktop = useResponsive('up', 'md');
 
   const displayResults = searchQuery && isSearchFocused;
@@ -102,10 +103,11 @@ export default function ChatSidebar() {
       const { value } = event.target;
       setSearchQuery(value);
       if (value) {
-        const response = await axios.get('/api/chat/search', {
+        const response = await axios.get('/api/v1/chats/search', {
           params: { query: value },
         });
-        setSearchResults(response.data.results);
+        console.log('response.data', response.data);
+        setSearchResults(response.data.data);
       } else {
         setSearchResults([]);
       }
@@ -126,7 +128,7 @@ export default function ChatSidebar() {
 
   const handleSelectContact = (result) => {
     if (handleSearchSelect) {
-      handleSearchSelect(result.username);
+      handleSearchSelect(fName(result.displayName));
     }
   };
 
@@ -167,7 +169,7 @@ export default function ChatSidebar() {
       </Box>
 
       <Scrollbar>
-        {!displayResults ? (
+        {!displayResults && conversations?.length > 0 ? (
           <ChatConversationList
             conversations={conversations}
             isOpenSidebar={openSidebar}

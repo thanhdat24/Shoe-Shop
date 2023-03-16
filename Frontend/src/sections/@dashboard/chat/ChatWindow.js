@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 // @mui
 import { Box, Divider, Stack } from '@mui/material';
@@ -26,21 +25,32 @@ import ChatAccount from './ChatAccount';
 
 // ----------------------------------------------------------------------
 
-ChatWindowClient.propTypes = {
-  handleCloseChat: PropTypes.func,
+const conversationSelector = (state) => {
+  const { conversationDetail, activeConversationId } = state.chat;
+  const conversation = activeConversationId ? conversationDetail : null;
+  if (conversation) {
+    return conversation;
+  }
+  const initState = {
+    id: '',
+    messages: [],
+    participants: [],
+    unreadCount: 0,
+    type: '',
+  };
+  return initState;
 };
 
-export default function ChatWindowClient({ handleCloseChat }) {
+export default function ChatWindow() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { conversationKey } = useParams();
-  const { contacts, conversationCurrent, recipients, participants, activeConversationId } = useSelector(
-    (state) => state.chat
-  );
-  console.log('conversationCurrent', conversationCurrent);
+  const { contacts, recipients, participants, activeConversationId,sendChatSuccess } = useSelector((state) => state.chat);
+  const conversation = useSelector((state) => conversationSelector(state));
+
   const mode = conversationKey ? 'DETAIL' : 'COMPOSE';
-  const displayParticipants = conversationCurrent?.participants?.filter((item) => item.email === 'admin@gmail.com');
+
 
   useEffect(() => {
     const getDetails = async () => {
@@ -58,7 +68,7 @@ export default function ChatWindowClient({ handleCloseChat }) {
       dispatch(resetActiveConversation());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationKey]);
+  }, [conversationKey,sendChatSuccess]);
 
   useEffect(() => {
     if (activeConversationId) {
@@ -77,15 +87,23 @@ export default function ChatWindowClient({ handleCloseChat }) {
       console.error(error);
     }
   };
-
   return (
     <Stack sx={{ flexGrow: 1, minWidth: '1px' }}>
-      <ChatHeaderDetail handleCloseChat={handleCloseChat} participants={displayParticipants} />
+      {mode === 'DETAIL' ? (
+        <ChatHeaderDetail participants={participants} />
+      ) : (
+        <ChatHeaderCompose
+          recipients={recipients}
+          contacts={Object.values(contacts.byId)}
+          onAddRecipients={handleAddRecipients}
+        />
+      )}
+
       <Divider />
 
       <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
         <Stack sx={{ flexGrow: 1 }}>
-          {conversationCurrent !== '' && <ChatMessageList conversation={conversationCurrent} />}
+          <ChatMessageList conversation={{ ...conversation, support: 'Admin' }} />
 
           <Divider />
 
@@ -96,7 +114,7 @@ export default function ChatWindowClient({ handleCloseChat }) {
           />
         </Stack>
 
-        {/* {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={displayParticipants} />} */}
+        {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={participants} />}
       </Box>
     </Stack>
   );

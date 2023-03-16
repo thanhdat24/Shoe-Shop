@@ -16,9 +16,10 @@ function objFromArray(array, key = 'id') {
 const initialState = {
   isLoading: false,
   error: null,
-  contact: {},
+  conversationCurrent: {},
   contacts: { byId: {}, allIds: [] },
-  conversations: { byId: {}, allIds: [] },
+  conversations: null,
+  conversationDetail: null,
   activeConversationId: null,
   participants: [],
   recipients: [],
@@ -41,21 +42,18 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET CONTACT SSUCCESS
-    getContactSuccess(state, action) {
-      state.contact = action.payload;
+    // GET CONVERSATIONS CURRENT SUCCESS
+    getConversationCurrentSuccess(state, action) {
+      state.conversationCurrent = action.payload;
 
-      state.activeConversationId = state.contact._id;
+      state.activeConversationId = state.conversationCurrent._id;
     },
     createContactSuccess(state, action) {
       state.contactSuccess = action.payload;
     },
     // GET CONVERSATIONS
     getConversationsSuccess(state, action) {
-      const conversations = action.payload;
-
-      state.conversations.byId = objFromArray(conversations);
-      state.conversations.allIds = Object.keys(state.conversations.byId);
+      state.conversations = action.payload;
     },
 
     // GET CONVERSATION
@@ -63,11 +61,8 @@ const slice = createSlice({
       const conversation = action.payload;
 
       if (conversation) {
-        state.conversations.byId[conversation.id] = conversation;
-        state.activeConversationId = conversation.id;
-        if (!state.conversations.allIds.includes(conversation.id)) {
-          state.conversations.allIds.push(conversation.id);
-        }
+        state.conversationDetail = conversation;
+        state.activeConversationId = conversation._id;
       } else {
         state.activeConversationId = null;
       }
@@ -130,13 +125,12 @@ export const { addRecipients, onSendMessage, resetActiveConversation } = slice.a
 
 // ----------------------------------------------------------------------
 
-export function getContact() {
+export function getConversationCurrent() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/chats/current');
-      console.log('response.data.data', response.data);
-      dispatch(slice.actions.getContactSuccess(response.data.data));
+      dispatch(slice.actions.getConversationCurrentSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       console.log('error', error);
@@ -162,8 +156,8 @@ export function getConversations() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/chat/conversations');
-      dispatch(slice.actions.getConversationsSuccess(response.data.conversations));
+      const response = await axios.get('/api/v1/chats');
+      dispatch(slice.actions.getConversationsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -176,10 +170,10 @@ export function getConversation(conversationKey) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/chat/conversation', {
+      const response = await axios.get('/api/v1/chats/conversation', {
         params: { conversationKey },
       });
-      dispatch(slice.actions.getConversationSuccess(response.data.conversation));
+      dispatch(slice.actions.getConversationSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -232,10 +226,10 @@ export function getParticipants(conversationKey) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/chat/participants', {
+      const response = await axios.get('/api/v1/chats/participants', {
         params: { conversationKey },
       });
-      dispatch(slice.actions.getParticipantsSuccess(response.data.participants));
+      dispatch(slice.actions.getParticipantsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

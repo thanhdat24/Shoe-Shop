@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { dotCase } from 'change-case';
 // @mui
 import { List } from '@mui/material';
 // routes
@@ -8,6 +9,8 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { SkeletonConversationItem } from '../../../components/skeleton';
 //
 import ChatConversationItem from './ChatConversationItem';
+// format
+import { fName } from '../../../utils/formatName';
 
 // ----------------------------------------------------------------------
 
@@ -23,32 +26,31 @@ export default function ChatConversationList({ conversations, isOpenSidebar, act
 
   const handleSelectConversation = (conversationId) => {
     let conversationKey = '';
-    const conversation = conversations.byId[conversationId];
+    const conversation = conversations[conversationId];
+
     if (conversation.type === 'GROUP') {
       conversationKey = conversation.id;
     } else {
-      const otherParticipant = conversation.participants.find(
-        (participant) => participant.id !== '8864c717-587d-472a-929a-8e5f298024da-0'
-      );
-      if (otherParticipant?.username) {
-        conversationKey = otherParticipant?.username;
+      const otherParticipant = conversation.participants.find((participant) => participant.email !== 'admin@gmail.com');
+      if (otherParticipant?.displayName) {
+        conversationKey = otherParticipant?.displayName;
       }
     }
-    navigate(PATH_DASHBOARD.chat.view(conversationKey));
+    navigate(PATH_DASHBOARD.chat.view(fName(conversationKey)));
   };
 
-  const loading = !conversations.allIds.length;
+  const loading = !conversations?.length;
 
   return (
     <List disablePadding sx={sx} {...other}>
-      {(loading ? [...Array(12)] : conversations.allIds).map((conversationId, index) =>
+      {(loading ? [...Array(12)] : conversations).map((conversationId, index) =>
         conversationId ? (
           <ChatConversationItem
-            key={conversationId}
+            key={conversationId._id}
             isOpenSidebar={isOpenSidebar}
-            conversation={conversations.byId[conversationId]}
-            isSelected={activeConversationId === conversationId}
-            onSelectConversation={() => handleSelectConversation(conversationId)}
+            conversation={conversationId}
+            isSelected={activeConversationId === conversationId._id}
+            onSelectConversation={() => handleSelectConversation(index)}
           />
         ) : (
           <SkeletonConversationItem key={index} />

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Box, Card, Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../redux/store';
-import { getConversations, getContact, createContact } from '../redux/slices/chat';
+import { getConversations, getConversationCurrent, createContact } from '../redux/slices/chat';
 // routes
 import { PATH_DASHBOARD } from '../routes/paths';
 // hooks
@@ -12,15 +12,17 @@ import useSettings from '../hooks/useSettings';
 import Page from '../components/Page';
 import HeaderBreadcrumbs from '../components/HeaderBreadcrumbs';
 import { ChatSidebar, ChatWindowClient } from '../sections/@dashboard/chat';
+import useAuth from '../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function Chat() {
   const { themeStretch } = useSettings();
   const { sendChatSuccess, contactSuccess } = useSelector((state) => state.chat);
+  const { user } = useAuth();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getContact());
+    dispatch(getConversationCurrent());
   }, [dispatch, sendChatSuccess, contactSuccess]);
 
   const [isActive, setIsActive] = useState(false);
@@ -30,7 +32,7 @@ export default function Chat() {
     setIsActive(!isActive);
   };
 
-  return (
+  return user?.googleId ? (
     <Box>
       <Box className={`fixed right-2 md:right-10 bottom-24 flex space-x-2 z-20 ${isActive ? 'block' : 'hidden'}`}>
         <Card sx={{ height: '72vh', width: '48vh', display: 'flex' }}>
@@ -137,5 +139,7 @@ export default function Chat() {
         </button>
       </Box>
     </Box>
+  ) : (
+    ''
   );
 }
