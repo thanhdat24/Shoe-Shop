@@ -1,6 +1,7 @@
 const factory = require('../controllers/handlerFactory');
 const Chat = require('../models/chatModel');
 const catchAsync = require('../utils/catchAsync');
+const { capitalCase } = require('change-case');
 
 exports.getDetailChat = factory.getOne();
 exports.updateChat = factory.updateOne(Chat);
@@ -77,5 +78,103 @@ exports.sendChat = catchAsync(async (req, res, next) => {
     message: 'Send message successfully!',
     data: doc,
     statusCode: 201,
+  });
+});
+
+exports.getDetailConversation = factory.getOneByName(Chat);
+
+const formatName = (name) => {
+  const formattedName = name
+    .split('.') // Tách chuỗi theo dấu "."
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Viết hoa chữ cái đầu và thêm phần còn lại
+    .join(' '); // Ghép các từ lại với nhau, cách nhau bởi khoảng trắng
+  return formattedName;
+};
+
+exports.getDetailConversation = catchAsync(async (req, res, next) => {
+  const { conversationKey } = req.query;
+  var filter = {};
+  if (conversationKey != '') {
+    filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
+  }
+
+  const chat = await Chat.find();
+
+  const conversation = chat.find((obj) => {
+    return obj.participants.some((participant) => {
+      return (
+        participant.displayName.toLowerCase() ===
+        formatName(conversationKey).toLowerCase()
+      );
+    });
+  });
+  if (conversation) {
+    res.status(201).json({
+      message: 'success',
+      length: 1,
+      data: conversation,
+    });
+  } else {
+    res.status(404).json({
+      message: 'fail',
+      length: 0,
+      data: {},
+    });
+  }
+});
+
+exports.getParticipants = catchAsync(async (req, res, next) => {
+  const { conversationKey } = req.query;
+  var filter = {};
+  if (conversationKey != '') {
+    filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
+  }
+  console.log('conversationKey', conversationKey);
+  const chat = await Chat.find();
+
+  const conversation = chat.find((obj) => {
+    return obj.participants.some((participant) => {
+      return (
+        participant.displayName.toLowerCase() ===
+        formatName(conversationKey).toLowerCase()
+      );
+    });
+  });
+
+  const displayParticipants = conversation.participants.filter(
+    (item) => item.email !== 'admin@gmail.com'
+  );
+  if (conversation) {
+    res.status(201).json({
+      message: 'success',
+      length: 1,
+      data: displayParticipants,
+    });
+  } else {
+    res.status(404).json({
+      message: 'fail',
+      length: 0,
+      data: {},
+    });
+  }
+});
+
+exports.searchParticipants = catchAsync(async (req, res, next) => {
+  const { query } = req.query;
+
+  const chat = await Chat.find();
+
+  const filteredChat = chat.flatMap((obj) =>
+    obj.participants.filter(
+      (participant) =>
+        participant.displayName.toLowerCase().includes(query) &&
+        participant.email !== 'admin@gmail.com'
+    )
+  );
+
+  res.status(200).json({
+    status: 'success',
+    length: filteredChat.length,
+    data: filteredChat,
   });
 });
