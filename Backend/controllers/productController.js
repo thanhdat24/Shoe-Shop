@@ -76,11 +76,11 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.searchProduct = catchAsync(async (req, res, next) => {
-  const { search } = req.query;
-  console.log('search', search);
+  const { query } = req.query;
+  console.log('query', query);
   var filter = {};
-  if (search != '') {
-    filter.name = new RegExp(fullTextSearchVi(search), 'i');
+  if (query != '') {
+    filter.name = new RegExp(fullTextSearchVi(query), 'i');
   }
 
   await Product.find(filter)

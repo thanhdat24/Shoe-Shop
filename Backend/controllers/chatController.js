@@ -129,7 +129,6 @@ exports.getParticipants = catchAsync(async (req, res, next) => {
   if (conversationKey != '') {
     filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
   }
-  console.log('conversationKey', conversationKey);
   const chat = await Chat.find();
 
   const conversation = chat.find((obj) => {
