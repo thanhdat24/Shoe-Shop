@@ -46,11 +46,12 @@ export default function ChatWindow() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { conversationKey } = useParams();
-  const { contacts, recipients, participants, activeConversationId,sendChatSuccess } = useSelector((state) => state.chat);
+  const { contacts, recipients, participants, activeConversationId, sendChatSuccess } = useSelector(
+    (state) => state.chat
+  );
   const conversation = useSelector((state) => conversationSelector(state));
 
   const mode = conversationKey ? 'DETAIL' : 'COMPOSE';
-
 
   useEffect(() => {
     const getDetails = async () => {
@@ -68,11 +69,11 @@ export default function ChatWindow() {
       dispatch(resetActiveConversation());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationKey,sendChatSuccess]);
+  }, [conversationKey, sendChatSuccess]);
 
   useEffect(() => {
     if (activeConversationId) {
-      dispatch(markConversationAsRead(activeConversationId));
+      // dispatch(markConversationAsRead(activeConversationId));
     }
   }, [dispatch, activeConversationId]);
 

@@ -23,7 +23,7 @@ export default function ChatContactSearch({ query, onChange, onFocus, onClickAwa
         value={query}
         onFocus={onFocus}
         onChange={onChange}
-        placeholder="Search contacts..."
+        placeholder="Tìm kiếm liên hệ..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

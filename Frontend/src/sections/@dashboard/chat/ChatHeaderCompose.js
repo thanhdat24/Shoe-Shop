@@ -56,7 +56,7 @@ export default function ChatHeaderCompose({ contacts, recipients, onAddRecipient
   return (
     <RootStyle>
       <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-        To:
+        Đến:
       </Typography>
 
       <AutocompleteStyle>
@@ -136,7 +136,7 @@ export default function ChatHeaderCompose({ contacts, recipients, onAddRecipient
               );
             })
           }
-          renderInput={(params) => <TextField {...params} placeholder={recipients.length === 0 ? 'Recipients' : ''} />}
+          renderInput={(params) => <TextField {...params} placeholder={recipients.length === 0 ? 'Người nhận' : ''} />}
         />
       </AutocompleteStyle>
     </RootStyle>

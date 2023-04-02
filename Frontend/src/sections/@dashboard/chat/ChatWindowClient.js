@@ -62,7 +62,7 @@ export default function ChatWindowClient({ handleCloseChat }) {
 
   useEffect(() => {
     if (activeConversationId) {
-      dispatch(markConversationAsRead(activeConversationId));
+      // dispatch(markConversationAsRead(activeConversationId));
     }
   }, [dispatch, activeConversationId]);
 
@@ -79,8 +79,11 @@ export default function ChatWindowClient({ handleCloseChat }) {
   };
 
   return (
-    <Stack sx={{ flexGrow: 1, minWidth: '1px' }}>
-      <ChatHeaderDetail handleCloseChat={handleCloseChat} participants={displayParticipants} />
+    <Stack sx={{ flexGrow: 1, minWidth: '1px',  }}>
+      <ChatHeaderDetail
+        handleCloseChat={handleCloseChat}
+        participants={displayParticipants}
+      />
       <Divider />
 
       <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>

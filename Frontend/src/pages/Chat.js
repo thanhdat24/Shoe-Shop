@@ -34,23 +34,27 @@ export default function Chat() {
 
   return user?.googleId ? (
     <Box>
-      <Box className={`fixed right-2 md:right-10 bottom-24 flex space-x-2 z-20 ${isActive ? 'block' : 'hidden'}`}>
+      <Box
+        className={`fixed right-2 md:right-10 bottom-24 flex space-x-2 z-20 transition duration-150 ${
+          isActive ? 'block' : 'hidden'
+        }`}
+      >
         <Card sx={{ height: '72vh', width: '48vh', display: 'flex' }}>
           {/* <ChatSidebar /> */}
           <ChatWindowClient handleCloseChat={toggleActiveClass} />
         </Card>
       </Box>
 
-      <Box className="fixed right-2 bottom-0 flex space-x-2 z-20 ">
-        <button className={`chat flex relative ${isActive ? 'active' : ''}`} onClick={toggleActiveClass}>
+      <Box className="fixed right-2 bottom-2 flex space-x-2 z-20 w-16 h-16 justify-center items-center ">
+        <button className={`chat flex relative  ${isActive ? 'active' : ''}`} onClick={toggleActiveClass}>
           <Box
-            className="background bg-blue-600 h-20 absolute w-20"
+            className="background bg-blue-600 h-16 absolute w-16"
             sx={{
               borderRadius: ' 50%',
               boxShadow:
                 '0 2.1px 1.3px rgba(0, 0, 0, 0.044), 0 5.9px 4.2px rgba(0, 0, 0, 0.054), 0 12.6px 9.5px rgba(0, 0, 0, 0.061), 0 25px 20px rgba(0, 0, 0, 0.1)',
-              left: '10px',
-              top: '10px',
+              left: '16px',
+              top: '16px',
             }}
           >
             {' '}

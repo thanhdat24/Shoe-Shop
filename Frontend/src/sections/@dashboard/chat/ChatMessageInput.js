@@ -68,7 +68,7 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
         disableUnderline
         onKeyUp={handleKeyUp}
         onChange={(event) => setMessage(event.target.value)}
-        placeholder="Type a message"
+        placeholder="Nhập tin nhắn"
         startAdornment={
           <InputAdornment position="start">
             <EmojiPicker disabled={disabled} value={message} setValue={setMessage} />

@@ -56,7 +56,7 @@ export default function ChatRoom({ conversation, participants }) {
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const isGroup = participants.length > 1;
+  const isGroup = participants?.length > 1;
 
   useEffect(() => {
     if (!isDesktop) {

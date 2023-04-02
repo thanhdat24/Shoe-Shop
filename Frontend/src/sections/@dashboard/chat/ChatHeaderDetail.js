@@ -27,10 +27,10 @@ ChatHeaderDetail.propTypes = {
 };
 
 export default function ChatHeaderDetail({ participants, handleCloseChat }) {
-  const isGroup = participants.length > 1;
+  // const isGroup = participants.length > 1;
   return (
     <RootStyle>
-      <OneAvatar participants={participants} />
+      {participants && <OneAvatar participants={participants} />}
 
       <Box sx={{ flexGrow: 1 }} />
       <IconButton>

@@ -181,7 +181,7 @@ const navConfig = [
   // APP
   // ----------------------------------------------------------------------
   {
-    subheader: 'app',
+    subheader: 'Ứng dụng',
     items: [
       // {
       //   title: 'mail',
@@ -193,7 +193,7 @@ const navConfig = [
       //     </Label>
       //   ),
       // },
-      { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+      { title: 'Hỗ trợ', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

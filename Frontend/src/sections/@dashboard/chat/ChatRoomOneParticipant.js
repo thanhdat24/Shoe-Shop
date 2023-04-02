@@ -66,7 +66,7 @@ export default function ChatRoomOneParticipant({ participants, isCollapse, onCol
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="subtitle1">{participant.name}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {participant.position}
+            {/* {participant.position} */} Khách hàng
           </Typography>
         </Box>
       </Box>
@@ -85,7 +85,7 @@ export default function ChatRoomOneParticipant({ participants, isCollapse, onCol
           />
         }
       >
-        information
+       thông tin
       </CollapseButtonStyle>
 
       <Collapse in={isCollapse}>
