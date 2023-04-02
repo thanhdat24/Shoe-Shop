@@ -63,14 +63,12 @@ export default function Product() {
     dispatch(getProduct(name));
     return dispatch(resetProduct());
   }, [dispatch, name]);
-  console.log('productRatingList', productRatingList);
   useEffect(() => {
     if (product) dispatch(getProductRating(product?._id));
     // return dispatch(resetProduct());
   }, [dispatch, product]);
 
   const handleAddCart = (product) => {
-    console.log('product123', product);
     dispatch(addCart(product));
   };
 

@@ -1,4 +1,13 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Container,
+  Typography,
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBestSeller } from '../redux/slices/product';
@@ -20,7 +29,7 @@ export default function BestSeller() {
       </Typography>
       <div>
         <BestSellerList bestSellerProd={bestSeller} loading={!bestSeller?.length}>
-          sdg
+          ""
         </BestSellerList>
         {/* <Card sx={{ maxWidth: 345 }}>
           <CardActionArea>

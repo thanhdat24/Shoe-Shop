@@ -1,14 +1,16 @@
+import { useEffect } from 'react';
 import sum from 'lodash/sum';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Badge } from '@mui/material';
+// notistack
+import { useSnackbar } from 'notistack';
 // redux
-import { useSelector } from '../../../redux/store';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { useDispatch, useSelector } from '../../../redux/store';
 // components
 import Iconify from '../../../components/Iconify';
+import { resetMaxQuantity } from '../../../redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +21,7 @@ const RootStyle = styled(RouterLink)(({ theme }) => ({
   cursor: 'pointer',
   position: 'fixed',
   alignItems: 'center',
-  top: theme.spacing(16),
+  top: theme.spacing(12),
   height: theme.spacing(5),
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
@@ -39,10 +41,19 @@ const RootStyle = styled(RouterLink)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function CartWidget() {
-  const { checkout } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  const { checkout, maxQuantity } = useSelector((state) => state.product);
+
+  const { enqueueSnackbar } = useSnackbar();
+
   console.log('checkoutCartWidget', checkout);
   const totalItems = sum(checkout.cart.map((item) => item.quantity));
-  console.log('totalItems', totalItems);
+
+  useEffect(() => {
+    if (maxQuantity) enqueueSnackbar('Đã đặt số lượng tối đa!', { variant: 'info' });
+    return dispatch(resetMaxQuantity());
+  }, [maxQuantity]);
 
   return (
     <RootStyle to="/checkout">

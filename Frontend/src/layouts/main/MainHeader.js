@@ -18,6 +18,7 @@ import {
   InputAdornment,
   Typography,
   Popper,
+  IconButton,
 } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 
@@ -137,9 +138,9 @@ export default function MainHeader() {
           params: { query: value },
         });
         console.log('response', response);
-        // if (isMountedRef.current) {
-        //   setSearchResults(response.data.data);
-        // }
+        if (isMountedRef.current) {
+          setSearchResults(response.data.data);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -153,7 +154,6 @@ export default function MainHeader() {
   const handleKeyUp = (event) => {
     if (event.key === 'Enter') {
       handleClick(searchQuery);
-      console.log('searchQuery', searchQuery);
     }
   };
 
@@ -203,7 +203,7 @@ export default function MainHeader() {
             v3.3.0
           </Label>
 
-          <Box className="flex relative justify-center items-center">
+          <Box className="flex justify-center items-center">
             <Autocomplete
               size="small"
               // autoHighlight
@@ -229,6 +229,19 @@ export default function MainHeader() {
                           icon={'eva:search-fill'}
                           sx={{ ml: 1, width: 20, height: 20, color: 'text.disabled' }}
                         />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <button onClick={listening ? stopListening : startListening}>
+                          {listening ? (
+                            <Box className="bg-red-500 w-9 h-9 rounded-full flex justify-center items-center">
+                              <MicIcon sx={{ color: 'white', width: 30, height: 30 }} />
+                            </Box>
+                          ) : (
+                            <Image alt="sketch icon" src="/icons/ic_mic.svg" sx={{ width: 30, height: 30 }} />
+                          )}
+                        </button>
                       </InputAdornment>
                     ),
                   }}
@@ -273,19 +286,9 @@ export default function MainHeader() {
                 );
               }}
             />
-            <button className="absolute right-1" onClick={listening ? stopListening : startListening}>
-              {listening ? (
-                <Box className="bg-red-500 w-9 h-9 rounded-full flex justify-center items-center">
-                  <MicIcon sx={{ color: 'white', width: 30, height: 30 }} />
-                </Box>
-              ) : (
-                <Image alt="sketch icon" src="/icons/ic_mic.svg" sx={{ width: 30, height: 30 }} />
-              )}
-            </button>
           </Box>
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-          <NotificationsPopover />
           {user.email !== undefined ? (
             <AccountPopover />
           ) : (

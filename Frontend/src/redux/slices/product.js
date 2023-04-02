@@ -12,7 +12,7 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  bestSeller:null,
+  bestSeller: null,
   products: [],
   cates: [],
   sizes: [],
@@ -22,6 +22,7 @@ const initialState = {
   searchList: null,
   sortBy: null,
   successCreate: null,
+  maxQuantity: false,
   filters: {
     gender: [],
     category: 'All',
@@ -158,9 +159,15 @@ const slice = createSlice({
             _product.color === product.color
         );
         if (indexCart !== -1) {
-          state.checkout.cart[indexCart].quantity += 1;
+          if (state.checkout.cart[indexCart].quantity >= state.checkout.cart[indexCart].available) {
+            state.maxQuantity = true;
+          } else {
+            state.checkout.cart[indexCart].quantity += 1;
+            state.maxQuantity = false;
+          }
         } else {
           state.checkout.cart = [...state.checkout.cart, product];
+          state.maxQuantity = false;
         }
       }
     },
@@ -186,6 +193,10 @@ const slice = createSlice({
 
     resetProduct(state) {
       state.product = null;
+    },
+
+    resetMaxQuantity(state) {
+      state.maxQuantity = false;
     },
 
     onBackStep(state) {
@@ -281,6 +292,7 @@ export const {
   sortByProducts,
   filterProducts,
   resetProduct,
+  resetMaxQuantity,
   createProductSuccess,
   createPaymentMethod,
 } = slice.actions;

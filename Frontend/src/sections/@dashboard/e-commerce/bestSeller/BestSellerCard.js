@@ -8,22 +8,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
 
-import Image from '../../../../components/Image';
-import { fCurrency } from '../../../../utils/formatNumber';
-// import 'tailwindcss/utilities';
-
 BestSellerCard.propTypes = {
   index: PropTypes.number,
   product: PropTypes.object,
-  onSelected: PropTypes.func
+  onSelected: PropTypes.func,
 };
 
 export default function BestSellerCard({ index, product, onSelected }) {
-  console.log('index', index);
-
-  console.log('productewrte', product);
   const [hover, setHover] = useState(false);
-  console.log('hover', hover);
+
   const initialStyle = {
     backgroundColor: (index === 0 && 'darksalmon') || (index === 1 && 'sienna') || 'darkslategray',
     color: 'white',
@@ -71,13 +64,12 @@ export default function BestSellerCard({ index, product, onSelected }) {
             width: '375px',
             transform: 'translateY(-13%) translateX(-14%) rotate(-40deg)',
           }}
-          // className="origin-bottom -rotate-45 "
           image={product?.productImages[0].cover}
           title="green iguana"
         />
       </Box>
       <CardContent className="text-center">
-        <Typography sx={{ color: '#e8e8e8', textTransform: 'uppercase' }} gutterBottom variant="body2">
+        <Typography sx={{ color: 'gray', textTransform: 'uppercase' }} gutterBottom variant="body2">
           {product?.idCate.name}
         </Typography>
         <Typography gutterBottom variant="h4" component="div" className="uppercase">
@@ -92,7 +84,7 @@ export default function BestSellerCard({ index, product, onSelected }) {
       </CardContent>
       <CardActions className="justify-center pb-4 mb-4">
         <Button
-          onClick={()=>onSelected()}
+          onClick={() => onSelected()}
           size="small"
           variant={!hover ? 'contained' : 'outlined'}
           style={hover ? hoverStyle : initialStyle}

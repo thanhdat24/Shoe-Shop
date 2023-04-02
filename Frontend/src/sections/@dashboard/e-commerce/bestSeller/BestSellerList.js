@@ -17,20 +17,6 @@ export default function BestSellerList({ bestSellerProd, loading }) {
   const navigate = useNavigate();
   const handleSelected = async (product) => {
     navigate(`product/${paramCase(product.name)}`);
-    console.log('productsfs ', product);
-    // dispatch(addCart(product));
-    // try {
-    //   onAddCart({
-    //     ...values,
-    //     subtotal: values.price * values.quantity,
-    //     available: detailColorSize.quantity,
-    //     idColor: detailColorSize.idColor._id,
-    //     idSize: detailColorSize.idSize._id,
-    //     productId: detailColorSize.idProduct._id,
-    //   });
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
   return (
     <Box

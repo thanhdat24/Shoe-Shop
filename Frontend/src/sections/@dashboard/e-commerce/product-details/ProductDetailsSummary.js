@@ -17,6 +17,7 @@ import Iconify from '../../../../components/Iconify';
 import SocialsButton from '../../../../components/SocialsButton';
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
+import { useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +52,8 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
   const theme = useTheme();
   const navigate = useNavigate();
   const [detailColorSize, setDetailColorSize] = useState({});
+
+  console.log('detailColorSize', detailColorSize);
   const { id, name, sizes, price, cover, status, colors, priceSale, inventoryType } = product;
   const { totalRating, totalReview } = ratingList;
   const alreadyProduct = cart?.map((item) => item.id).includes(id);

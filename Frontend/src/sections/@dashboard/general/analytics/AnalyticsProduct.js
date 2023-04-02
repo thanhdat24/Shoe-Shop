@@ -65,7 +65,7 @@ export default function AnalyticsProduct() {
     legend: { position: 'top', horizontalAlign: 'right' },
     yaxis: {
       labels: {
-        formatter: function (value) {
+        formatter(value) {
           return value.toLocaleString().replace(/,/g, '.');
         },
       },

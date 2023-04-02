@@ -60,8 +60,8 @@ export default function ProductDetailsReviewOverview({ product }) {
           {ratings
             .slice(0)
             .reverse()
-            .map((rating) => (
-              <ProgressItem key={rating.name} star={rating} total={total} />
+            .map((rating, index) => (
+              <ProgressItem key={index} star={rating} total={total} />
             ))}
         </Stack>
       </GridStyle>
