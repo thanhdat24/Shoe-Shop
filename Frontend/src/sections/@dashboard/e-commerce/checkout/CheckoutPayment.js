@@ -130,8 +130,8 @@ export default function CheckoutPayment() {
           } - Tổng tiền ${fCurrency(cartCheckout.total)}đ`,
         });
 
-
-        setLinkMoMo(data.data.qrCodeUrl);
+        console.log('data123', data);
+        setLinkMoMo(data.data.payUrl);
         checkoutLinkRef.current.click();
       } else {
         dispatch(createOrder(cartCheckout));

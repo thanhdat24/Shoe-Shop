@@ -187,8 +187,7 @@ export default function ShipperList() {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSubmitDialog = () => {
-  };
+  const handleSubmitDialog = () => {};
 
   const handleViewRow = (id) => {
     setIdShipper(id);
@@ -400,7 +399,7 @@ export default function ShipperList() {
 
                       <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
 
-                      <TableNoData isNotFound={isNotFound} />
+                      {/* <TableNoData isNotFound={isNotFound} /> */}
                     </TableBody>
                   </Table>
                 </TableContainer>

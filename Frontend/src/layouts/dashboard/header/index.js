@@ -16,7 +16,6 @@ import { IconButtonAnimate } from '../../../components/animate';
 //
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
@@ -82,7 +81,6 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           <NotificationsPopover />
-          <ContactsPopover />
           <AccountPopover />
         </Stack>
       </Toolbar>

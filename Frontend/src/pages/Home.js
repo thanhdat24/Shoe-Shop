@@ -9,7 +9,6 @@ import {
   HomeDarkMode,
   HomeLookingFor,
   HomeColorPresets,
-  HomePricingPlans,
   HomeAdvertisement,
   HomeCleanInterfaces,
   HomeHugePackElements,
@@ -45,8 +44,6 @@ export default function HomePage() {
           <HomeColorPresets />
 
           <HomeCleanInterfaces />
-
-          <HomePricingPlans />
 
           <HomeLookingFor />
 

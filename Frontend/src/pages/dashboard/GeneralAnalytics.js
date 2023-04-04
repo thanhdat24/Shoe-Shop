@@ -8,17 +8,7 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 // sections
-import {
-  AnalyticsTasks,
-  AnalyticsNewsUpdate,
-  AnalyticsOrderTimeline,
-  AnalyticsCurrentVisits,
-  AnalyticsWebsiteVisits,
-  AnalyticsTrafficBySite,
-  AnalyticsWidgetSummary,
-  AnalyticsCurrentSubject,
-  AnalyticsConversionRates,
-} from '../../sections/@dashboard/general/analytics';
+import { AnalyticsCurrentVisits, AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analytics';
 
 import { getOrders } from '../../redux/slices/order';
 import { fCurrency } from '../../utils/formatNumber';
@@ -87,13 +77,6 @@ export default function GeneralAnalytics() {
           </Grid>
           <Grid item xs={12} md={12} lg={8}>
             <AnalyticsProduct />
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <AnalyticsWebsiteVisits />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={6}>
-            <AnalyticsCurrentVisits />
           </Grid>
         </Grid>
       </Container>
