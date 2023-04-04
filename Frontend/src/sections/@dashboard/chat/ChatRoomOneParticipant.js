@@ -64,7 +64,7 @@ export default function ChatRoomOneParticipant({ participants, isCollapse, onCol
       >
         <Avatar alt={participant.displayName} src={participant.photoURL} sx={{ width: 96, height: 96 }} />
         <Box sx={{ mt: 2, textAlign: 'center' }}>
-          <Typography variant="subtitle1">{participant.name}</Typography>
+          <Typography variant="subtitle1">{participant.displayName}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {/* {participant.position} */} Khách hàng
           </Typography>

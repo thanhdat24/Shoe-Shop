@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { Avatar, Box, Typography } from '@mui/material';
 // components
 import Image from '../../../components/Image';
+import { formatDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -71,10 +72,11 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
                 ...(isMe && { justifyContent: 'flex-end' }),
               }}
             >
-              {!isMe && `${firstName},`}&nbsp;
-              {formatDistanceToNowStrict(new Date(message.createdAt), {
+              {/* {!isMe && `${firstName},`}&nbsp; */}
+              {/* {formatDistanceToNowStrict(new Date(message.createdAt), {
                 addSuffix: true,
-              })}
+              })} */}
+              {formatDate(message.createdAt)}
             </InfoStyle>
           )}
 
@@ -83,7 +85,7 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
             className={
               isMe
                 ? 'text-white !rounded-3xl !px-3 !py-2 !break-word !rounded-br-none cursor-pointer !overflow-x-auto !max-w-3/4 text-sm bg-gradient-to-br from-green-400 to-green-600 shadow-md'
-                : ' !rounded-3xl !px-3 !py-2 !break-word !rounded-bl-none shadow-sm cursor-pointer !overflow-x-auto !max-w-3/4 text-sm  bg-gradient-to-br from-gray-100 to-gray-300  '
+                : '!rounded-3xl !px-3 !py-2 !break-word !rounded-bl-none shadow-sm cursor-pointer !overflow-x-auto !max-w-3/4 text-sm  bg-gradient-to-br from-gray-100 to-gray-300  '
             }
             sx={{
               ...isMe,

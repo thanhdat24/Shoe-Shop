@@ -65,7 +65,7 @@ function OneAvatar({ participants }) {
         <BadgeStatus status="online" sx={{ position: 'absolute', right: 2, bottom: 2 }} />
       </Box>
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{participant.displayName}</Typography>
+        <Typography variant="subtitle2">{participant.displayName === "Lê Thành Đạt" && "Admin"}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {capitalCase('online')}
