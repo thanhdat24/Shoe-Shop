@@ -29,7 +29,12 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function HomeAdvertisement() {
   return (
-    <Container component={MotionViewport}>
+    <Container component={MotionViewport} sx={{ position: 'relative', textAlign: 'center', marginTop: 10 }}>
+      <m.div variants={varFade().inUp}>
+        <Typography variant="h2" sx={{ mb: 3 }}>
+          Sản phẩm độc quyền
+        </Typography>
+      </m.div>
       <ContentStyle>
         <Box
           component={m.div}
@@ -42,7 +47,7 @@ export default function HomeAdvertisement() {
             <Image
               visibleByDefault
               alt="rocket"
-              src="https://minimal-assets-api.vercel.app/assets/images/home/rocket.png"
+              src="https://res.cloudinary.com/web-app-shoes/image/upload/v1682922011/bjafzeqxahulaqclbvmw.png"
               disabledEffect
               sx={{ maxWidth: 460 }}
             />
@@ -52,14 +57,26 @@ export default function HomeAdvertisement() {
         <Box
           sx={{
             pl: { md: 10 },
-            textAlign: { xs: 'center', md: 'left' },
+            textAlign: { xs: 'center', md: 'left', width: '50% ' },
           }}
         >
           <Box component={m.div} variants={varFade().inDown} sx={{ color: 'common.white', mb: 5 }}>
-            <Typography variant="h2">
-              Get started with
-              <br /> minimal kit today
-            </Typography>
+            <Typography variant="h2">Nike Invincible 3 By You</Typography>
+            <Typography
+              className="line-clamp-4"
+              variant="body2"
+              dangerouslySetInnerHTML={{
+                __html: `<p>
+                    Giày chạy bộ Invincible Run 3 được thiết kế với lớp đệm dày giúp bạn luôn tự tin và thoải mái trong
+                    suốt cuộc chạy. Đế giày đàn hồi và bật nhảy tốt, giúp bạn di chuyển dễ dàng trên mọi địa hình và sẵn
+                    sàng cho cuộc chạy tiếp theo. Với nhiều lựa chọn về phần trên và đế giày, bạn có thể tự do lựa chọn
+                    phong cách và tạo dấu ấn cá nhân cho riêng mình. Bên cạnh đó, với sự kết hợp hoàn hảo giữa thẩm mỹ
+                    và chức năng, đôi giày này sẽ khiến bạn trông bất khả chiến bại và cảm thấy tuyệt vời trên mỗi bước
+                    chân.
+                  </p>`,
+              }}
+            />
+            {/* <Typography variant="body"></Typography> */}
           </Box>
           <m.div variants={varFade().inDown}>
             <Button
@@ -76,7 +93,7 @@ export default function HomeAdvertisement() {
                 '&:hover': { bgcolor: 'grey.300' },
               }}
             >
-              Purchase Now
+              Mua ngay
             </Button>
           </m.div>
         </Box>

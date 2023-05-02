@@ -53,7 +53,8 @@ import { createBrand, getBrands, resetBrand } from '../../redux/slices/brand';
 import BrandTableToolbar from '../../sections/@dashboard/brand/list/BrandTableToolbar';
 import { DialogAnimate } from '../../components/animate';
 import CateTableRow from '../../sections/@dashboard/cate/list/CateTableRow';
-import CateTableToolBar from '../../sections/@dashboard/cate/list/CateTableToolBar';
+import ObjectUseTableToolBar from '../../sections/@dashboard/objectUse/list/ObjectUseableToolBar';
+
 
 // ----------------------------------------------------------------------
 
@@ -122,7 +123,6 @@ export default function ObjectUseList() {
     if (error) {
       enqueueSnackbar('Thêm đối tượng sử dụng không thành công!', { variant: 'error' });
     } else if (newObj) {
-
       enqueueSnackbar('Thêm đối tượng sử dụng  thành công!');
       dispatch(getObjects());
       // navigate(PATH_DASHBOARD.user.list);
@@ -216,7 +216,7 @@ export default function ObjectUseList() {
         </DialogAnimate>
 
         <Card>
-          <CateTableToolBar filterName={filterName} onFilterName={handleFilterName} />
+          <ObjectUseTableToolBar filterName={filterName} onFilterName={handleFilterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

@@ -64,6 +64,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
     cover: product.images[0],
     price,
     color: colors[0]?.color,
+
     size: sizes[0].size,
     quantity: detailColorSize.quantity < 1 ? 0 : 1,
   };
@@ -89,6 +90,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
           subtotal: data.price * data.quantity,
           available: detailColorSize.quantity,
           idColor: detailColorSize.idColor._id,
+              colorName: detailColorSize.idColor.name,
           idSize: detailColorSize.idSize._id,
           productId: detailColorSize.idProduct._id,
         });
@@ -107,9 +109,11 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
         subtotal: values.price * values.quantity,
         available: detailColorSize.quantity,
         idColor: detailColorSize.idColor._id,
+        colorName: detailColorSize.idColor.name,
         idSize: detailColorSize.idSize._id,
         productId: detailColorSize.idProduct._id,
       });
+      console.log('values', values);
     } catch (error) {
       console.error(error);
     }

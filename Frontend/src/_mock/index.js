@@ -5,6 +5,7 @@ import _mock from './_mock';
 export * from './_app';
 export * from './_user';
 export * from './_invoice';
+export * from './_exclusive_product';
 export * from './_ecommerce';
 export * from './_province';
 

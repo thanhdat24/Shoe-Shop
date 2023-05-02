@@ -21,7 +21,6 @@ import {
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // _mock_
-import { _notifications } from '../../../_mock';
 // components
 import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
@@ -36,7 +35,6 @@ import { updateOrder } from '../../../redux/slices/order';
 export default function NotificationsPopover() {
   const dispatch = useDispatch();
 
-  // const [notifications, setNotifications] = useState(_notifications);
 
   const { notifications } = useSelector((state) => state.notification);
   const { orderUpdate } = useSelector((state) => state.order);

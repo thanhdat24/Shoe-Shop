@@ -43,7 +43,7 @@ export default function GeneralAnalytics() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <AnalyticsWidgetSummary
               title="Đơn hàng"
               total={orders?.length}
@@ -51,7 +51,7 @@ export default function GeneralAnalytics() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <AnalyticsWidgetSummary
               title="Người dùng"
               total={allAccountsList?.length}
@@ -60,7 +60,7 @@ export default function GeneralAnalytics() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <AnalyticsWidgetSummary
               title="Doanh thu"
               total={fCurrency(totalPrice)}
@@ -69,9 +69,9 @@ export default function GeneralAnalytics() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AnalyticsWidgetSummary title="Lượt truy cập" total={234} color="error" icon={'ant-design:eye-filled'} />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} md={6} lg={4}>
             <AnalyticsCurrentVisits />
           </Grid>

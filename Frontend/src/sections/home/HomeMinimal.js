@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 // @mui
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Box, Card, Container, Typography } from '@mui/material';
+import { Box, Card, Container, Typography, Pagination, Stack } from '@mui/material';
 // components
 import Image from '../../components/Image';
 import { MotionViewport, varFade } from '../../components/animate';
@@ -11,25 +11,6 @@ import { getProducts } from '../../redux/slices/product';
 import { useDispatch, useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
-
-const CARDS = [
-  {
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_design.svg',
-    title: 'UI & UX Design',
-    description:
-      'The set is built on the principles of the atomic design system. It helps you to create projects fastest and easily customized packages for your projects.',
-  },
-  {
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_code.svg',
-    title: 'Development',
-    description: 'Easy to customize and extend each component, saving you time and money.',
-  },
-  {
-    icon: '/logo/logo_single.svg',
-    title: 'Branding',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.',
-  },
-];
 
 const shadowIcon = (color) => `drop-shadow(2px 2px 2px ${alpha(color, 0.48)})`;
 
@@ -93,10 +74,13 @@ export default function HomeMinimal() {
 
   const theme = useTheme();
   const { products } = useSelector((state) => state.product);
-
+  const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(getProducts(page));
+  }, [dispatch, page]);
   const isLight = theme.palette.mode === 'light';
 
   return (
@@ -113,7 +97,11 @@ export default function HomeMinimal() {
           </m.div>
         </Box>
 
-        <ShopProductList products={products} loading={!products.length} />
+        <ShopProductList products={products.data} loading={!products.result} />
+        <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+          {' '}
+          <Pagination count={3} page={page} onChange={handleChange} color="primary" />
+        </Stack>
       </Container>
     </RootStyle>
   );

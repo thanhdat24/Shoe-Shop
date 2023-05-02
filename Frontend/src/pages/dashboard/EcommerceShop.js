@@ -164,7 +164,7 @@ export default function EcommerceShop() {
           )}
         </Stack>
 
-        <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
+        <ShopProductList products={filteredProducts} loading={!products?.result && isDefault} />
         <CartWidget />
       </Container>
     </Page>

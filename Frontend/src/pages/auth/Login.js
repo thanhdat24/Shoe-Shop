@@ -72,26 +72,15 @@ export default function Login() {
       <RootStyle>
         <HeaderStyle>
           <Logo />
-          {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Don’t have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                Get started
-              </Link>
-            </Typography>
-          )}
         </HeaderStyle>
 
         {mdUp && (
           <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
-            </Typography>
             <Image
               visibleByDefault
               disabledEffect
               alt="login"
-              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_login.png"
+              src="https://res.cloudinary.com/web-app-shoes/image/upload/v1682922011/bjafzeqxahulaqclbvmw.png"
             />
           </SectionStyle>
         )}
@@ -101,9 +90,8 @@ export default function Login() {
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                  Sign in to Minimal
+                  Đăng nhập vào Shoes
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
               </Box>
 
               <Tooltip title={capitalCase(method)} placement="right">
@@ -116,10 +104,10 @@ export default function Login() {
                 </>
               </Tooltip>
             </Stack>
-
+            {/* 
             <Alert severity="info" sx={{ mb: 3 }}>
               Use email : <strong>admin@gmail.com</strong> / password :<strong> Dat123456</strong>
-            </Alert>
+            </Alert> */}
 
             <LoginForm />
 

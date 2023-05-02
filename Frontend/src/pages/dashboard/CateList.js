@@ -178,7 +178,7 @@ export default function CateList() {
               name: 'Loại giày',
               href: PATH_DASHBOARD.brand.root,
             },
-            { name: 'Danh sách' },
+            { name: 'Danh sách loại giày' },
           ]}
           action={
             <Button

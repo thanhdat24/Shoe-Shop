@@ -48,7 +48,7 @@ export default function AccountChangePassword() {
   };
 
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: 3, width:"55%", margin:"0 auto" }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="flex-end">
           <RHFTextField name="oldPassword" type="password" label="Mật khẩu cũ" />

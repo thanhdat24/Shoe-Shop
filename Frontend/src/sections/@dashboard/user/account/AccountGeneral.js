@@ -144,7 +144,7 @@ export default function AccountGeneral() {
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
+                Lưu thay đổi
               </LoadingButton>
             </Stack>
           </Card>

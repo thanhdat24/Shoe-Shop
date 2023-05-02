@@ -39,7 +39,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function ProductTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, inventoryType, productDetail, productImages, price, idCate,idSupplier } = row;
+  const { name, inventoryType, productDetail, productImages, price, idCate,idSupplier, priceSale } = row;
   const color = _(productDetail)
     .groupBy((x) => x.idColor.color)
     .map((value, key) => ({
@@ -75,7 +75,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
         <Image
           disabledEffect
           alt={name}
-          src={productImages[0].url[0]}
+          src={productImages[0]?.url[0]}
           sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }}
         />
         <Typography variant="subtitle2" noWrap>
@@ -110,6 +110,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
         </Label>
       </TableCell>
       <TableCell align="right">{fCurrency(price)}₫</TableCell>
+      <TableCell align="right">{fCurrency(priceSale)}₫</TableCell>
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

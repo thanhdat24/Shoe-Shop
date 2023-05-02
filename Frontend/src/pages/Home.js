@@ -3,16 +3,7 @@ import { styled } from '@mui/material/styles';
 // components
 import Page from '../components/Page';
 // sections
-import {
-  HomeHero,
-  HomeMinimal,
-  HomeDarkMode,
-  HomeLookingFor,
-  HomeColorPresets,
-  HomeAdvertisement,
-  HomeCleanInterfaces,
-  HomeHugePackElements,
-} from '../sections/home';
+import { HomeHero, HomeMinimal, HomeAdvertisement, HomeHugePackElements } from '../sections/home';
 import BestSeller from './BestSeller';
 
 // ----------------------------------------------------------------------
@@ -31,22 +22,12 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function HomePage() {
   return (
-    <Page title="The starting point for your next project">
+    <Page title="Shoes">
       <RootStyle>
         <HomeHero />
         <ContentStyle>
           <HomeMinimal />
-
           <BestSeller />
-
-          <HomeDarkMode />
-
-          <HomeColorPresets />
-
-          <HomeCleanInterfaces />
-
-          <HomeLookingFor />
-
           <HomeAdvertisement />
         </ContentStyle>
       </RootStyle>

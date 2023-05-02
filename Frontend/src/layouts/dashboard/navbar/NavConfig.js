@@ -49,23 +49,28 @@ const navConfig = [
         icon: ICONS.user,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.user.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.user.new },
+          // { title: 'Tạo', path: PATH_DASHBOARD.user.new },
 
           { title: 'Tài khoản', path: PATH_DASHBOARD.user.account },
         ],
       },
-      // PROMOTION
+      // PRODUCT
       {
-        title: 'Khuyến mãi',
-        path: PATH_DASHBOARD.promotion.root,
-        icon: ICONS.promotion,
+        title: 'Sản phẩm',
+        path: PATH_DASHBOARD.eCommerce.root,
+        icon: ICONS.cart,
         children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.promotion.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.promotion.new },
-          // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
+          // { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
+          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
+          { title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list },
+          { title: 'Tạo', path: PATH_DASHBOARD.eCommerce.new },
+
+          // { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
+          // { title: 'view', path: PATH_DASHBOARD.eCommerce.view },
         ],
       },
-      // Ưu đãi
+
+      // BRAND
       {
         title: 'Thương hiệu',
         path: PATH_DASHBOARD.brand.root,
@@ -99,16 +104,6 @@ const navConfig = [
         ],
       },
       // SHIPPER
-      {
-        title: 'Shipper',
-        path: PATH_DASHBOARD.shipper.root,
-        icon: ICONS.shipper,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.shipper.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.shipper.new },
-          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
-        ],
-      },
 
       // E-COMMERCE
       {
@@ -129,21 +124,17 @@ const navConfig = [
           { title: 'Tạo', path: PATH_DASHBOARD.objUse.new },
         ],
       },
-      {
-        title: 'Sản phẩm',
-        path: PATH_DASHBOARD.eCommerce.root,
-        icon: ICONS.cart,
-        children: [
-          // { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
-          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          { title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.eCommerce.new },
 
-          // { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          // { title: 'view', path: PATH_DASHBOARD.eCommerce.view },
+      {
+        title: 'Shipper',
+        path: PATH_DASHBOARD.shipper.root,
+        icon: ICONS.shipper,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.shipper.list },
+          { title: 'Tạo', path: PATH_DASHBOARD.shipper.new },
+          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
         ],
       },
-
       // INVOICE
       {
         title: 'Đơn hàng',
@@ -154,6 +145,17 @@ const navConfig = [
           // { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
           { title: 'Tạo', path: PATH_DASHBOARD.invoice.new },
           { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
+        ],
+      },
+      // PROMOTION
+      {
+        title: 'Khuyến mãi',
+        path: PATH_DASHBOARD.promotion.root,
+        icon: ICONS.promotion,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.promotion.list },
+          // { title: 'Tạo', path: PATH_DASHBOARD.promotion.new },
+          // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
         ],
       },
       // Đánh giá

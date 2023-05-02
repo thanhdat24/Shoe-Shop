@@ -200,7 +200,7 @@ export default function MainHeader() {
           <Logo />
           {/* <Box sx={{ flexGrow: 2 }} /> */}
           <Label color="info" sx={{ ml: 1 }}>
-            v3.3.0
+            Shoes
           </Label>
 
           <Box className="flex justify-center items-center">

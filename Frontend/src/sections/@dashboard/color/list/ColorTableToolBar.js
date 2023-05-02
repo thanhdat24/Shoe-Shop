@@ -17,7 +17,7 @@ export default function ColorTableToolBar({ filterName, onFilterName }) {
       <TextField
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Tìm kiếm thương hiệu"
+        placeholder="Tìm kiếm màu sắc"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

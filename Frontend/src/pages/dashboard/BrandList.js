@@ -175,7 +175,7 @@ export default function BrandList() {
               name: 'Thương hiệu',
               href: PATH_DASHBOARD.brand.root,
             },
-            { name: 'Product List' },
+            { name: 'Danh sách thương hiệu' },
           ]}
           action={
             <Button

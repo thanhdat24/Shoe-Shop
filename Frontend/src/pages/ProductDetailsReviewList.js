@@ -243,7 +243,7 @@ function ReviewItem({ review }) {
               alignItems: 'center',
             }}
           >
-            {!likes && (
+            {/* {!likes && (
               <Typography variant="body2" sx={{ mr: 1 }}>
                 Nhận xét này có hữu ích cho bạn?
               </Typography>
@@ -255,8 +255,8 @@ function ReviewItem({ review }) {
               startIcon={<Iconify icon={!likes ? 'ic:round-thumb-up' : 'eva:checkmark-fill'} />}
               onClick={handleClickHelpful}
             >
-              {likes ? 'Helpful' : 'Thích'}({fShortenNumber(!likes ? helpful : helpful + 1)})
-            </Button>
+              {likes ? 'Helpful' : 'Thích'}({fShortenNumber(!likes ? helpful : helpful + 1) })
+            </Button> */}
           </Box>
         </div>
       </ListItem>

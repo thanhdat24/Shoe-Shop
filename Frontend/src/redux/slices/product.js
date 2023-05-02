@@ -300,12 +300,12 @@ export const {
 // ----------------------------------------------------------------------
 
 // PRODUCT
-export function getProducts() {
+export function getProducts(page) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/v1/products');
-      dispatch(slice.actions.getProductsSuccess(response.data.data));
+      const response = await axios.get(`/api/v1/products/?page=${page}`);
+      dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

@@ -214,24 +214,6 @@ export default function HomeHero() {
                 Mua ngay
               </Button>
             </m.div>
-
-            <Stack spacing={2.5}>
-              <m.div variants={varFade().inRight}>
-                <Typography variant="overline" sx={{ color: 'primary.light' }}>
-                  Available For
-                </Typography>
-              </m.div>
-
-              <Stack direction="row" spacing={1.5} justifyContent={{ xs: 'center', md: 'flex-start' }}>
-                {['ic_sketch', 'ic_figma', 'ic_js', 'ic_ts', 'ic_nextjs'].map((resource) => (
-                  <m.img
-                    key={resource}
-                    variants={varFade().inRight}
-                    src={`https://minimal-assets-api.vercel.app/assets/images/home/${resource}.svg`}
-                  />
-                ))}
-              </Stack>
-            </Stack>
           </ContentStyle>
         </Container>
       </RootStyle>

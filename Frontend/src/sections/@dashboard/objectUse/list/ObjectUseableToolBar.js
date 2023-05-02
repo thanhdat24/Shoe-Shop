@@ -17,7 +17,7 @@ export default function ObjectUseTableToolBar({ filterName, onFilterName }) {
       <TextField
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Tìm kiếm loại giày"
+        placeholder="Tìm kiếm đối tượng"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

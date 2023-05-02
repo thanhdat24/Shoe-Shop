@@ -27,7 +27,7 @@ export default function MainLayout() {
       ) : (
         <Box
           sx={{
-            py: 5,
+            py: 4,
             textAlign: 'center',
             position: 'relative',
             bgcolor: 'background.default',
@@ -37,9 +37,8 @@ export default function MainLayout() {
             <Logo sx={{ mb: 1, mx: 'auto' }} />
 
             <Typography variant="caption" component="p">
-              © All rights reserved
-              <br /> made by &nbsp;
-              <Link href="https://minimals.cc/">minimals.cc</Link>
+              Copyright © 2023 Lê Thành Đạt
+           
             </Typography>
           </Container>
         </Box>

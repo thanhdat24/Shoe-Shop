@@ -39,7 +39,7 @@ export default function UserAccount() {
     <Page title="User: Account Settings">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Account"
+          heading="Tài khoản"
           links={[
             { name: 'Quản lý', href: PATH_DASHBOARD.root },
             { name: 'Người dùng', href: PATH_DASHBOARD.user.root },

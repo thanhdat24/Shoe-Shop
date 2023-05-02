@@ -43,12 +43,13 @@ import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Tên sản phẩm', align: 'left' },
-  { id: 'color', label: 'Màu sắc', align: 'left', width: 120 },
+  { id: 'color', label: 'Màu sắc', align: 'left' },
   { id: 'size', label: 'Kích thước', align: 'left', width: 120 },
   { id: 'cate', label: 'Thể loại', align: 'left' },
   { id: 'supplier', label: 'Nhà cung cấp', align: 'left' },
   { id: 'inventoryType', label: 'Trạng thái', align: 'center' },
-  { id: 'price', label: 'Giá', align: 'center' },
+  { id: 'price', label: 'Giá so sánh', align: 'center' },
+  { id: 'priceSale', label: 'Giá giảm', align: 'center' },
   { id: '' },
 ];
 
@@ -93,10 +94,10 @@ export default function EcommerceProductList() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (products?.length) {
-      setTableData(products);
+    if (products?.result) {
+      setTableData(products.data);
     }
-  }, [products]);
+  }, [products.data]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);

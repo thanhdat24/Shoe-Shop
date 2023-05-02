@@ -24,7 +24,7 @@ export default function EcommerceProductCreate() {
   const { name } = useParams();
   const { products } = useSelector((state) => state.product);
   const isEdit = pathname.includes('edit');
-  const currentProduct = products?.find((product) => paramCase(product.name) === name);
+  const currentProduct = products?.data?.find((product) => paramCase(product.name) === name);
 
   useEffect(() => {
     dispatch(getProducts());
@@ -35,7 +35,7 @@ export default function EcommerceProductCreate() {
     <Page title="Ecommerce: Create a new product">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Tạo sản phẩm mới' : 'Chỉnh sửa product'}
+          heading={!isEdit ? 'Tạo sản phẩm mới' : 'Chỉnh sửa sản phẩm'}
           links={[
             { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {

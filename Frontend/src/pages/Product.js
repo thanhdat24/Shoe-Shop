@@ -20,18 +20,19 @@ import ProductDetailsReview from './ProductDetailsReview';
 
 const PRODUCT_DESCRIPTION = [
   {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
+    title: 'Đổi hàng trong 10 ngày',
+    description:
+      'Nếu sản phẩm không đáp ứng được nhu cầu của bạn, bạn có thể đổi hàng trong vòng 10 ngày kể từ ngày mua.',
     icon: 'ic:round-verified',
   },
   {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
+    title: 'Bảo hành 1 năm',
+    description: 'Bảo hành sản phẩm trong 1 năm từ ngày mua để đảm bảo chất lượng và sự hài lòng của khách hàng.',
     icon: 'eva:clock-fill',
   },
   {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
+    title: '100% hàng chính hãng',
+    description: 'Chúng tôi cam kết cung cấp sản phẩm chính hãng 100%, đảm bảo chất lượng và uy tín của thương hiệu.',
     icon: 'ic:round-verified-user',
   },
 ];
@@ -114,7 +115,7 @@ export default function Product() {
               ))}
             </Grid>
 
-            <Card>
+            <Card sx={{ marginBottom: 5 }}>
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>

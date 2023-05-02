@@ -11,7 +11,7 @@ export default function ShipperLayout() {
           boxShadow: 'rgb(0 0 0 / 10%) 0px 0px 5px 2px',
           position: 'relative',
           border: '1px solid white',
-          maxWidth: '475px',
+          // maxWidth: '475px',
           margin: { xs: 2.5, md: 3 },
           '& > *': {
             flexGrow: 1,
@@ -23,7 +23,7 @@ export default function ShipperLayout() {
           sx={{
             width: '100%',
             margin: '0px 0px',
-            height: '750px',
+            height: '728px',
           }}
         >
           <Outlet />

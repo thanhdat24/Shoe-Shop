@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -51,7 +52,6 @@ import useTable from '../../../hooks/useTable';
 import { getObjects } from '../../../redux/slices/objectUse';
 import { getBrands } from '../../../redux/slices/brand';
 import { getSuppliers } from '../../../redux/slices/supplier';
-
 // ----------------------------------------------------------------------
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -79,12 +79,13 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-  useEffect(() => {
-    if (activeStep === steps.length) {
+    if (activeStep === steps.length - 1) {
       dispatch(createProduct(arrayNewProduct));
+      enqueueSnackbar('Nhập liệu thành công!', { variant: 'success' });
+      navigate(PATH_DASHBOARD.eCommerce.list);
     }
-  }, [activeStep]);
+  };
+
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -279,7 +280,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-
   const [images, setImages] = useState([]);
   const imageTypeRegex = /image\/(png|jpg|jpeg|svg)/gm;
   const handleDrop = useCallback(
@@ -439,13 +439,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                         </option>
                       ))}
                     </RHFSelect>{' '}
-                    {/* <RHFSelect name="brand" label="Thương hiệu">
-                      {BRAND_OPTION?.map((category) => (
-                        <option key={category._id} value={category._id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </RHFSelect> */}
                     <Controller
                       name="size"
                       control={control}
@@ -456,7 +449,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                           freeSolo
                           onChange={(event, newValue) => field.onChange(newValue)}
                           options={SIZE_OPTION.map((options) => options)}
-                          getOptionLabel={(option) => option.name}
+                          getOptionLabel={(option) => option.name.toString()}
                           renderTags={(value, getTagProps) =>
                             value.map((options, index) => (
                               <Chip {...getTagProps({ index })} key={options._id} size="small" label={options.name} />
@@ -474,7 +467,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                           {...field}
                           multiple
                           freeSolo
-                          getOptionLabel={(option) => option.name}
+                          getOptionLabel={(option) => option.name.toString()}
                           onChange={(event, newValue) => field.onChange(newValue)}
                           options={COLOR_OPTION.map((option) => option)}
                           renderTags={(value, getTagProps) =>

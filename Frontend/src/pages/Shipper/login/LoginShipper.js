@@ -21,6 +21,7 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 import AuthWrapper from '../AuthWrapper';
 import AuthCardWrapper from '../AuthCardWrapper';
 import LoginForm from './LoginForm';
+import Logo from '../../../components/Logo';
 
 // ----------------------------------------------------------------------
 
@@ -85,7 +86,7 @@ export default function LoginShipper() {
               <AuthCardWrapper>
                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                   <Grid item sx={{ mb: 3 }}>
-                    Logo
+                    <Logo />
                   </Grid>
                   <Grid item xs={12}>
                     <Grid
@@ -101,10 +102,10 @@ export default function LoginShipper() {
                             gutterBottom
                             variant={matchDownSM ? 'h3' : 'h5'}
                           >
-                            Hi, Welcome Back
+                            Xin chào, Chào mừng trở lại
                           </Typography>
                           <Typography variant="caption" fontSize="16px" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                            Enter your credentials to continue
+                            Vui lòng nhập thông tin đăng nhập của bạn.
                           </Typography>
                         </Stack>
                       </Grid>
@@ -121,7 +122,8 @@ export default function LoginShipper() {
                         variant="subtitle1"
                         sx={{ textDecoration: 'none' }}
                       >
-                        Don&apos;t have an account?
+                        {/* Don&apos;t have an account? */}
+                        Không có tài khoản?
                       </Typography>
                     </Grid>
                   </Grid>
