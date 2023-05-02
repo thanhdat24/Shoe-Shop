@@ -5,16 +5,7 @@ const ProductImages = require('../models/productImagesModel');
 const catchAsync = require('../utils/catchAsync');
 const _ = require('lodash');
 const cloudinary = require('../utils/cloudinary');
-const fullTextSearch = require('fulltextsearch');
-const fullTextSearchVi = fullTextSearch.vi;
 
-const filterObj = (obj, ...allowedField) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedField.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
 
 exports.getDetailProduct = factory.getOne(Product, {
   path: 'productDetail productImages',
@@ -25,16 +16,48 @@ exports.getDetailProductByName = factory.getOneByName(Product, {
 
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
-exports.getAllProduct = factory.getAll(Product, {
-  path: 'productDetail productImages',
+// exports.getAllProduct = factory.getAll(Product, {
+//   path: 'productDetail productImages',
+// });
+
+exports.getAllProduct = catchAsync(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 8;
+  const skip = (page - 1) * limit;
+
+  const count = await Product.countDocuments();
+  const totalPages = Math.ceil(count / limit);
+  let query;
+  if (req.query.page !== 'undefined') {
+    query = Product.find()
+      .sort({ createdAt: -1 })
+      .populate('productDetail productImages')
+      .skip(skip)
+      .limit(limit);
+  } else {
+    query = Product.find()
+      .sort({ createdAt: -1 })
+      .populate('productDetail productImages');
+  }
+
+  const doc = await query;
+
+  res.status(200).json({
+    status: 'success',
+    result: doc.length,
+    page,
+    totalPages,
+    data: doc,
+  });
 });
+
 exports.createProduct = catchAsync(async (req, res, next) => {
   const { productImages } = req.body[0];
   let productItems = [];
   req.body.map((item, index) => {
     productItems.push({
-      idSize: item.size._id,
-      idColor: item.color._id,
+      idSize: item.idSize._id,
+      idColor: item.idColor._id,
       quantity: item.quantity,
       sku: item.sku,
       idProduct: '',
@@ -76,14 +99,16 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.searchProduct = catchAsync(async (req, res, next) => {
-  const { query } = req.query;
-  console.log('query', query);
-  var filter = {};
-  if (query != '') {
-    filter.name = new RegExp(fullTextSearchVi(query), 'i');
-  }
+  const { search } = req.query;
 
-  await Product.find(filter)
+  const titleCaseSearch = search
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  console.log('titleCaseSearch', titleCaseSearch);
+
+  await Product.find({ name: { $regex: titleCaseSearch } })
     .populate('productImages productDetail')
     .then((records) => {
       res.status(200).json({
