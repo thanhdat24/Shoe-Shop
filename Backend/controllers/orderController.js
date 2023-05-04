@@ -70,7 +70,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     let arrayItems = [];
     if (req.order.idPromotion !== null) {
       const promotion = await Promotion.find(req.order.idPromotion);
-      console.log('promotion', promotion);
       req.promotion = promotion;
     }
     let totalQuality = 0;
@@ -99,9 +98,15 @@ exports.createOrder = catchAsync(async (req, res, next) => {
             let idColorAndSize = await ProductDetail.find({
               idColor: item.idColor,
               idSize: item.idSize,
+              idProduct: product._id,
             });
+            console.log('idColorAndSize', idColorAndSize);
             if (idColorAndSize) {
               idColorAndSize[0].quantity -= item.quantity;
+              console.log(
+                'idColorAndSize[0].quantity',
+                idColorAndSize[0].quantity
+              );
 
               await idColorAndSize[0].save();
             } else {
@@ -385,7 +390,9 @@ exports.monthlyProductRevenue = catchAsync(async (req, res, next) => {
 
   doc = doc.filter(
     (item) =>
-      item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
+      item.idOrder.status === 'Đã nhận' ||
+      item.idOrder.status === 'Đã đánh giá' ||
+      item.idOrder.status === 'Đã giao hàng'
   );
   let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
@@ -438,7 +445,9 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
   let doc = await OrderDetail.find({ idProduct });
   doc = doc.filter(
     (item) =>
-      item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
+      item.idOrder.status === 'Đã nhận' ||
+      item.idOrder.status === 'Đã đánh giá' ||
+      item.idOrder.status === 'Đã giao hàng'
   );
   let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('MM-YYYY'))

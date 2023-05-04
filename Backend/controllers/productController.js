@@ -5,7 +5,8 @@ const ProductImages = require('../models/productImagesModel');
 const catchAsync = require('../utils/catchAsync');
 const _ = require('lodash');
 const cloudinary = require('../utils/cloudinary');
-
+const fullTextSearch = require('fulltextsearch');
+const fullTextSearchVi = fullTextSearch.vi;
 
 exports.getDetailProduct = factory.getOne(Product, {
   path: 'productDetail productImages',
@@ -100,15 +101,12 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 exports.searchProduct = catchAsync(async (req, res, next) => {
   const { search } = req.query;
+  var filter = {};
+  if (search != '') {
+    filter.name = new RegExp(fullTextSearchVi(search), 'i');
+  }
 
-  const titleCaseSearch = search
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-
-  console.log('titleCaseSearch', titleCaseSearch);
-
-  await Product.find({ name: { $regex: titleCaseSearch } })
+  await Product.find(filter)
     .populate('productImages productDetail')
     .then((records) => {
       res.status(200).json({

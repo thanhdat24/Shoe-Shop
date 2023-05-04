@@ -2,6 +2,8 @@ const factory = require('../controllers/handlerFactory');
 const Chat = require('../models/chatModel');
 const catchAsync = require('../utils/catchAsync');
 const { capitalCase } = require('change-case');
+const fullTextSearch = require('fulltextsearch');
+const fullTextSearchVi = fullTextSearch.vi;
 
 exports.getDetailChat = factory.getOne();
 exports.updateChat = factory.updateOne(Chat);
