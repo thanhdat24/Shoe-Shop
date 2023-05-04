@@ -120,8 +120,6 @@ export default function CateList() {
     if (error) {
       enqueueSnackbar('Thêm loại giày không thành công!', { variant: 'error' });
     } else if (newCate) {
-      console.log('234', newCate);
-
       enqueueSnackbar('Thêm loại giày  thành công!');
       dispatch(getCates());
       // navigate(PATH_DASHBOARD.user.list);

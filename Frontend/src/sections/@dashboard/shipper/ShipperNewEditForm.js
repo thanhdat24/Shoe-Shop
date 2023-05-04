@@ -29,10 +29,9 @@ import { createShipper, resetShipper } from '../../../redux/slices/shipper';
 
 ShipperNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
 };
 
-export default function ShipperNewEditForm({ isEdit, currentUser }) {
+export default function ShipperNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -62,19 +61,19 @@ export default function ShipperNewEditForm({ isEdit, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      displayName: currentUser?.displayName || '',
-      email: currentUser?.email || '',
-      photoURL: currentUser?.photoURL || '',
-      phoneNumber: currentUser?.phoneNumber || '',
-      address: currentUser?.address || '',
-      gender: currentUser?.gender || '',
-      password: currentUser?.password || '',
-      passwordConfirm: currentUser?.passwordConfirm || '',
-      dateOfBirth: currentUser?.dateOfBirth || '',
-      licensePlates: currentUser?.licensePlates || '',
+      displayName: '',
+      email: '',
+      photoURL: '',
+      phoneNumber: '',
+      address: '',
+      gender: '',
+      password: '',
+      passwordConfirm: '',
+      dateOfBirth: '',
+      licensePlates: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    []
   );
 
   const methods = useForm({
@@ -94,14 +93,14 @@ export default function ShipperNewEditForm({ isEdit, currentUser }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentUser) {
+    if (isEdit) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [isEdit]);
 
   const onSubmit = async (account) => {
     try {

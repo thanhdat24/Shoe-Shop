@@ -112,7 +112,7 @@ const navConfig = [
         icon: ICONS.cate,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.cate.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.cate.new },
+          // { title: 'Tạo', path: PATH_DASHBOARD.cate.new },
         ],
       },
       {
@@ -121,7 +121,7 @@ const navConfig = [
         icon: ICONS.obj,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.objUse.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.objUse.new },
+          // { title: 'Tạo', path: PATH_DASHBOARD.objUse.new },
         ],
       },
 
@@ -143,8 +143,8 @@ const navConfig = [
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.invoice.list },
           // { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-          { title: 'Tạo', path: PATH_DASHBOARD.invoice.new },
-          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
+          // { title: 'Tạo', path: PATH_DASHBOARD.invoice.new },
+          // { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
         ],
       },
       // PROMOTION
@@ -154,7 +154,7 @@ const navConfig = [
         icon: ICONS.promotion,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.promotion.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.promotion.new },
+          { title: 'Tạo', path: PATH_DASHBOARD.promotion.new },
           // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
         ],
       },

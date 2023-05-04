@@ -20,6 +20,7 @@ import EmptyContent from '../../../../components/EmptyContent';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutProductList from './CheckoutProductList';
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -35,11 +36,12 @@ export default function CheckoutCart() {
   const isEmptyCart = cart.length === 0;
 
   const handleDeleteCart = (itemIndex) => {
-    console.log('itemIndex', itemIndex);
     dispatch(deleteCart(itemIndex));
   };
-
+  const { user } = useAuth();
+  console.log('user', user);
   const handleNextStep = () => {
+    console.log('123');
     dispatch(onNextStep());
   };
 
@@ -107,7 +109,7 @@ export default function CheckoutCart() {
           size="large"
           type="submit"
           variant="contained"
-          disabled={cart.length === 0}
+          disabled={cart.length === 0 || user.displayName === undefined}
           onClick={handleNextStep}
         >
           Thanh toán

@@ -13,7 +13,6 @@ ColorManyPicker.propTypes = {
 };
 
 export default function ColorManyPicker({ colors, onChangeColor, sx, ...other }) {
-  console.log('colors123', colors);
   return (
     <Box sx={sx}>
       {colors.map((item) => {

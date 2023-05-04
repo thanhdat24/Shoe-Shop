@@ -113,7 +113,6 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
         idSize: detailColorSize.idSize._id,
         productId: detailColorSize.idProduct._id,
       });
-      console.log('values', values);
     } catch (error) {
       console.error(error);
     }

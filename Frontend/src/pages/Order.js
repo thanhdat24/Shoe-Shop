@@ -56,8 +56,6 @@ export default function Order() {
 
   const [itemReview, setItemReview] = useState('');
 
-
-
   const groupByItemReview = _(itemReview.orderDetail)
     .groupBy((x) => x.idProduct.id)
     .map((value, key) => ({ idProduct: key, productDetail: value }))
@@ -215,9 +213,9 @@ export default function Order() {
                     border: '1px solid white',
                   }}
                 >
-                  <div className="flex ">
+                  <div className="flex mb-3 items-center">
                     <StatusOrder status={order.status} />
-                    <p className="text-red-400 mb-3 font-semibold uppercase">{order.status}</p>
+                    <p className="text-red-400 font-semibold uppercase mr-5">{order.status}</p>
                   </div>
                   <hr />
                   {order?.orderDetail?.map((item, index) => {
@@ -403,7 +401,6 @@ function applySortFilter({ tableData, filterStatus }) {
   } else {
     tableData = tableData.filter((item) => item.status === 'Đã nhận' || item.status === 'Đã đánh giá');
   }
-
 
   return tableData;
 }

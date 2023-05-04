@@ -208,9 +208,6 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         { element: <HomePage />, index: true },
-        { path: 'about-us', element: <About /> },
-        { path: 'contact-us', element: <Contact /> },
-        { path: 'faqs', element: <Faqs /> },
         {
           path: 'product',
           children: [{ path: ':name', element: <Product /> }],
@@ -322,12 +319,9 @@ const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
-const About = Loadable(lazy(() => import('../pages/About')));
-const Contact = Loadable(lazy(() => import('../pages/Contact')));
 const Account = Loadable(lazy(() => import('../pages/Account')));
 const OrderView = Loadable(lazy(() => import('../pages/OrderView')));
 const Order = Loadable(lazy(() => import('../pages/Order')));
-const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Product = Loadable(lazy(() => import('../pages/Product')));

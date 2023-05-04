@@ -31,7 +31,14 @@ import {
 } from '@mui/material';
 import _ from 'lodash';
 import { DataGrid } from '@mui/x-data-grid';
-import { createProduct, getAllCate, getAllColor, getAllSize, getProducts } from '../../../redux/slices/product';
+import {
+  createProduct,
+  getAllCate,
+  getAllColor,
+  getAllSize,
+  getProducts,
+  updateProduct,
+} from '../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -69,8 +76,8 @@ ProductNewEditForm.propTypes = {
 
 const steps = ['Select campaign settings', 'Create an ad group'];
 export default function ProductNewEditForm({ isEdit, currentProduct }) {
+  console.log('currentProduct', currentProduct);
   const [activeStep, setActiveStep] = useState(0);
-  const [productUpdate, setNewProductUpdate] = useState({});
   const [arrayNewProduct, setArrayNewProduct] = useState();
 
   const isStepOptional = (step) => {
@@ -86,23 +93,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   const navigate = useNavigate();
@@ -185,9 +177,10 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const defaultValues = useMemo(
     () => ({
+      id: currentProduct?.id || '',
       name: currentProduct?.name || '',
       desc: currentProduct?.desc || '',
-      productImages: currentProduct?.images || [],
+      productImages: currentProduct?.productImages[0]?.url || [],
       sku: currentProduct?.sku || '',
       price: currentProduct?.price || 0,
       priceSale: currentProduct?.priceSale || 0,
@@ -237,9 +230,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     newProduct = {
       ...product,
     };
-    console.log('newProduct', newProduct);
     try {
-      if (newProduct !== undefined) {
+      if (newProduct !== undefined && !isEdit) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         setActiveStep(1);
         const arrayItemProduct = [];
@@ -271,6 +263,10 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
           }
         }
         setArrayNewProduct(arrayItemProduct);
+      } else {
+        dispatch(updateProduct(newProduct, newProduct.id));
+        enqueueSnackbar('Chỉnh sửa thành công!', { variant: 'success' });
+        navigate(PATH_DASHBOARD.eCommerce.list);
       }
       // reset();
       // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
@@ -446,6 +442,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                         <Autocomplete
                           {...field}
                           multiple
+                          disabled={isEdit && true}
                           freeSolo
                           onChange={(event, newValue) => field.onChange(newValue)}
                           options={SIZE_OPTION.map((options) => options)}
@@ -467,6 +464,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                           {...field}
                           multiple
                           freeSolo
+                          disabled={isEdit && true}
                           getOptionLabel={(option) => option.name.toString()}
                           onChange={(event, newValue) => field.onChange(newValue)}
                           options={COLOR_OPTION.map((option) => option)}

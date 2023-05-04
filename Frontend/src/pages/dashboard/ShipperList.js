@@ -300,11 +300,11 @@ export default function ShipperList() {
           isEdit={'Tạo'}
           isInvoice={'yes'}
           onClose={handleCloseDialog}
-          title={'Danh sách đơn hàng'}
+          title={<span style={{ fontSize: '25px' }}>Danh sách đơn hàng</span>}
           onClickSubmit={handleSubmitDialog}
         >
           <DialogContent>
-            <Tabs
+            {/* <Tabs
               allowScrollButtonsMobile
               variant="scrollable"
               scrollButtons="auto"
@@ -324,11 +324,11 @@ export default function ShipperList() {
                   }
                 />
               ))}
-            </Tabs>
+            </Tabs> */}
             <Card sx={{ mb: 5 }}>
               <Scrollbar>
                 <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-                  {selected.length > 0 && (
+                  {/* {selected.length > 0 && (
                     <TableSelectedActions
                       dense={dense}
                       numSelected={selected.length}
@@ -367,10 +367,10 @@ export default function ShipperList() {
                         </Stack>
                       }
                     />
-                  )}
+                  )} */}
 
                   <Table size={dense ? 'small' : 'medium'}>
-                    <TableHeadCustom
+                    {/* <TableHeadCustom
                       order={order}
                       orderBy={orderBy}
                       headLabel={TABLE_HEAD_ORDER}
@@ -383,7 +383,7 @@ export default function ShipperList() {
                           tableData.map((row) => row.id)
                         )
                       }
-                    />
+                    /> */}
 
                     <TableBody>
                       {orderShipper?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
@@ -397,7 +397,7 @@ export default function ShipperList() {
                         />
                       ))}
 
-                      <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+                      {/* <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} /> */}
 
                       {/* <TableNoData isNotFound={isNotFound} /> */}
                     </TableBody>
@@ -408,7 +408,7 @@ export default function ShipperList() {
           </DialogContent>
         </DialogAnimate>
         <Card>
-          <ShipperTableToolBar filterName={filterName} onFilterName={handleFilterName} />
+          {/* <ShipperTableToolBar filterName={filterName} onFilterName={handleFilterName} /> */}
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

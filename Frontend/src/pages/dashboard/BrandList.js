@@ -108,8 +108,7 @@ export default function BrandList() {
   const { brandList, isLoading, newBrand, error } = useSelector((state) => state.brand);
 
   const [tableData, setTableData] = useState([]);
-  console.log('first', tableData);
-  console.log('brandList', brandList);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -119,7 +118,6 @@ export default function BrandList() {
     if (error) {
       enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
     } else if (newBrand) {
-      console.log('234', newBrand);
       enqueueSnackbar('Thêm thương hiệu  thành công!');
       // navigate(PATH_DASHBOARD.user.list);
     }

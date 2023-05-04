@@ -124,7 +124,6 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
   };
 
   const handleDeleteAddress = async (e) => {
-    console.log('idDelete', idDelete);
     dispatch(deleteAddress(idDelete));
     setOpen(false);
     setTimeout(() => {

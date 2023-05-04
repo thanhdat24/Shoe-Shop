@@ -25,7 +25,6 @@ export default function UserCreate() {
 
   const isEdit = pathname.includes('edit');
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
 
   return (
     <Page title="User: Create a new user">
@@ -39,7 +38,7 @@ export default function UserCreate() {
           ]}
         />
 
-        <UserNewEditForm isEdit={isEdit} currentUser={currentUser} />
+        <UserNewEditForm isEdit={isEdit}  />
       </Container>
     </Page>
   );

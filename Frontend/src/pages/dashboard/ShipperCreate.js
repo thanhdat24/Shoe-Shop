@@ -26,8 +26,6 @@ export default function ShipperCreate() {
 
   const isEdit = pathname.includes('edit');
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
-
   return (
     <Page title="User: Create a new shipper">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -40,7 +38,7 @@ export default function ShipperCreate() {
           ]}
         />
 
-        <ShipperNewEditForm isEdit={isEdit} currentUser={currentUser} />
+        <ShipperNewEditForm isEdit={isEdit} />
       </Container>
     </Page>
   );

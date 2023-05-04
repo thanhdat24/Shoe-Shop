@@ -39,6 +39,7 @@ import { createDiscount, getPromotionDetail, resetDiscount, updatePromotion } fr
 import ModalDialog from '../../components/ModalDialog/DialogTitle';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { fNumberVND } from '../../utils/formatNumber';
 
 export default function PromotionEdit() {
   const { id } = useParams();
@@ -402,7 +403,7 @@ export default function PromotionEdit() {
                                 <li className={classes.typographyInfo}>
                                   <span>
                                     Giảm{' '}
-                                    <b className="text-green-600">{`${(values?.price * 1).toLocaleString(
+                                    <b className="text-green-600">{`${(fNumberVND(values?.price) * 1).toLocaleString(
                                       'vi-VI'
                                     )} đ`}</b>
                                   </span>
@@ -580,8 +581,8 @@ export default function PromotionEdit() {
                                                   <ul className={classes.description}>
                                                     <li>
                                                       Giảm &nbsp;
-                                                      {values?.price / 1000}K Đơn hàng tối thiểu{' '}
-                                                      {values.miniPrice / 1000}K
+                                                      {fNumberVND(values?.price)} Đơn hàng tối thiểu{' '}
+                                                      {fNumberVND(values.miniPrice)}
                                                     </li>
                                                     <li>Áp dụng cho tất cả sản phẩm</li>
                                                   </ul>
@@ -596,11 +597,11 @@ export default function PromotionEdit() {
                                       </button>
                                       <div className="pr-7">
                                         <h4 className="text-sm font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                                          Giảm&nbsp;{values?.price / 1000}K
+                                          Giảm&nbsp;{fNumberVND(values?.price)}
                                         </h4>
                                         <p className="text-xs font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
                                           Đơn hàng tối thiểu&nbsp;
-                                          {values.miniPrice / 1000}K
+                                          {fNumberVND(values.miniPrice)}
                                         </p>
                                       </div>
                                       <div className="flex items-end mt-auto">
@@ -688,7 +689,9 @@ export default function PromotionEdit() {
                           <li className={classes.typographyInfo}>
                             <span>
                               Giảm{' '}
-                              <b className="text-green-600">{`${(values?.price * 1).toLocaleString('vi-VI')} đ`}</b>
+                              <b className="text-green-600">{`${(fNumberVND(values?.price) * 1).toLocaleString(
+                                'vi-VI'
+                              )} đ`}</b>
                             </span>
                           </li>
                           <li className={classes.typographyInfo}>

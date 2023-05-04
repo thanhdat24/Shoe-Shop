@@ -36,6 +36,7 @@ import { createDiscount, resetDiscount } from '../../redux/slices/promotion';
 import ModalDialog from '../../components/ModalDialog/DialogTitle';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { fNumberVND } from '../../utils/formatNumber';
 
 export default function PromotionCreate() {
   const navigate = useNavigate();
@@ -346,8 +347,7 @@ export default function PromotionCreate() {
                           <ul className={classes.alertMessage}>
                             <li className={classes.typographyInfo}>
                               <span>
-                                Giảm{' '}
-                                <b className="text-green-600">{`${(values?.price * 1).toLocaleString('vi-VI')} đ`}</b>
+                                Giảm <b className="text-green-600">{`${fNumberVND(values?.price)}`}</b>
                               </span>
                             </li>
                             <li className={classes.typographyInfo}>
@@ -359,7 +359,7 @@ export default function PromotionCreate() {
                             </li>
                             <li className={classes.typographyInfo}>
                               Giá trị đơn hàng tối thiểu:{' '}
-                              <b className="text-green-600">{`${(values?.miniPrice * 1).toLocaleString('vi-VI')} đ`}</b>
+                              <b className="text-green-600">{`${fNumberVND(values?.miniPrice)}`}</b>
                             </li>
                             {(effectiveTime[0] && effectiveTime[1]) !== null && (
                               <li className={classes.typographyInfo}>
@@ -507,7 +507,8 @@ export default function PromotionCreate() {
                                               <ul className={classes.description}>
                                                 <li>
                                                   Giảm Giảm&nbsp;
-                                                  {values?.price / 1000}K Đơn hàng tối thiểu {values.miniPrice / 1000}K
+                                                  {fNumberVND(values?.price)} Đơn hàng tối thiểu{' '}
+                                                  {fNumberVND(values.miniPrice)}
                                                 </li>
                                                 <li>Áp dụng cho tất cả sản phẩm</li>
                                               </ul>
@@ -522,11 +523,11 @@ export default function PromotionCreate() {
                                   </button>
                                   <div className="pr-7">
                                     <h4 className="text-sm font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                                      Giảm&nbsp;{values?.price / 1000}K
+                                      Giảm&nbsp;{fNumberVND(values?.price)}
                                     </h4>
                                     <p className="text-xs font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
                                       Đơn hàng tối thiểu&nbsp;
-                                      {values.miniPrice / 1000}K
+                                      {fNumberVND(values.miniPrice)}
                                     </p>
                                   </div>
                                   <div className="flex items-end mt-auto">
@@ -589,7 +590,7 @@ export default function PromotionCreate() {
                     <ul className={classes.alertMessage}>
                       <li className={classes.typographyInfo}>
                         <span>
-                          Giảm <b className="text-green-600">{`${(values?.price * 1).toLocaleString('vi-VI')} đ`}</b>
+                          Giảm <b className="text-green-600">{`${fNumberVND(values?.price * 1)}`}</b>
                         </span>
                       </li>
                       <li className={classes.typographyInfo}>
@@ -601,7 +602,7 @@ export default function PromotionCreate() {
                       </li>
                       <li className={classes.typographyInfo}>
                         Giá trị đơn hàng tối thiểu:{' '}
-                        <b className="text-green-600">{`${(values?.miniPrice * 1).toLocaleString('vi-VI')} đ`}</b>
+                        <b className="text-green-600">{`${fNumberVND(values?.miniPrice)}`}</b>
                       </li>
                       <li className={classes.typographyInfo}>
                         Số lượng mã giảm giá: <b className="text-green-600">{values?.quantity}</b>

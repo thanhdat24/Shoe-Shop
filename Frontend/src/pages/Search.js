@@ -60,9 +60,7 @@ export default function Search() {
   });
   const FILTER_COLOR_OPTIONS = colors;
 
-  console.log('filters', filters);
   const filteredProducts = applyFilter(searchList, filters, priceGte, priceLte);
-  console.log('filteredProducts', filteredProducts);
 
   const defaultValues = {
     gender: filters.gender,
@@ -106,7 +104,6 @@ export default function Search() {
 
   const handleRemoveColor = (value) => {
     const newValue = filters.colors.filter((item) => item !== value);
-    console.log('newValue', newValue);
     setValue('colors', newValue);
   };
 

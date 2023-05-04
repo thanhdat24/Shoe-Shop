@@ -116,7 +116,6 @@ export default function ColorList() {
   const onSubmit = async (data) => {
     try {
       dispatch(createSize(data));
-      console.log(data);
       setOpen(false);
       await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
@@ -130,7 +129,6 @@ export default function ColorList() {
     if (error) {
       enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
     } else if (newSize) {
-      console.log('234', newSize);
       enqueueSnackbar('Thêm thương hiệu  thành công!');
       // navigate(PATH_DASHBOARD.user.list);
     }

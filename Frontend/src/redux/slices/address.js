@@ -29,8 +29,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-      console.log('state', state);
-      console.log('action', action);
     },
 
     // CRREATE ADDRESS

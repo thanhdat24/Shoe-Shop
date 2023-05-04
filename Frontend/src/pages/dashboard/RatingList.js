@@ -145,8 +145,6 @@ export default function RatingList() {
   };
 
   const handleSubmit = async () => {
-    // console.log('idView', id);
-    console.log('IdRating', idRating);
     dispatch(updateRating(idRating, { active: true }));
     setOpen(false);
     enqueueSnackbar('Duyệt đánh giá thành công!');
@@ -166,9 +164,6 @@ export default function RatingList() {
     filterEndDate,
   });
 
-  console.log('tableData', tableData);
-  console.log('dataFiltered', dataFiltered);
-
   const denseHeight = dense ? 56 : 76;
 
   const isNotFound =
@@ -180,22 +175,14 @@ export default function RatingList() {
 
   const getLengthByStatus = (status) => tableData.filter((item) => item.status === status).length;
 
-  const getTotalPriceByStatus = (status) =>
-    sumBy(
-      tableData.filter((item) => item.status === status),
-      'total'
-    );
-
-  const getPercentByStatus = (status) => (getLengthByStatus(status) / tableData.length) * 100;
-
   return (
     <Page title="Đơn hàng: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách đơn hàng "
+          heading="Danh sách đánh giá "
           links={[
             { name: 'Trang chủ', href: PATH_DASHBOARD.root },
-            { name: 'Đơn hàng', href: PATH_DASHBOARD.invoice.root },
+            { name: 'Đánh giá', href: PATH_DASHBOARD.invoice.root },
             { name: 'Danh sách' },
           ]}
           // action={
@@ -277,12 +264,6 @@ export default function RatingList() {
                   rowCount={tableData.length}
                   numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
                 />
 
                 <TableBody>
@@ -290,8 +271,6 @@ export default function RatingList() {
                     <RatingTableRow
                       key={row.id}
                       row={row}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
                       onViewRow={() => handleViewRow(row.id)}
                       onEditRow={() => handleEditRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}

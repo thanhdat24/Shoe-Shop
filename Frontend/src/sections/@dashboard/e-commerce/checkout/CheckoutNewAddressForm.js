@@ -68,7 +68,6 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
     formState: { isSubmitting },
   } = methods;
   const values = watch();
-  console.log('values', values);
   const onSubmit = async (data) => {
     try {
       dispatch(createAddress(data));
@@ -80,7 +79,6 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
   };
   useEffect(async () => {
     const data = await getListProvince(values.city?.idProvince);
-    console.log('data', data);
 
     if (data.status === 200) {
       setDistrictList(data.data);
@@ -89,7 +87,6 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
   useEffect(async () => {
     const data = await getListWard(values.district?.idDistrict);
-    console.log('dataWard', data);
 
     if (data.status === 200) {
       setWardList(data.data);

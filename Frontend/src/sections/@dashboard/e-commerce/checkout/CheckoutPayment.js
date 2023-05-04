@@ -130,7 +130,6 @@ export default function CheckoutPayment() {
           } - Tổng tiền ${fCurrency(cartCheckout.total)}đ`,
         });
 
-        console.log('data123', data);
         setLinkMoMo(data.data.payUrl);
         checkoutLinkRef.current.click();
       } else {

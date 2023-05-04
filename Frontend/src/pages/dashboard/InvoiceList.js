@@ -455,7 +455,6 @@ function applySortFilter({
 
   if (filterService === 'Mã đơn hàng') {
     if (filterName) {
-
       // tableData = tableData.filter((item) => item.id === filterName);
     }
     // tableData = tableData.filter((item) => item.address.fullName === filterService);
@@ -472,11 +471,12 @@ function applySortFilter({
     // tableData = tableData.filter((item) => item.address.fullName === filterService);
   }
   // filter theo ngày
+
   if (filterStartDate && filterEndDate) {
     tableData = tableData.filter(
       (item) =>
-        moment(item.createdAt).format('DD/MM/YYYY') >= moment(filterStartDate).format('DD/MM/YYYY') &&
-        moment(item.createdAt).format('DD/MM/YYYY') <= moment(filterEndDate).format('DD/MM/YYYY')
+        moment(item.createdAt).format('yyyy-MM-DD') >= moment(filterStartDate).format('yyyy-MM-DD') &&
+        moment(item.createdAt).format('yyyy-MM-DD') <= moment(filterEndDate).format('yyyy-MM-DD')
     );
   }
 

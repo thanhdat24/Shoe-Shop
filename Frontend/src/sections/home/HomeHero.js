@@ -172,13 +172,6 @@ export default function HomeHero() {
               </Typography>
             </m.div>
 
-            <m.div variants={varFade().inRight}>
-              <Typography sx={{ color: 'common.white' }}>
-                The starting point for your next project based on easy-to-customize MUI helps you build apps faster and
-                better.
-              </Typography>
-            </m.div>
-
             <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
               <m.div variants={varFade().inRight}>
                 <TextIconLabel

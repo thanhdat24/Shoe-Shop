@@ -27,8 +27,6 @@ const IconStyle = styled('div')(({ theme }) => ({
 
 export default function ProductDetailTableRow({ row, selected }) {
   const theme = useTheme();
-  console.log('row123', row);
-  console.log('selected', selected);
   const {
     idColor: { name: nameColor },
     idSize: { name: nameSize },

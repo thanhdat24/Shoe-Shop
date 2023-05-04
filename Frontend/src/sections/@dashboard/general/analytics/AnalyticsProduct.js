@@ -29,12 +29,9 @@ export default function AnalyticsProduct() {
   //   const { orderList, orderByBookYear, orderByBookMonth } = useSelector((state) => state.OrderReducer);
 
   const handleChangeSeriesData = (event) => {
-    console.log('event.target.value', event.target.value);
-    // setSeriesData(Number(event.target.value));
     setSeriesData(Number(event.target.value));
   };
   const handleChangeShoes = (event) => {
-    console.log('idProduct', event.target.value);
     setShoes(event.target.value);
   };
   useEffect(() => {
@@ -60,7 +57,6 @@ export default function AnalyticsProduct() {
     },
   ];
 
-  console.log('CHART_DATA', CHART_DATA);
   const chartOptions = merge(BaseOptionChart(), {
     legend: { position: 'top', horizontalAlign: 'right' },
     yaxis: {
@@ -150,7 +146,7 @@ export default function AnalyticsProduct() {
                 <option className="mt-60 " value="2023">
                   Năm
                 </option>
-                <option className="mt-60" value="11">
+                <option className="mt-60" value="5">
                   Tháng
                 </option>
               </TextField>

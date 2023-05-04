@@ -10,7 +10,7 @@ export function fPercent(number) {
   return numeral(number / 100).format('0.0%');
 }
 
-export function fNumber(number) { 
+export function fNumber(number) {
   return numeral(number).format();
 }
 
@@ -20,4 +20,23 @@ export function fShortenNumber(number) {
 
 export function fData(number) {
   return numeral(number).format('0.0 b');
+}
+
+export function fNumberVND(number) {
+  if (number >= 10000000) {
+    return `${(number / 1000000).toFixed(0)}tr`;
+  }
+  if (number >= 1000000) {
+    return `${(number / 1000000).toFixed(0)}tr`;
+  }
+  if (number >= 100000) {
+    return `${(number / 1000).toFixed(0)}k`;
+  }
+  if (number >= 10000) {
+    return `${(number / 1000).toFixed(0)}k`;
+  }
+  if (number >= 1000) {
+    return `${(number / 1000).toFixed(0)}k`;
+  }
+  return number;
 }

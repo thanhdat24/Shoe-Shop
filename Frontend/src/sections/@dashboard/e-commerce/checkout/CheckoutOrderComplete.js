@@ -43,7 +43,6 @@ export default function CheckoutOrderComplete({ ...other }) {
   const { createOrderSuccess } = useSelector((state) => state.order);
 
   const { checkout } = useSelector((state) => state.product);
-  console.log('checkout123', checkout);
 
   const handleResetStep = () => {
     dispatch(resetCart());

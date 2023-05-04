@@ -24,6 +24,7 @@ import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import { useSelector } from '../../../../redux/store';
 import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
+import { fNumberVND } from '../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 const ButtonDiscount = styled(Button)(({ theme }) => ({
@@ -72,7 +73,6 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
   const { checkout } = useSelector((state) => state.product);
 
   const { cart, total, discount, subtotal } = checkout;
-
 
   // ----------------------------------------------------------------------
   const handleCopy = () => {
@@ -330,10 +330,10 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
                           </button>
                           <div className="pr-7">
                             <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                              Giảm {item?.price / 1000}K
+                              Giảm {fNumberVND(item?.price)}
                             </h4>
                             <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              Cho đơn hàng từ {item.miniPrice / 1000}K
+                              Cho đơn hàng từ {fNumberVND(item.miniPrice)}
                             </p>
                           </div>
                           <div className="flex items-end mt-auto justify-between">
@@ -368,7 +368,7 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
             ) : (
               <div className="grid  gap-4 truncate py-1 px-2 max-h-80" key={index}>
                 <div className="relative">
-                  <div className="relative w-full z-10 flex ">
+                  <div className="relative w-full z-10 flex justify-around">
                     <div className="relative opacity-100 h-36">
                       <img
                         className="w-full h-36"
@@ -489,10 +489,10 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
                           </button>
                           <div className="pr-7 ">
                             <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                              Giảm {item?.price / 1000}K
+                              Giảm {fNumberVND(item?.price)}K
                             </h4>
                             <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              Cho đơn hàng từ {item.miniPrice / 1000}K
+                              Cho đơn hàng từ {fNumberVND(item.miniPrice)}
                             </p>
                           </div>
                           <div className="flex items-end mt-auto">

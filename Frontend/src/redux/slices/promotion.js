@@ -16,7 +16,7 @@ const initialState = {
   promotions: null,
   newAccount: null,
   newDiscount: null,
-  promotionDetail:null
+  promotionDetail: null,
 };
 
 const slice = createSlice({
@@ -32,7 +32,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
@@ -69,6 +68,7 @@ const slice = createSlice({
     resetDiscount(state) {
       state.error = null;
       state.newDiscount = '';
+      state.success = '';
     },
   },
 });
@@ -93,7 +93,7 @@ export function createDiscount(promotion) {
   };
 }
 
-export function updatePromotion(updateDiscount,id) {
+export function updatePromotion(updateDiscount, id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {

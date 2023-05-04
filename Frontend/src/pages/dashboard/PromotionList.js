@@ -48,7 +48,7 @@ const STATUS_OPTIONS = ['Tất cả', 'Sắp diễn ra', 'Đang diễn ra', 'K�
 const TABLE_HEAD = [
   { id: 'name', label: 'Mã giảm giá', align: 'left' },
 
-  { id: 'price', label: 'Giảm giá', align: 'left' },
+  { id: 'price', label: 'Giảm giá', align: 'left', width: '200px'  },
 
   { id: 'content', label: 'Tiêu chí', align: 'left' },
   { id: 'time', label: 'Thời gian áp dụng', align: 'left', width: '250px' },

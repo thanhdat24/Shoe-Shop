@@ -40,11 +40,8 @@ export default function RatingTableRow({
 }) {
   const theme = useTheme();
   // const { allRating } = useSelector((state) => state.rating);
-  console.log('row', row);
   const { idProduct, imageRating, idOrder, content, rating, createdAt, active, _id } = row;
-  const handleChangeStatus = (id) => {
-    console.log('id', id);
-  };
+  const handleChangeStatus = (id) => {};
 
   const RootStyle = styled('div')(({ theme }) => ({
     '& .slick-slide': {
@@ -78,9 +75,6 @@ export default function RatingTableRow({
 
   return (
     <TableRow hover selected={selected} sx={{ margin: '0 10px' }}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
       <TableCell align="left">{idProduct.name}</TableCell>
       <TableCell align="left">
         <div className="flex">

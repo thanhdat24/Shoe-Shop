@@ -20,7 +20,6 @@ ProductDetailsReviewList.propTypes = {
 
 export default function ProductDetailsReviewList({ product }) {
   // const { reviews } = product;
-  console.log('productrewr', product);
   // const {}
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
@@ -61,7 +60,6 @@ function ReviewItem({ review }) {
       idUser: { photoURL, displayName },
     },
   } = review;
-  console.log('imageRating', imageRating);
 
   const handleClickHelpful = () => {
     setHelpfuls((prev) => !prev);

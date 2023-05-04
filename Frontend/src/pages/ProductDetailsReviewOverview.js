@@ -46,11 +46,11 @@ export default function ProductDetailsReviewOverview({ product }) {
           Đánh giá trung bình
         </Typography>
         <Typography variant="h2" gutterBottom sx={{ color: 'error.main' }}>
-          {totalRating}/5
+          {fShortenNumber(totalRating) || 0}/5
         </Typography>
         <RatingStyle readOnly value={totalRating} precision={0.1} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          ({fShortenNumber(totalReview)}
+          ({fShortenNumber(totalReview) || 0}
           &nbsp;nhận xét)
         </Typography>
       </GridStyle>

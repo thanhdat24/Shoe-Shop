@@ -110,7 +110,6 @@ export default function OrderListShipper() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  console.log('user123', user);
   const [value, setValue] = React.useState(0);
 
   const dispatch = useDispatch();

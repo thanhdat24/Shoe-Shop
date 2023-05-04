@@ -133,7 +133,6 @@ export function getConversationCurrent() {
       dispatch(slice.actions.getConversationCurrentSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
-      console.log('error', error);
     }
   };
 }

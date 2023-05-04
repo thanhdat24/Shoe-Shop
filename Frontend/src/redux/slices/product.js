@@ -344,11 +344,11 @@ export function getProduct(name) {
     }
   };
 }
-export function getAllProduct() {
+export function getAllProduct(page) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/v1/products');
+      const response = await axios.get(`/api/v1/products/?page=${page}`);
       dispatch(slice.actions.getAllProductSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -380,12 +380,22 @@ export function createProduct(newProduct) {
   };
 }
 
+export function updateProduct(product, id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`/api/v1/products/id/${id}`, product);
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 export function searchProduct(search) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/products/search', { params: { search } });
-      console.log('response', response);
       dispatch(slice.actions.searchProductSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -398,7 +408,6 @@ export function searchGender(search) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/v1/products/search-gender', { params: { search } });
-      console.log('response', response);
       dispatch(slice.actions.searchGenderSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
