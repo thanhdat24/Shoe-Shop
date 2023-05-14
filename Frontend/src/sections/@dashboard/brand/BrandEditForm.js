@@ -27,10 +27,9 @@ import { createBrand, resetBrand } from '../../../redux/slices/brand';
 
 BrandEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
 };
 
-export default function BrandEditForm({ isEdit, currentUser }) {
+export default function BrandEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,10 +52,10 @@ export default function BrandEditForm({ isEdit, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
+      name:  '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    []
   );
 
   const methods = useForm({
@@ -76,14 +75,14 @@ export default function BrandEditForm({ isEdit, currentUser }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentUser) {
+    if (isEdit) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [isEdit]);
 
   const onSubmit = async (account) => {
     try {

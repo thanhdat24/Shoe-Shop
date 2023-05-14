@@ -39,9 +39,7 @@ export default function CheckoutCart() {
     dispatch(deleteCart(itemIndex));
   };
   const { user } = useAuth();
-  console.log('user', user);
   const handleNextStep = () => {
-    console.log('123');
     dispatch(onNextStep());
   };
 

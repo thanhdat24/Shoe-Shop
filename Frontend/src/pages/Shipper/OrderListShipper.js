@@ -565,11 +565,7 @@ function applySortFilter({ tableData, filterStatus }) {
       (item) => item.status === 'Đã giao hàng' || item.status === 'Đã nhận' || item.status === 'Đã đánh giá'
     );
   }
-  // console.log('filterStatus', filterStatus);
-  // if (filterStatus === 'Hoàn thành') {
-  //   console.log('1234');
-  //   tableData = tableData.filter((item) => item.status === 'Đã nhận');
-  // }
+
 
   return tableData;
 }

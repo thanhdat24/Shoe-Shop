@@ -122,10 +122,10 @@ export default function ShopFilterSidebar({
     }
     if (activeThumb === 0) {
       setValue1([Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]]);
-      navigate(PATH_HOME.search.viewPrice(paramCase(search), Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]));
+      navigate(PATH_HOME.search.viewPrice(search, Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]));
     } else {
       setValue1([value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)]);
-      navigate(PATH_HOME.search.viewPrice(paramCase(search), value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)));
+      navigate(PATH_HOME.search.viewPrice(search, value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)));
     }
   };
 

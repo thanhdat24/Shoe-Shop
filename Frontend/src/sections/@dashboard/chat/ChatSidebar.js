@@ -60,7 +60,6 @@ export default function ChatSidebar() {
   const [isSearchFocused, setSearchFocused] = useState(false);
 
   const { conversations, activeConversationId } = useSelector((state) => state.chat);
-  console.log('conversations', conversations);
   const isDesktop = useResponsive('up', 'md');
 
   const displayResults = searchQuery && isSearchFocused;
@@ -106,7 +105,6 @@ export default function ChatSidebar() {
         const response = await axios.get('/api/v1/chats/search', {
           params: { query: value },
         });
-        console.log('response.data', response.data);
         setSearchResults(response.data.data);
       } else {
         setSearchResults([]);

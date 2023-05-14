@@ -10,8 +10,6 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Stack } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
-// mock
-import { _invoiceAddressFrom } from '../../../../_mock';
 // components
 import { FormProvider } from '../../../../components/hook-form';
 //
@@ -23,10 +21,9 @@ import InvoiceNewEditStatusDate from './InvoiceNewEditStatusDate';
 
 InvoiceNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentInvoice: PropTypes.object,
 };
 
-export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
+export default function InvoiceNewEditForm({ isEdit }) {
   const navigate = useNavigate();
 
   const [loadingSave, setLoadingSave] = useState(false);
@@ -41,17 +38,17 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
 
   const defaultValues = useMemo(
     () => ({
-      createDate: currentInvoice?.createDate || null,
-      dueDate: currentInvoice?.dueDate || null,
-      taxes: currentInvoice?.taxes || '',
-      status: currentInvoice?.status || 'draft',
-      discount: currentInvoice?.discount || '',
-      invoiceFrom: currentInvoice?.invoiceFrom || _invoiceAddressFrom[0],
-      invoiceTo: currentInvoice?.invoiceTo || null,
-      items: currentInvoice?.items || [{ title: '', description: '', service: '', quantity: 0, price: 0, total: 0 }],
+      createDate: null,
+      dueDate: null,
+      taxes: '',
+      status: 'draft',
+      discount: '',
+      invoiceFrom:{},
+      invoiceTo: null,
+      items: [{ title: '', description: '', service: '', quantity: 0, price: 0, total: 0 }],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentInvoice]
+    []
   );
 
   const methods = useForm({
@@ -69,14 +66,14 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentInvoice) {
+    if (isEdit ) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentInvoice]);
+  }, [isEdit]);
 
   const newInvoice = {
     ...values,

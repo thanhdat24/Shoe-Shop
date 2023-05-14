@@ -66,7 +66,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     const order = await Order.create(objOrder);
     req.order = order;
 
-    console.log('req.order', req.order);
     let arrayItems = [];
     if (req.order.idPromotion !== null) {
       const promotion = await Promotion.find(req.order.idPromotion);

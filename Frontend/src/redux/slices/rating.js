@@ -130,11 +130,9 @@ export function createRating(ratingList) {
 export function updateRating(id, updateRating) {
   return async () => {
     dispatch(slice.actions.startLoading());
-console.log('respon ');
     try {
       const response = await axios.patch(`/api/v1/ratings/${id}`, updateRating);
       dispatch(slice.actions.updateRatingSuccess(response.data.data));
-      console.log('respon update', response);
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

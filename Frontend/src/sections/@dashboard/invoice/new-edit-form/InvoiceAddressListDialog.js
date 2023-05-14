@@ -8,14 +8,13 @@ import Scrollbar from '../../../../components/Scrollbar';
 // ----------------------------------------------------------------------
 
 InvoiceAddressListDialog.propTypes = {
-  addressOptions: PropTypes.array,
   onClose: PropTypes.func,
   onSelect: PropTypes.func,
   open: PropTypes.bool,
   selected: PropTypes.func,
 };
 
-export default function InvoiceAddressListDialog({ open, selected, onClose, onSelect, addressOptions }) {
+export default function InvoiceAddressListDialog({ open, selected, onClose, onSelect }) {
   const handleSelect = (address) => {
     onSelect(address);
     onClose();
@@ -37,7 +36,7 @@ export default function InvoiceAddressListDialog({ open, selected, onClose, onSe
       </Stack>
 
       <Scrollbar sx={{ p: 1.5, pt: 0, maxHeight: 80 * 8 }}>
-        {addressOptions.map((address) => (
+        {/* {addressOptions.map((address) => (
           <ListItemButton
             key={address.id}
             selected={selected(address.id)}
@@ -59,7 +58,7 @@ export default function InvoiceAddressListDialog({ open, selected, onClose, onSe
               {address.address}
             </Typography>
           </ListItemButton>
-        ))}
+        ))} */}
       </Scrollbar>
     </Dialog>
   );

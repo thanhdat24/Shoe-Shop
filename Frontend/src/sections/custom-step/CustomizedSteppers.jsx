@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import Check  from '@mui/icons-material/Check';
+import Check from '@mui/icons-material/Check';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -109,10 +109,6 @@ function ColorlibStepIcon(props) {
     4: <Check />,
     5: <StarBorderIcon />,
   };
-  const iconCancel = {
-    1: <ReceiptIcon />,
-    2: <ProductionQuantityLimitsIcon />,
-  };
 
   return (
     <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
@@ -174,7 +170,6 @@ const steps = ['Chờ xác nhận', 'Đang vận chuyển', 'Đã giao hàng', '
 const stepsCancel = ['Chờ xác nhận', 'Đã hủy'];
 export default function CustomizedSteppers({ orderDetail }) {
   const [step, setStep] = useState(0);
-  const [cancelStatus, setCancelStatus] = useState(0);
 
   useEffect(() => {
     if (orderDetail !== 'undefined' && orderDetail?.status === 'Đang xử lý') {

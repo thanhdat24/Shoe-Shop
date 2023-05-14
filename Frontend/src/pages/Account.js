@@ -14,7 +14,6 @@ import useAuth from '../hooks/useAuth';
 export default function Account() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
-  console.log('user1234', user);
 
   const NewUserSchema = Yup.object().shape({});
 
@@ -40,7 +39,6 @@ export default function Account() {
   const values = watch();
 
   const onSubmit = async (data) => {
-    console.log('data', data);
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (error) {

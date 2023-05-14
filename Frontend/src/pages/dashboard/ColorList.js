@@ -142,28 +142,6 @@ export default function ColorList() {
     }, 3000);
   }, [error, newColor]);
 
-  // const onSubmit = async (data) => {
-  //   console.log('data545', data);
-  //   try {
-  //     console.log('data', data);
-  //     // const newEvent = {
-  //     //   title: data.title,
-  //     //   description: data.description,
-  //     //   textColor: data.textColor,
-  //     //   allDay: data.allDay,
-  //     //   start: data.start,
-  //     //   end: data.end,
-  //     // };
-
-  //     //   enqueueSnackbar('Create success!');
-  //     //   dispatch(createEvent(newEvent));
-
-  //     // reset();
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const handleClose = () => {
     setOpen(false);
   };

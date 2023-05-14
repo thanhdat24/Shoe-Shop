@@ -38,7 +38,6 @@ export default function ChatWindowClient({ handleCloseChat }) {
   const { contacts, conversationCurrent, recipients, participants, activeConversationId } = useSelector(
     (state) => state.chat
   );
-  console.log('conversationCurrent', conversationCurrent);
   const mode = conversationKey ? 'DETAIL' : 'COMPOSE';
   const displayParticipants = conversationCurrent?.participants?.filter((item) => item.email === 'admin@gmail.com');
 

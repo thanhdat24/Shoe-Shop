@@ -6,8 +6,6 @@ import { Container } from '@mui/material';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -26,7 +24,6 @@ export default function BrandCreate() {
 
   const isEdit = pathname.includes('edit');
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
 
   return (
     <Page title="Thương hiệu">
@@ -40,7 +37,7 @@ export default function BrandCreate() {
           ]}
         />
 
-        <BrandEditForm isEdit={isEdit} currentUser={currentUser} />
+        <BrandEditForm isEdit={isEdit} />
       </Container>
     </Page>
   );

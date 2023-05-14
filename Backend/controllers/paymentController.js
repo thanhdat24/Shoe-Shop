@@ -1,8 +1,4 @@
 const { Payment } = require('../models/paymentModel');
-var crypto = require('crypto');
-var secretKey = 'um76xDBeRmmj5kVMhXiCeFKixZTTlmZb';
-var iv = new Buffer(16); // 16 byte buffer with random data
-iv.fill(0); // fill with zeros
 const factory = require('../controllers/handlerFactory');
 
 exports.getAllPayment = factory.getAll(Payment);
@@ -16,8 +12,6 @@ function encrypt_token(data) {
 }
 
 exports.createMoMoPayment = (request, response) => {
-  //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
-  //parameters
   var partnerCode = process.env.PARTNERCODE;
   var accessKey = process.env.ACCESSKEY;
   var secretkey = process.env.SECRETKEY;

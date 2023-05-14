@@ -7,8 +7,6 @@ import { getShippers } from '../../redux/slices/shipper';
 import { getOrderDetail, getOrders } from '../../redux/slices/order';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// _mock_
-import { _invoices } from '../../_mock';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components

@@ -132,12 +132,10 @@ export default function MainHeader() {
   const handleChangeSearch = async (value) => {
     try {
       setSearchQuery(value);
-      console.log('value', value);
       if (value) {
         const response = await axios.get('/api/v1/products/search', {
           params: { query: value },
         });
-        console.log('response', response);
         if (isMountedRef.current) {
           setSearchResults(response.data.data);
         }
@@ -168,7 +166,6 @@ export default function MainHeader() {
     recognition.start();
     recognition.onresult = (event) => {
       setListening(false);
-      console.log(event.results[0][0].transcript);
 
       navigate(PATH_HOME.search.view(event.results[0][0].transcript));
       // Perform a search based on the transcript
@@ -251,7 +248,6 @@ export default function MainHeader() {
                 const { name, productImages, price } = product;
                 const matches = match(name, inputValue);
                 const parts = parse(name, matches);
-                console.log('parts', parts);
                 return (
                   <Link underline="none" component={RouterLink} to={PATH_HOME.product.view(paramCase(name))}>
                     <li {...props}>

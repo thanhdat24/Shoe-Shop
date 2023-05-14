@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { PATH_AUTH, PATH_DASHBOARD, PATH_SHIPPER } from '../../../routes/paths';
+import { PATH_AUTH, PATH_SHIPPER } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -31,14 +31,12 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 
-import { useDispatch } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const { loginShipper, user } = useAuth();
   
-  const dispatch = useDispatch();
 
   const theme = useTheme();
 

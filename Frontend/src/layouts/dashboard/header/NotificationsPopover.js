@@ -165,7 +165,6 @@ const dispatch = useDispatch()
   const { photoURL, title } = renderContent(notification);
 
   const handleRead = async (id) => {
-    console.log(id);
    await dispatch(updateOrder(id,{isRead:true}))
     setOpen(null);
   };

@@ -70,8 +70,6 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'ecommerce', element: <GeneralEcommerce /> },
-        { path: 'analytics', element: <GeneralAnalytics /> },
 
         {
           path: 'e-commerce',
@@ -197,7 +195,7 @@ export default function Router() {
         { path: 'coming-soon', element: <ComingSoon /> },
         { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Product /> },
-        { path: 'payment', element: <Payment /> },
+        // { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> },
@@ -267,9 +265,6 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // GENERAL
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
-// const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
@@ -327,7 +322,6 @@ const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Product = Loadable(lazy(() => import('../pages/Product')));
 const Search = Loadable(lazy(() => import('../pages/Search')));
 const SearchGender = Loadable(lazy(() => import('../pages/SearchGender')));
-const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 

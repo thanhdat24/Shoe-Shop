@@ -7,7 +7,6 @@ import { Stack, Divider, Typography, Button } from '@mui/material';
 import useResponsive from '../../../../hooks/useResponsive';
 import useToggle from '../../../../hooks/useToggle';
 // _mock
-import { _invoiceAddressFrom, _invoiceAddressTo } from '../../../../_mock';
 // components
 import Iconify from '../../../../components/Iconify';
 //
@@ -54,7 +53,6 @@ export default function InvoiceNewEditAddress() {
             onClose={onCloseFrom}
             selected={(selectedId) => invoiceFrom?.id === selectedId}
             onSelect={(address) => setValue('invoiceFrom', address)}
-            addressOptions={_invoiceAddressFrom}
           />
         </Stack>
 
@@ -80,7 +78,7 @@ export default function InvoiceNewEditAddress() {
             onClose={onCloseTo}
             selected={(selectedId) => invoiceTo?.id === selectedId}
             onSelect={(address) => setValue('invoiceTo', address)}
-            addressOptions={_invoiceAddressTo}
+            // addressOptions={_invoiceAddressTo}
           />
         </Stack>
 

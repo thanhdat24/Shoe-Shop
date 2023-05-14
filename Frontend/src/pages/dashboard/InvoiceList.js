@@ -33,8 +33,6 @@ import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
-// _mock_
-import { _invoices } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';

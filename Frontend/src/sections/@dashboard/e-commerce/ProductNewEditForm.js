@@ -76,7 +76,6 @@ ProductNewEditForm.propTypes = {
 
 const steps = ['Select campaign settings', 'Create an ad group'];
 export default function ProductNewEditForm({ isEdit, currentProduct }) {
-  console.log('currentProduct', currentProduct);
   const [activeStep, setActiveStep] = useState(0);
   const [arrayNewProduct, setArrayNewProduct] = useState();
 

@@ -62,8 +62,6 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('userForm', user);
-
     try {
       if (user.displayName !== undefined && user.googleId !== undefined && user.role === 'khách hàng') {
         registerUser(user);

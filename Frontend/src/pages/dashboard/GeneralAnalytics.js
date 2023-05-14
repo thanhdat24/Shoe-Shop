@@ -21,11 +21,11 @@ export default function GeneralAnalytics() {
   const dispatch = useDispatch();
   const { allAccountsList } = useSelector((state) => state.admin);
   const { orders } = useSelector((state) => state.order);
+  
   useEffect(() => {
     dispatch(getOrders());
     dispatch(getAllAccounts());
   }, [dispatch]);
-  console.log('allAccountsList', allAccountsList);
   const totalPrice = orders?.reduce((total, item) => {
     if (item.status === 'Đã nhận' || item.status === 'Đã giao hàng' || item.status === 'Đã đánh giá') {
       total += item.total;
@@ -33,8 +33,6 @@ export default function GeneralAnalytics() {
     return total;
   }, 0);
 
-  console.log('orders', orders);
-  console.log('totalPrice', totalPrice);
   return (
     <Page title="General: Analytics">
       <Container maxWidth={themeStretch ? false : 'xl'}>

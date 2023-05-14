@@ -1,5 +1,4 @@
 import axios from 'axios';
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 // config
 import { HOST_API } from '../config';

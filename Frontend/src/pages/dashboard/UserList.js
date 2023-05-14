@@ -58,7 +58,6 @@ export default function UserList() {
   useEffect(() => {
     dispatch(getAllAccounts());
   }, [dispatch]);
-  console.log('allAccountsList', allAccountsList);
   const {
     dense,
     page,

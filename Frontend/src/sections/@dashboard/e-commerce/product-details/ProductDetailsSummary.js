@@ -53,7 +53,6 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
   const navigate = useNavigate();
   const [detailColorSize, setDetailColorSize] = useState({});
 
-  console.log('detailColorSize', detailColorSize);
   const { id, name, sizes, price, cover, status, colors, priceSale, inventoryType } = product;
   const { totalRating, totalReview } = ratingList;
   const alreadyProduct = cart?.map((item) => item.id).includes(id);

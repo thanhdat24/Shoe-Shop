@@ -5,8 +5,6 @@ import { Container } from '@mui/material';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
-// _mock_
-import { _invoices } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -20,8 +18,6 @@ export default function InvoiceEdit() {
 
   const { id } = useParams();
 
-  const currentInvoice = _invoices.find((invoice) => invoice.id === id);
-
   return (
     <Page title="Invoices: Edit">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -30,11 +26,11 @@ export default function InvoiceEdit() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Invoices', href: PATH_DASHBOARD.invoice.list },
-            { name: currentInvoice?.invoiceNumber || '' },
+            { name: '' },
           ]}
         />
 
-        <InvoiceNewEditForm isEdit currentInvoice={currentInvoice} />
+        <InvoiceNewEditForm isEdit />
       </Container>
     </Page>
   );

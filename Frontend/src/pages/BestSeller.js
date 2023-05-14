@@ -21,7 +21,6 @@ export default function BestSeller() {
     if (bestSeller === null) dispatch(getBestSeller());
   }, [dispatch]);
 
-  console.log('bestSeller', bestSeller);
   return (
     <Container>
       <Typography variant="h2" sx={{ textAlign: 'center' }}>

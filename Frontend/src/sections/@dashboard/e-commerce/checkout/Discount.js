@@ -489,7 +489,7 @@ export default function Discount({ open, onClose, onNextStep, onCreateBilling, p
                           </button>
                           <div className="pr-7 ">
                             <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                              Giảm {fNumberVND(item?.price)}K
+                              Giảm {fNumberVND(item?.price)}
                             </h4>
                             <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
                               Cho đơn hàng từ {fNumberVND(item.miniPrice)}
