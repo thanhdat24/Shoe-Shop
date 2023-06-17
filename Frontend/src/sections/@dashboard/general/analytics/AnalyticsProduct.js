@@ -27,7 +27,6 @@ export default function AnalyticsProduct() {
   const { allAccountsList } = useSelector((state) => state.admin);
   const { staticProductDetail, staticProductDetailMonth } = useSelector((state) => state.order);
   //   const { orderList, orderByBookYear, orderByBookMonth } = useSelector((state) => state.OrderReducer);
-
   const handleChangeSeriesData = (event) => {
     setSeriesData(Number(event.target.value));
   };

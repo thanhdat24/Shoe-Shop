@@ -56,13 +56,6 @@ const ContentStyle = styled((props) => <Stack spacing={5} {...props} />)(({ them
   },
 }));
 
-const HeroOverlayStyle = styled(m.img)({
-  zIndex: 9,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  position: 'absolute',
-});
 
 // ----------------------------------------------------------------------
 

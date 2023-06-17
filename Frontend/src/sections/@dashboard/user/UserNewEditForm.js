@@ -229,7 +229,6 @@ export default function UserNewEditForm({ isEdit }) {
                   <option value={option}>{option}</option>
                 ))}
               </RHFSelect>
-
               <RHFTextField name="password" label="Mật khẩu" />
               <RHFTextField name="passwordConfirm" label="Xác nhận mật khẩu" />
               <RHFTextField name="address" label="Địa chỉ" />

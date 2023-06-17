@@ -96,7 +96,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     <RootStyle
       sx={{
         width: {
-          lg: isCollapse ? NAVBAR.DASHBOARD_COLLAPSE_WIDTH : NAVBAR.DASHBOARD_WIDTH,
+          lg: NAVBAR.DASHBOARD_WIDTH,
         },
         ...(collapseClick && {
           position: 'absolute',
@@ -113,8 +113,8 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <Drawer
           open
           variant="persistent"
-          onMouseEnter={onHoverEnter}
-          onMouseLeave={onHoverLeave}
+          // onMouseEnter={onHoverEnter}
+          // onMouseLeave={onHoverLeave}
           PaperProps={{
             sx: {
               width: NAVBAR.DASHBOARD_WIDTH,
@@ -124,13 +124,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
                 theme.transitions.create('width', {
                   duration: theme.transitions.duration.standard,
                 }),
-              ...(isCollapse && {
-                width: NAVBAR.DASHBOARD_COLLAPSE_WIDTH,
-              }),
-              ...(collapseHover && {
-                ...cssStyles(theme).bgBlur(),
-                boxShadow: (theme) => theme.customShadows.z24,
-              }),
             },
           }}
         >

@@ -30,12 +30,11 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
     <>
       {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
       <ListItemTextStyle disableTypography primary={title} isCollapse={isCollapse} />
-      {!isCollapse && (
+
         <>
           {info && info}
           {children && <ArrowIcon open={open} />}
         </>
-      )}
     </>
   );
 
@@ -80,7 +79,7 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
       <DotIcon active={active} />
       <ListItemText disableTypography primary={title} />
       {info && info}
-      {children && <ArrowIcon open={open} />}
+      {/* {children && <ArrowIcon open={open} />} */}
     </>
   );
 

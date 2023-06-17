@@ -17,6 +17,7 @@ import AccountLayoutLayout from '../layouts/account';
 import OrderDetail from '../pages/Shipper/OrderDetail';
 import ShipperLayout from '../layouts/shipper';
 import ProductDetail from '../pages/dashboard/ProductDetail';
+import GeneralAnalytics from '../pages/dashboard/GeneralAnalytics';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +59,7 @@ export default function Router() {
         { path: 'verify', element: <VerifyCode /> },
       ],
     },
-
+    
     // Dashboard Routes
     {
       path: 'admin',
@@ -67,10 +68,10 @@ export default function Router() {
           <DashboardLayout />
         </AuthGuard>
       ),
+      
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralApp /> },
-
+               { path: 'analytics', element: <GeneralAnalytics /> },
         {
           path: 'e-commerce',
           children: [
@@ -158,7 +159,6 @@ export default function Router() {
             // { path: 'edit/:id', element: <PromotionCreate /> },
           ],
         },
-
         {
           path: 'invoice',
           children: [
@@ -185,6 +185,7 @@ export default function Router() {
           ],
         },
       ],
+
     },
 
     // Main Routes
@@ -193,7 +194,6 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Product /> },
         // { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
@@ -263,8 +263,6 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // DASHBOARD
 
-// GENERAL
-const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
@@ -318,7 +316,6 @@ const Account = Loadable(lazy(() => import('../pages/Account')));
 const OrderView = Loadable(lazy(() => import('../pages/OrderView')));
 const Order = Loadable(lazy(() => import('../pages/Order')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
-const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Product = Loadable(lazy(() => import('../pages/Product')));
 const Search = Loadable(lazy(() => import('../pages/Search')));
 const SearchGender = Loadable(lazy(() => import('../pages/SearchGender')));
