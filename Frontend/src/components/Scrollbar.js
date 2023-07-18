@@ -6,17 +6,20 @@ import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(() => ({
+const RootStyle = styled('div')(({ isNavBar }) => ({
   flexGrow: 1,
   height: '100%',
   overflow: 'hidden',
+  backgroundColor: isNavBar ? '#111c43' : undefined,
+  color: isNavBar ? '#a3aed1' : undefined,
 }));
 
-const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
+const SimpleBarStyle = styled(SimpleBarReact)(({ theme, isNavBar }) => ({
+  color: isNavBar ? '#a3aed1 !important' : undefined,
   maxHeight: '100%',
   '& .simplebar-scrollbar': {
     '&:before': {
-      backgroundColor: alpha(theme.palette.grey[600], 0.48),
+      backgroundColor: isNavBar ? alpha(theme.palette.grey[600], 0.48) : undefined,
     },
     '&.simplebar-visible:before': {
       opacity: 1,
@@ -38,9 +41,10 @@ const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
 Scrollbar.propTypes = {
   children: PropTypes.node.isRequired,
   sx: PropTypes.object,
+  isNavBar: PropTypes.bool, // Thêm kiểu prop 'isNavBar' kiểu bool
 };
 
-export default function Scrollbar({ children, sx, ...other }) {
+export default function Scrollbar({ children, sx, isNavBar, ...other }) {
   const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
 
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
@@ -54,8 +58,8 @@ export default function Scrollbar({ children, sx, ...other }) {
   }
 
   return (
-    <RootStyle>
-      <SimpleBarStyle timeout={500} clickOnTrack={false} sx={sx} {...other}>
+    <RootStyle isNavBar={isNavBar}>
+      <SimpleBarStyle isNavBar={isNavBar} timeout={500} clickOnTrack={false} sx={sx} {...other}>
         {children}
       </SimpleBarStyle>
     </RootStyle>

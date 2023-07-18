@@ -74,6 +74,7 @@ const slice = createSlice({
       state.error = null;
       state.success = '';
       state.newAccount = '';
+      state.adminUpdate = null;
     },
   },
 });

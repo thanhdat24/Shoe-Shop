@@ -48,10 +48,6 @@ const slice = createSlice({
       state.colors = action.payload;
     },
 
-    getPromotionDetailSuccess(state, action) {
-      state.isLoading = false;
-      state.promotionDetail = action.payload;
-    },
 
     // OPEN MODAL
     openModal(state) {
@@ -109,17 +105,6 @@ export function getColors() {
     try {
       const response = await axios.get('/api/v1/colors');
       dispatch(slice.actions.getColorsSuccess(response.data.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-export function getPromotionDetail(id) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`/api/v1/promotions/${id}`);
-      dispatch(slice.actions.getPromotionDetailSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

@@ -56,7 +56,6 @@ const ContentStyle = styled((props) => <Stack spacing={5} {...props} />)(({ them
   },
 }));
 
-
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {

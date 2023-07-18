@@ -25,13 +25,13 @@ const RootStyle = styled(AppBar, {
 })(({ isCollapse, isOffset, verticalLayout, theme }) => ({
   ...cssStyles(theme).bgBlur(),
   boxShadow: 'none',
-  height: HEADER.MOBILE_HEIGHT,
+  height: '60px',
   zIndex: theme.zIndex.appBar + 1,
   transition: theme.transitions.create(['width', 'height'], {
     duration: theme.transitions.duration.shorter,
   }),
   [theme.breakpoints.up('lg')]: {
-    height: HEADER.DASHBOARD_DESKTOP_HEIGHT,
+    height: '60px',
     width: `calc(100% - ${NAVBAR.DASHBOARD_WIDTH + 1}px)`,
     ...(isCollapse && {
       width: `calc(100% - ${NAVBAR.DASHBOARD_COLLAPSE_WIDTH}px)`,

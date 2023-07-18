@@ -16,7 +16,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import AccountLayoutLayout from '../layouts/account';
 import OrderDetail from '../pages/Shipper/OrderDetail';
 import ShipperLayout from '../layouts/shipper';
-import ProductDetail from '../pages/dashboard/ProductDetail';
+import ProductDetail from '../pages/dashboard/Product/ProductDetail';
 import GeneralAnalytics from '../pages/dashboard/GeneralAnalytics';
 
 // ----------------------------------------------------------------------
@@ -59,7 +59,7 @@ export default function Router() {
         { path: 'verify', element: <VerifyCode /> },
       ],
     },
-    
+
     // Dashboard Routes
     {
       path: 'admin',
@@ -68,10 +68,10 @@ export default function Router() {
           <DashboardLayout />
         </AuthGuard>
       ),
-      
+
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-               { path: 'analytics', element: <GeneralAnalytics /> },
+        { path: 'analytics', element: <GeneralAnalytics /> },
         {
           path: 'e-commerce',
           children: [
@@ -92,7 +92,15 @@ export default function Router() {
 
             { path: 'list', element: <UserList /> },
             { path: 'new', element: <UserCreate /> },
-            { path: ':name/edit', element: <UserCreate /> },
+            { path: ':id/edit', element: <UserCreate /> },
+            // { path: 'account', element: <UserAccount /> },
+          ],
+        },
+        {
+          path: 'staff',
+          children: [
+            { element: <Navigate to="/admin/staff/list" replace />, index: true },
+            { path: 'list', element: <StaffList /> },
             { path: 'account', element: <UserAccount /> },
           ],
         },
@@ -185,7 +193,6 @@ export default function Router() {
           ],
         },
       ],
-
     },
 
     // Main Routes
@@ -194,8 +201,6 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'pricing', element: <Product /> },
-        // { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> },
@@ -263,52 +268,53 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // DASHBOARD
 
-
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
-const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
-const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
+const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/Product/ProductList')));
+const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/Product/ProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 
 // INVOICE
-const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
-const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetails')));
-const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
-const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
+const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/Invoice/InvoiceList')));
+const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/Invoice/InvoiceDetails')));
+const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/Invoice/InvoiceCreate')));
+const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/Invoice/InvoiceEdit')));
 
 // USER
+const UserList = Loadable(lazy(() => import('../pages/dashboard/User/UserList')));
+const UserAccount = Loadable(lazy(() => import('../pages/dashboard/User/UserAccount')));
+const UserCreate = Loadable(lazy(() => import('../pages/dashboard/User/UserCreate')));
 
-const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
-const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
-const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+// STAFF
+const StaffList = Loadable(lazy(() => import('../pages/dashboard/Staff/StaffList')));
 
 // PROMOTION
-const PromotionList = Loadable(lazy(() => import('../pages/dashboard/PromotionList')));
-const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/PromotionEdit')));
-const PromotionCreate = Loadable(lazy(() => import('../pages/dashboard/PromotionCreate')));
+const PromotionList = Loadable(lazy(() => import('../pages/dashboard/Promotion/PromotionList')));
+const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/Promotion/PromotionEdit')));
+const PromotionCreate = Loadable(lazy(() => import('../pages/dashboard/Promotion/PromotionCreate')));
 // Brand
-const BrandList = Loadable(lazy(() => import('../pages/dashboard/BrandList')));
-const BrandCreate = Loadable(lazy(() => import('../pages/dashboard/BrandCreate')));
+const BrandList = Loadable(lazy(() => import('../pages/dashboard/Brand/BrandList')));
+const BrandCreate = Loadable(lazy(() => import('../pages/dashboard/Brand/BrandCreate')));
 // Color
-const ColorList = Loadable(lazy(() => import('../pages/dashboard/ColorList')));
+const ColorList = Loadable(lazy(() => import('../pages/dashboard/Color/ColorList')));
 // const PromotionEdit = Loadable(lazy(() => import('../pages/dashboard/PromotionEdit')));
 
 // Size
 
-const SizeList = Loadable(lazy(() => import('../pages/dashboard/SizeList')));
+const SizeList = Loadable(lazy(() => import('../pages/dashboard/Size/SizeList')));
 // shipper
 
-const ShipperList = Loadable(lazy(() => import('../pages/dashboard/ShipperList')));
-const ShipperCreate = Loadable(lazy(() => import('../pages/dashboard/ShipperCreate')));
+const ShipperList = Loadable(lazy(() => import('../pages/dashboard/Shipper/ShipperList')));
+const ShipperCreate = Loadable(lazy(() => import('../pages/dashboard/Shipper/ShipperCreate')));
 
 // cate
-const CateList = Loadable(lazy(() => import('../pages/dashboard/CateList')));
+const CateList = Loadable(lazy(() => import('../pages/dashboard/Category/CateList')));
 // ObjectUse
-const ObjectUseList = Loadable(lazy(() => import('../pages/dashboard/ObjectUseList')));
+const ObjectUseList = Loadable(lazy(() => import('../pages/dashboard/ObjectUse/ObjectUseList')));
 
 // APP
-const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
+const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat/Chat')));
 
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
@@ -330,4 +336,4 @@ const AccountShipper = Loadable(lazy(() => import('../pages/Shipper/Account')));
 const ChangePassword = Loadable(lazy(() => import('../pages/Shipper/ChangePassword')));
 
 // Rating
-const RatingList = Loadable(lazy(() => import('../pages/dashboard/RatingList')));
+const RatingList = Loadable(lazy(() => import('../pages/dashboard/Rating/RatingList')));

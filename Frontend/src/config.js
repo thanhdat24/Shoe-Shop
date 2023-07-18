@@ -29,7 +29,6 @@ export const AUTH0_API = {
 
 export const MAPBOX_API = process.env.REACT_APP_MAPBOX;
 
-
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.analytics; // as '/dashboard/app'
 
@@ -39,13 +38,13 @@ export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.analytics; // as '/dashbo
 export const HEADER = {
   MOBILE_HEIGHT: 64,
   MAIN_DESKTOP_HEIGHT: 88,
-  DASHBOARD_DESKTOP_HEIGHT: 92,
+  DASHBOARD_DESKTOP_HEIGHT: 62,
   DASHBOARD_DESKTOP_OFFSET_HEIGHT: 92 - 32,
 };
 
 export const NAVBAR = {
   BASE_WIDTH: 260,
-  DASHBOARD_WIDTH: 280,
+  DASHBOARD_WIDTH: 250,
   DASHBOARD_COLLAPSE_WIDTH: 88,
   //
   DASHBOARD_ITEM_ROOT_HEIGHT: 48,

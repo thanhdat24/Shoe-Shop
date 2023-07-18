@@ -5,7 +5,7 @@ import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-UserTableToolbar.propTypes = {
+UserTableToolBar.propTypes = {
   filterName: PropTypes.string,
   filterRole: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -13,7 +13,7 @@ UserTableToolbar.propTypes = {
   optionsRole: PropTypes.arrayOf(PropTypes.string),
 };
 
-export default function UserTableToolbar({ filterName, filterRole, onFilterName, onFilterRole, optionsRole }) {
+export default function UserTableToolBar({ filterName, filterRole, onFilterName, onFilterRole, optionsRole }) {
   return (
     <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5, px: 3 }}>
       <TextField

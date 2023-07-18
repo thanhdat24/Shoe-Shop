@@ -22,7 +22,7 @@ export default function cssStyles(theme) {
       const opacity = props?.opacity || 0.8;
 
       return {
-        backdropFilter: `blur(${blur}px)`,
+        backdropFilter: `blur(${40}px)`,
         WebkitBackdropFilter: `blur(${blur}px)`, // Fix on Mobile
         backgroundColor: alpha(color, opacity),
       };

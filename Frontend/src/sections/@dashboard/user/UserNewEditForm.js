@@ -28,9 +28,10 @@ import { createShipper, resetShipper } from '../../../redux/slices/shipper';
 
 UserNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
+  currentAdmin: PropTypes.object,
 };
 
-export default function UserNewEditForm({ isEdit }) {
+export default function UserNewEditForm({ isEdit, currentAdmin }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,25 +54,26 @@ export default function UserNewEditForm({ isEdit }) {
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
     gender: Yup.string().required('gender is required'),
-    password: Yup.string().required('password is required'),
-    passwordConfirm: Yup.string().required('passwordConfirm is required'),
+    // password: Yup.string().required('password is required'),
+    // passwordConfirm: Yup.string().required('passwordConfirm is required'),
     dateOfBirth: Yup.string().required('dateOfBirth is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      displayName: '',
-      email: '',
-      photoURL: '',
-      phoneNumber: '',
-      address: '',
-      gender: '',
-      password: '',
-      passwordConfirm: '',
-      dateOfBirth: '',
+      displayName: currentAdmin?.displayName || '',
+      email: currentAdmin?.email || '',
+      photoURL: currentAdmin?.photoURL || '',
+      phoneNumber: currentAdmin?.phoneNumber || '',
+      address: currentAdmin?.address || '',
+      gender: currentAdmin?.gender || '',
+      active: currentAdmin?.active || false,
+      // password: currentAdmin?.displayName || '',
+      // passwordConfirm: currentAdmin?.displayName || '',
+      dateOfBirth: currentAdmin?.dateOfBirth || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [currentAdmin, isEdit]
   );
 
   const methods = useForm({
@@ -91,14 +93,14 @@ export default function UserNewEditForm({ isEdit }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit && currentAdmin) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit]);
+  }, [isEdit, currentAdmin]);
 
   const onSubmit = async (account) => {
     try {
@@ -146,10 +148,10 @@ export default function UserNewEditForm({ isEdit }) {
           <Card sx={{ py: 10, px: 3 }}>
             {isEdit && (
               <Label
-                color={values.status !== 'active' ? 'error' : 'success'}
+                color={currentAdmin?.active ? 'success' : 'error'}
                 sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
               >
-                {values.status}
+                {currentAdmin?.active ? 'Hoạt động' : 'Khóa'}
               </Label>
             )}
 
@@ -182,13 +184,13 @@ export default function UserNewEditForm({ isEdit }) {
                 labelPlacement="start"
                 control={
                   <Controller
-                    name="status"
+                    name="active"
                     control={control}
                     render={({ field }) => (
                       <Switch
                         {...field}
                         checked={field.value !== 'active'}
-                        onChange={(event) => field.onChange(event.target.checked ? 'banned' : 'active')}
+                        onChange={(event) => field.onChange(event.target.checked ? 'Khoá' : 'Hoạt động')}
                       />
                     )}
                   />
@@ -219,7 +221,7 @@ export default function UserNewEditForm({ isEdit }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="fullName" label="Họ tên" />
+              <RHFTextField name="displayName" label="Họ tên" />
               <RHFTextField name="email" label="Email " />
               <RHFTextField name="phoneNumber" label="Số điện thoại" />
 
@@ -229,8 +231,8 @@ export default function UserNewEditForm({ isEdit }) {
                   <option value={option}>{option}</option>
                 ))}
               </RHFSelect>
-              <RHFTextField name="password" label="Mật khẩu" />
-              <RHFTextField name="passwordConfirm" label="Xác nhận mật khẩu" />
+              {/* <RHFTextField name="password" label="Mật khẩu" /> */}
+              {/* <RHFTextField name="passwordConfirm" label="Xác nhận mật khẩu" /> */}
               <RHFTextField name="address" label="Địa chỉ" />
               <Controller
                 name="dateOfBirth"

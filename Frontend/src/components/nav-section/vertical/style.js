@@ -37,14 +37,19 @@ export const ListItemStyle = styled(ListItemButton, {
 
 export const ListItemTextStyle = styled(ListItemText, {
   shouldForwardProp: (prop) => prop !== 'isCollapse',
-})(({ isCollapse, theme }) => ({
+})(({ theme, activeRoot }) => ({
   whiteSpace: 'nowrap',
   transition: theme.transitions.create(['width', 'opacity'], {
     duration: theme.transitions.duration.shorter,
   }),
-  ...(isCollapse && {
-    width: 0,
-    opacity: 0,
+
+  fontWeight: '400',
+  marginTop: '4px',
+  marginBottom: '0px',
+  color: '#a3aed1',
+  fontFamily: 'Public Sans,sans-serif',
+  ...(activeRoot && {
+    color: '#fff',
   }),
 }));
 

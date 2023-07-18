@@ -48,11 +48,6 @@ const slice = createSlice({
       state.sizes = action.payload;
     },
 
-    getPromotionDetailSuccess(state, action) {
-      state.isLoading = false;
-      state.promotionDetail = action.payload;
-    },
-
     // OPEN MODAL
     openModal(state) {
       state.isOpenModal = true;
@@ -109,17 +104,6 @@ export function getSizes() {
     try {
       const response = await axios.get('/api/v1/sizes');
       dispatch(slice.actions.getSizesSuccess(response.data.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-export function getPromotionDetail(id) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`/api/v1/promotions/${id}`);
-      dispatch(slice.actions.getPromotionDetailSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

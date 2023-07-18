@@ -31,10 +31,10 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
       {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
       <ListItemTextStyle disableTypography primary={title} isCollapse={isCollapse} />
 
-        <>
-          {info && info}
-          {children && <ArrowIcon open={open} />}
-        </>
+      <>
+        {info && info}
+        {children && <ArrowIcon open={open} />}
+      </>
     </>
   );
 
@@ -76,10 +76,10 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
 
   const renderContent = (
     <>
-      <DotIcon active={active} />
-      <ListItemText disableTypography primary={title} />
+      <DotIcon active={active || false} />
+      <ListItemText disableTypography primary={title} sx={{ color: '#a3aed1', ...(active && { color: '#fff' }) }} />
       {info && info}
-      {/* {children && <ArrowIcon open={open} />} */}
+      {children && <ArrowIcon open={open || false} />}
     </>
   );
 
@@ -117,7 +117,7 @@ export function DotIcon({ active }) {
           width: 4,
           height: 4,
           borderRadius: '50%',
-          bgcolor: 'text.disabled',
+          bgcolor: '#a3aed1',
 
           transition: (theme) =>
             theme.transitions.create('transform', {

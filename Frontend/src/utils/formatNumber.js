@@ -11,6 +11,9 @@ export function fPercent(number) {
 }
 
 export function fNumber(number) {
+    if (!number) {
+      return '--';
+    }
   return numeral(number).format();
 }
 
@@ -39,4 +42,16 @@ export function fNumberVND(number) {
     return `${(number / 1000).toFixed(0)}k`;
   }
   return number;
+}
+
+
+export function formatPriceInVND(price) {
+   if (!price) {
+    return "-- ₫";
+  }
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+  return formatter.format(price);
 }

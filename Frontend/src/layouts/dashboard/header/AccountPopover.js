@@ -23,7 +23,7 @@ const MENU_OPTIONS_ADMIN = [
   },
   {
     label: 'Tài khoản',
-    linkTo: PATH_DASHBOARD.user.account,
+    linkTo: PATH_DASHBOARD.staff.account,
   },
   // {
   //   label: 'Settings',

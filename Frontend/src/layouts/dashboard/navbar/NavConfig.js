@@ -6,7 +6,9 @@ import SvgIconStyle from '../../../components/SvgIconStyle';
 
 // ----------------------------------------------------------------------
 
-const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+const getIcon = (name) => (
+  <SvgIconStyle src={`/icons/${name}.svg`} sx={{ color: '#a3aed1', fill: '#a3aed1', width: 1, height: 1 }} />
+);
 
 const ICONS = {
   blog: getIcon('ic_blog'),
@@ -37,21 +39,35 @@ const navConfig = [
     items: [{ title: 'Thống kê', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics }],
   },
 
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
   {
-    subheader: 'Quản lý',
+    subheader: 'Quản lý khách hàng',
     items: [
       // USER
       {
-        title: 'Người dùng',
+        title: 'Khách hàng',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.user.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.user.new },
+          // { title: 'Tài khoản', path: PATH_DASHBOARD.user.account },
+        ],
+      },
+    ],
+  },
 
-          { title: 'Tài khoản', path: PATH_DASHBOARD.user.account },
+  // MANAGEMENT
+  // ----------------------------------------------------------------------
+  {
+    subheader: 'Quản lý danh mục hệ thống',
+    items: [
+      // USER
+      {
+        title: 'Nhân viên',
+        path: PATH_DASHBOARD.staff.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.staff.list },
+          { title: 'Tài khoản', path: PATH_DASHBOARD.staff.account },
         ],
       },
       // PRODUCT
@@ -59,15 +75,7 @@ const navConfig = [
         title: 'Sản phẩm',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
-        children: [
-          // { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
-          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          { title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.eCommerce.new },
-
-          // { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          // { title: 'view', path: PATH_DASHBOARD.eCommerce.view },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list }],
       },
 
       // BRAND
@@ -75,33 +83,21 @@ const navConfig = [
         title: 'Thương hiệu',
         path: PATH_DASHBOARD.brand.root,
         icon: ICONS.brand,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.brand.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.promotion.new },
-          // { title: 'edit', path: PATH_DASHBOARD.promotion.edit },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.brand.list }],
       },
       // Color
       {
         title: 'Màu sắc',
         path: PATH_DASHBOARD.color.root,
         icon: ICONS.color,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.color.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.color.new },
-          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.color.list }],
       },
       // SIZE
       {
         title: 'Kích thước',
         path: PATH_DASHBOARD.size.root,
         icon: ICONS.shoes,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.size.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.size.new },
-          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.size.list }],
       },
       // SHIPPER
 
@@ -110,42 +106,27 @@ const navConfig = [
         title: 'Loại giày',
         path: PATH_DASHBOARD.cate.root,
         icon: ICONS.cate,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.cate.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.cate.new },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.cate.list }],
       },
       {
         title: 'Đối tượng sử dụng',
         path: PATH_DASHBOARD.objUse.root,
         icon: ICONS.obj,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.objUse.list },
-          // { title: 'Tạo', path: PATH_DASHBOARD.objUse.new },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.objUse.list }],
       },
 
       {
         title: 'Shipper',
         path: PATH_DASHBOARD.shipper.root,
         icon: ICONS.shipper,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.shipper.list },
-          { title: 'Tạo', path: PATH_DASHBOARD.shipper.new },
-          // { title: 'edit', path: PATH_DASHBOARD.color.edit },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.shipper.list }],
       },
       // INVOICE
       {
         title: 'Đơn hàng',
         path: PATH_DASHBOARD.invoice.root,
         icon: ICONS.invoice,
-        children: [
-          { title: 'Danh sách', path: PATH_DASHBOARD.invoice.list },
-          // { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-          // { title: 'Tạo', path: PATH_DASHBOARD.invoice.new },
-          // { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-        ],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.invoice.list }],
       },
       // PROMOTION
       {
