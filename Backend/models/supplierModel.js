@@ -4,25 +4,51 @@ const supplierSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please tell us category'],
+      required: [true, 'Bạn chưa nhập nhà phân phối'],
       trim: true,
     },
-    phoneNumber: {
+    address: {
       type: String,
-      required: [true, 'Please tell us phone number'],
     },
     fullAddress: {
       type: String,
-      required: [true, 'Please tell us address'],
+    },
+    city: {
+      type: String,
+      trim: true,
+    },
+    district: {
+      type: String,
+      trim: true,
+    },
+    ward: {
+      type: String,
+      trim: true,
+    },
+    contactName: {
+      type: String,
+      trim: true,
+    },
+    contactPhone: {
+      type: String,
+      trim: true,
+    },
+    contactEmail: {
+      type: String,
+      trim: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
   },
   {
+    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
 
 const Supplier = mongoose.model('Supplier', supplierSchema);
-
 
 module.exports = Supplier;
