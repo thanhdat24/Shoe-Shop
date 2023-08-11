@@ -20,6 +20,7 @@ import ratingReducer from './slices/rating';
 import supplierReducer from './slices/supplier';
 import notificationReducer from './slices/notification';
 import userReducer from './slices/user';
+import receiptReducer from './slices/receipt';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ const rootReducer = combineReducers({
   supplier: supplierReducer,
   notification: notificationReducer,
   user: userReducer,
+  receipt: receiptReducer,
 });
 
 export { rootPersistConfig, rootReducer };

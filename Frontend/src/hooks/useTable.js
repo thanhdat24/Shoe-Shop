@@ -15,6 +15,7 @@ export default function useTable(props) {
 
   const [selected, setSelected] = useState(props?.defaultSelected || []);
 
+  const [selectedInventory, setSelectedInventory] = useState(props?.defaultSelected || []);
   const onSort = (id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -37,7 +38,22 @@ export default function useTable(props) {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
+    console.log('newSelected', newSelected);
     setSelected(newSelected);
+  };
+
+  const onSelectRowInventory = (item) => {
+    const selectedIndex = selectedInventory.findIndex((item1) => item1._id === item._id);
+
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selectedInventory, item);
+    } else {
+      newSelected = selectedInventory.filter((item2) => item2._id !== item._id);
+    }
+
+    setSelectedInventory(newSelected);
   };
 
   const onSelectAllRows = (checked, newSelecteds) => {
@@ -72,8 +88,11 @@ export default function useTable(props) {
     rowsPerPage,
     //
     selected,
+    selectedInventory,
     setSelected,
+    setSelectedInventory,
     onSelectRow,
+    onSelectRowInventory,
     onSelectAllRows,
     //
     onSort,

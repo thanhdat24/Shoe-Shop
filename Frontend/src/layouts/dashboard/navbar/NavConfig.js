@@ -78,6 +78,16 @@ const navConfig = [
         children: [{ title: 'Danh sách', path: PATH_DASHBOARD.eCommerce.list }],
       },
 
+      {
+        title: 'Quản lý tồn kho',
+        path: PATH_DASHBOARD.inventory.suppliers,
+        icon: ICONS.cart,
+        children: [
+          { title: 'Nhập hàng', path: PATH_DASHBOARD.inventory.inventory_receives },
+          { title: 'Nhà cung cấp', path: PATH_DASHBOARD.inventory.suppliers },
+        ],
+      },
+
       // BRAND
       {
         title: 'Thương hiệu',

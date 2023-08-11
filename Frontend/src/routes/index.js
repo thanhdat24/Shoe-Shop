@@ -192,6 +192,17 @@ export default function Router() {
             { path: ':conversationKey', element: <Chat /> },
           ],
         },
+        {
+          path: 'inventory',
+          children: [
+            { element: <SuppliersList />, index: true },
+            { path: 'inventory_receives', element: <InventoryReceives /> },
+            { path: 'inventory_receives/:receiptCode', element: <InventoryReceivesEdit /> },
+            { path: 'inventory_receives_new', element: <InventoryReceivesNew /> },
+            { path: 'suppliers', element: <SuppliersList /> },
+            { path: 'suppliers_new', element: <SuppliersNew /> },
+          ],
+        },
       ],
     },
 
@@ -274,6 +285,21 @@ const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/E
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/Product/ProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/Product/ProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+
+// INVENTORY
+const InventoryReceives = Loadable(
+  lazy(() => import('../pages/dashboard/Inventory/InventoryReceives/InventoryReceives'))
+);
+const InventoryReceivesNew = Loadable(
+  lazy(() => import('../pages/dashboard/Inventory/InventoryReceives/InventoryReceivesNew'))
+);
+
+const InventoryReceivesEdit = Loadable(
+  lazy(() => import('../pages/dashboard/Inventory/InventoryReceives/InventoryReceivesEdit'))
+);
+
+const SuppliersList = Loadable(lazy(() => import('../pages/dashboard/Inventory/Suppliers/SuppliersList')));
+const SuppliersNew = Loadable(lazy(() => import('../pages/dashboard/Inventory/Suppliers/SuppliersNew')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/Invoice/InvoiceList')));

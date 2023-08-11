@@ -140,7 +140,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={province.map((options) => options)}
-                    renderInput={(params) => <TextField label="Tỉnh / Thành phố" {...params} />}
+                    renderInput={(params) => <TextField label="Tỉnh/Thành phố" {...params} />}
                   />
                 )}
               />
@@ -155,7 +155,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={districtList?.map((options) => options)}
-                    renderInput={(params) => <TextField label="Quận / Huyện" {...params} />}
+                    renderInput={(params) => <TextField label="Quận/Huyện" {...params} />}
                   />
                 )}
               />
@@ -170,7 +170,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={wardList?.map((options) => options)}
-                    renderInput={(params) => <TextField label="Phường / Xã" {...params} />}
+                    renderInput={(params) => <TextField label="Phường/Xã" {...params} />}
                   />
                 )}
               />

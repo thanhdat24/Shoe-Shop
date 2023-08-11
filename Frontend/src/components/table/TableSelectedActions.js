@@ -50,7 +50,7 @@ export default function TableSelectedActions({ dense, actions, rowCount, numSele
           }),
         }}
       >
-        {numSelected} selected
+        {numSelected} đã được chọn
       </Typography>
 
       {actions && actions}

@@ -13,7 +13,7 @@ import cssStyles from '../../utils/cssStyles';
 const RootStyle = styled(AppBar)(({ theme }) => ({
   ...cssStyles(theme).bgBlur(),
   height: '75px',
-  zIndex: theme.zIndex.appBar + 1000,
+  zIndex: theme.zIndex.appBar + 100,
   [theme.breakpoints.up('lg')]: {
     height: '75px',
     width: `calc(100% - ${NAVBAR.DASHBOARD_WIDTH + 1}px)`,

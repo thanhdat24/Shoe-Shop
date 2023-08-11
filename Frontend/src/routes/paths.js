@@ -59,7 +59,10 @@ export const PATH_PAGE = {
   root: '/',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
+  pricing: '/pricing',
   payment: '/payment',
+  about: '/about-us',
+  contact: '/contact-us',
   faqs: '/faqs',
   page404: '/404',
   page500: '/500',
@@ -143,6 +146,14 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/objUse/list'),
     new: path(ROOTS_DASHBOARD, '/objUse/new'),
     // edit: (id) => path(ROOTS_DASHBOARD, `${id}`),
+  },
+  inventory: {
+    inventory_receives: path(ROOTS_DASHBOARD, '/inventory/inventory_receives'),
+    inventory_receives_edit: (receiptCode) => path(ROOTS_DASHBOARD, `/inventory/inventory_receives/${receiptCode}`),
+
+    inventory_receives_new: path(ROOTS_DASHBOARD, '/inventory/inventory_receives_new'),
+    suppliers: path(ROOTS_DASHBOARD, '/inventory/suppliers'),
+    suppliers_new: path(ROOTS_DASHBOARD, '/inventory/suppliers_new'),
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),

@@ -87,9 +87,9 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
     control,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
-
+  console.log('errors', errors);
   const values = watch();
 
   useEffect(() => {

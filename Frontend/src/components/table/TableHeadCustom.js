@@ -27,6 +27,7 @@ TableHeadCustom.propTypes = {
   onSelectAllRows: PropTypes.func,
   order: PropTypes.oneOf(['asc', 'desc']),
   sx: PropTypes.object,
+  className : PropTypes.string
 };
 
 export default function TableHeadCustom({
@@ -38,6 +39,7 @@ export default function TableHeadCustom({
   onSort,
   onSelectAllRows,
   sx,
+  className,
 }) {
   return (
     <TableHead sx={sx}>
@@ -61,11 +63,12 @@ export default function TableHeadCustom({
           >
             {onSort ? (
               <TableSortLabel
+                className={className}
                 hideSortIcon
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={() => onSort(headCell.id)}
-                sx={{ textTransform: 'capitalize' }}
+                sx={{ fontSize: '14px' }}
               >
                 {headCell.label}
 

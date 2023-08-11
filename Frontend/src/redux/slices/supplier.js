@@ -8,11 +8,10 @@ import { dispatch } from '../store';
 
 const initialState = {
   isLoading: false,
-
+  newSupplier: null,
   error: null,
   success: '',
   supplierList: null,
-
 };
 
 const slice = createSlice({
@@ -33,14 +32,13 @@ const slice = createSlice({
     // CRREATE ADMIN
     createSupplierSuccess(state, action) {
       state.isLoading = false;
-      state.newSize = action.payload;
+      state.newSupplier = action.payload;
     },
 
     getSupplierSuccess(state, action) {
       state.isLoading = false;
       state.supplierList = action.payload;
     },
-
 
     // OPEN MODAL
     openModal(state) {
@@ -53,9 +51,9 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
-    resetSize(state) {
+    resetSupplier(state) {
       state.error = null;
-      state.newSize = '';
+      state.newSupplier = null;
     },
   },
 });
@@ -64,7 +62,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, resetSize } = slice.actions;
+export const { openModal, closeModal, selectEvent, resetSupplier } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +77,6 @@ export function createSupplier(supplier) {
     }
   };
 }
-
 
 export function getSuppliers() {
   return async () => {
