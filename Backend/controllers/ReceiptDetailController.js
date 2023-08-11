@@ -1,5 +1,5 @@
 const ReceiptDetail = require('../models/receiptDetailModel');
-const factory = require('../controllers/handlerFactory');
+const factory = require('./handlerFactory');
 
 exports.getAllReceiptDetail = factory.getAll(ReceiptDetail);
 exports.createReceiptDetail = factory.createOne(ReceiptDetail);

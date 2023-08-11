@@ -1,7 +1,7 @@
 const Receipt = require('../models/receiptModel');
 const Product = require('../models/productModel');
 const ReceiptDetail = require('../models/receiptDetailModel');
-const factory = require('../controllers/handlerFactory');
+const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const _ = require('lodash');
@@ -16,44 +16,76 @@ const filterObj = (obj, ...allowedField) => {
 };
 
 exports.getAllReceipt = factory.getAll(Receipt, { path: 'receiptDetail' });
-exports.getDetailReceipt = factory.getOne(Receipt);
+exports.getDetailReceipt = catchAsync(async (req, res, next) => {
+  const query = req.params.id;
+  const doc = await Receipt.findOne({ receiptCode: query }).populate(
+    'receiptDetail'
+  );
+
+  if (!doc) {
+    return next(new AppError('Không tìm thấy mã phiếu nhập', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    length: 1,
+    data: doc,
+  });
+});
+
 exports.deleteReceipt = factory.deleteOne(Receipt);
 
 exports.createReceipt = catchAsync(async (req, res, next) => {
-  let totalPrice = 0;
-  let idSupplier;
-  let idProductDetail;
-  req.body.map((item, index) => {
-    totalPrice += item.totalPrice;
-    idSupplier = item.idSupplier;
-    idProductDetail = item.idProductDetail;
-  });
-  req.body.idAdmin = req.user.id;
-  req.body.totalPrice = totalPrice;
-  req.body.idSupplier = idSupplier;
+  try {
+    // Tìm mã phiếu nhập hàng lớn nhất hiện có
+    const lastReceipt = await Receipt.findOne(
+      {},
+      { receiptCode: 1 },
+      { sort: { receiptCode: -1 } }
+    );
 
-  const objReceipt = filterObj(
-    req.body,
-    'totalPrice',
-    'idSupplier',
-    'idAdmin',
-    'idProductDetail'
-  );
+    let nextReceiptCode = 'IR100000'; // Mã mặc định nếu không có phiếu nhập hàng nào
 
-  const receipt = await Receipt.create(objReceipt);
+    if (lastReceipt) {
+      // Lấy số phiếu nhập hàng từ mã cuối cùng và tăng lên 1 đơn vị
+      const lastReceiptNumber = parseInt(
+        lastReceipt.receiptCode.substring(2),
+        10
+      );
+      nextReceiptCode = `IR${lastReceiptNumber + 1}`;
+    }
 
-  if (receipt._id) {
-    req.body.map((item, index) => {
-      req.body[index].idReceipt = receipt._id;
+    const receiptData = {
+      ...req.body,
+      debt: req.body.totalPrice,
+      receiptCode: nextReceiptCode,
+    };
+
+    const receipt = await Receipt.create(receiptData);
+
+    if (receipt._id) {
+      const receiptDetailData = req.body.inventoryData.map((item, index) => ({
+        price: item.price,
+        quantity: item.quantity,
+        totalPrice: item.price * item.quantity,
+        idReceipt: receipt._id,
+        idProductDetail: item.id,
+      }));
+      await ReceiptDetail.insertMany(receiptDetailData);
+    }
+
+    res.status(201).json({
+      status: 'success',
+      result: receipt.length,
+      data: receipt,
     });
-    await ReceiptDetail.insertMany(req.body);
+  } catch (error) {
+    console.error('Error creating receipt:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while creating the receipt.',
+    });
   }
-
-  res.status(201).json({
-    status: 'success',
-    result: receipt.length,
-    data: receipt,
-  });
 });
 
 exports.updateReceipt = catchAsync(async (req, res, next) => {

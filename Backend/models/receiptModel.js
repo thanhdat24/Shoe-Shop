@@ -2,16 +2,32 @@ const mongoose = require('mongoose');
 
 const receiptSchema = new mongoose.Schema(
   {
+    receiptCode: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     totalPrice: {
       type: Number,
       required: true,
     },
-    idAdmin: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
-    idSupplier: { type: mongoose.Schema.ObjectId, ref: 'Supplier' },
-
+    totalReceivedQuantity: {
+      type: Number,
+      required: true,
+    },
+    staffProcessor: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
+    supplier: { type: mongoose.Schema.ObjectId, ref: 'Supplier' },
+    receivingWarehouse: {
+      warehouseAddress: { type: String, required: true },
+      warehousePhoneNumber: { type: String, required: true },
+    },
+    debt : {
+      type: Number,
+      required: true,
+    },
     inventoryStatus: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
@@ -29,11 +45,11 @@ receiptSchema.virtual('receiptDetail', {
 
 receiptSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'idSupplier',
+    path: 'supplier',
     select: 'name phoneNumber fullAddress',
   }).populate({
-    path: 'idAdmin',
-    select: 'fullName phoneNumber',
+    path: 'staffProcessor',
+    select: 'displayName phoneNumber email',
   });
 
   next();
