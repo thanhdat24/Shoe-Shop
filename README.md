@@ -16,4 +16,5 @@
  - Redux Toolkit
  - TailwindCSS
  - MUI
+ - Firebase
 
