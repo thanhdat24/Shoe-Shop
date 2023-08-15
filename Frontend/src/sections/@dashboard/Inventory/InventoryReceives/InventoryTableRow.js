@@ -103,10 +103,19 @@ export default function InventoryTableRow({
         });
       }
     });
-
     setPriceQuantity(updatedPriceQuantity);
   }, [priceValues, quantityValues]);
 
+  useEffect(() => {
+    const updatedData = selectedInventory.map((item) => ({
+      id: item._id,
+      quantity: 0,
+      price: 0,
+      idProduct: item.idProduct._id,
+    }));
+
+    setInventoryData(updatedData);
+  }, [selectedInventory]);
   const handlePriceChange = (newPriceValues, idProduct) => {
     const updatedInventoryData = inventoryData.map((item) => ({ ...item })); // Tạo bản sao của mảng
 

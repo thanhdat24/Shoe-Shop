@@ -31,8 +31,8 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function ReceiptTableRow({ row, selected }) {
   const theme = useTheme();
 
-  const { receiptCode, createdAt, supplier, inventoryStatus, totalPrice, debt } = row;
-
+  const { receiptCode, createdAt, supplier, inventoryStatus, totalPrice, supplierPaidCost, supplierCost } = row;
+  console.log('row123', row);
   return (
     <TableRow hover selected={selected}>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
@@ -53,15 +53,15 @@ export default function ReceiptTableRow({ row, selected }) {
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={inventoryStatus ? 'success' : 'default'}
+          color={inventoryStatus === 2 || inventoryStatus === 3 ? 'success' : 'default'}
           sx={{ textTransform: 'none' }}
         >
-          {inventoryStatus ? 'Đã nhập kho' : 'Chưa nhập kho'}
+          {inventoryStatus === 2 ? 'Đã nhập hàng' : inventoryStatus === 3 ? 'Đã xuất trả' : 'Nháp'}
         </Label>
       </TableCell>
       <TableCell align="left">{formatPriceInVND(totalPrice)}</TableCell>
       <TableCell align="left">
-        <Box className="text-red-500">{formatPriceInVND(debt)}</Box>
+        <Box className="text-red-500">{supplierPaidCost > 0 ? '—' : formatPriceInVND(supplierCost)}</Box>
       </TableCell>
     </TableRow>
   );

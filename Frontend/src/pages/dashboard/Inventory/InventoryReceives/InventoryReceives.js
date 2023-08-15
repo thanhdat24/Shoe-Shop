@@ -66,7 +66,7 @@ const TABLE_HEAD = [
   { id: 'receivingWarehouse', label: 'Kho nhập', align: 'left' },
   { id: 'active', label: 'Trạng thái', align: 'left' },
   { id: 'total', label: 'Tổng tiền', align: 'left' },
-  { id: 'debt', label: 'Còn nợ', align: 'left' },
+  { id: 'supplierPaidCost', label: 'Còn nợ', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------

@@ -23,7 +23,7 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
 export default function SaveCancelButtons(props) {
   const classes = useStyles();
 
-  const { onCancel, onSave, isDisabledSave, ...other } = props;
+  const { onCancel, onSave, isDisabledSave, textCreate, ...other } = props;
 
   return (
     <RootStyle>
@@ -56,12 +56,11 @@ export default function SaveCancelButtons(props) {
             className={classes.buttonCreate}
             onClick={onSave}
           >
-            Tạo mới
+            {textCreate || 'Tạo mới'}
           </LoadingButton>
         </Stack>
       </Toolbar>
     </RootStyle>
-  
   );
 }
 

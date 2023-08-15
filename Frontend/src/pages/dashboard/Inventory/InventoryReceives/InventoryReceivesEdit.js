@@ -24,7 +24,10 @@ import {
   Table,
   TableBody,
   IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as Yup from 'yup';
 import _ from 'lodash';
 
@@ -39,7 +42,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, alpha } from '@mui/material/styles';
 import { createDiscount, resetDiscount } from '../../../../redux/slices/promotion';
 
 // routes
@@ -59,18 +62,52 @@ import useTable, { getComparator } from '../../../../hooks/useTable';
 import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
 import SearchModelProductRow from './SearchModelProductRow';
 import useToggle from '../../../../hooks/useToggle';
-import { createReceipt, getDetailReceipts } from '../../../../redux/slices/receipt';
+import { createReceipt, getDetailReceipts, resetReceipt, updateReceiptDraft } from '../../../../redux/slices/receipt';
 import { InventoryEditTableRow } from '../../../../sections/@dashboard/Inventory/InventoryReceivesEdit';
 import Label from '../../../../components/Label';
+import SupplierPaymentDialog from './SupplierPaymentDialog';
+import ConfirmImport from './ConfirmImport';
 
-const SearchbarStyle = styled('div')(({ theme }) => ({
-  marginTop: 20,
-  height: 60,
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 3),
-  boxShadow: theme.customShadows.z8,
+const StyledMenu = styled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'right',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+    boxShadow:
+      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+    '& .MuiMenu-list': {
+      padding: '4px 0',
+    },
+    '& .MuiMenuItem-root': {
+      transitionDuration: '0.2s',
+      '& .MuiSvgIcon-root': {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      '&:active': {
+        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+      },
+      '&:hover': {
+        backgroundColor: '#00AB55',
+        color: '#fff',
+      },
+    },
+  },
 }));
 
 const TABLE_HEAD = [
@@ -83,42 +120,51 @@ const TABLE_HEAD = [
 export default function InventoryReceivesNew() {
   const {
     dense,
-    page,
-    order,
-    orderBy,
+
     rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    selectedInventory,
-    onSelectRow,
-    onSelectRowInventory,
-    onSelectAllRows,
-    setSelectedInventory,
-    //
+
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
 
   const dispatch = useDispatch();
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const { toggle: open, onOpen, onClose } = useToggle();
+  const [openConfirmImport, setOpenConfirmImport] = useState(false);
   const { receiptCode } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { detailReceipt } = useSelector((state) => state.receipt);
-  console.log('detailReceipt', detailReceipt);
+  const { detailReceipt, updateReceiptSuccess } = useSelector((state) => state.receipt);
 
   const { products, isLoading } = useSelector((state) => state.product);
   const theme = useTheme();
 
   const [inventoryData, setInventoryData] = useState([]);
+console.log('inventoryData456', inventoryData);
+  const handleCloseConfirmImport = () => {
+    setOpenConfirmImport(false);
+  };
+  const handleOpenConfirmImport = () => {
+    setOpenConfirmImport(true);
+  };
 
-  console.log('inventoryData', inventoryData);
+  const totalReceivedQuantity = () => {
+    return inventoryData.reduce((sum, item) => sum + item.quantity, 0);
+  };
+
+  const totalPrice = () => {
+    return inventoryData.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  };
 
   const groupByReceiptDetail = _(detailReceipt?.receiptDetail)
     .groupBy((x) => x.idProductDetail.idProduct.name)
@@ -132,7 +178,58 @@ export default function InventoryReceivesNew() {
     dispatch(getDetailReceipts(receiptCode));
   }, [dispatch]);
 
-  const denseHeight = dense ? 60 : 80;
+  useEffect(() => {
+    if (updateReceiptSuccess) {
+      enqueueSnackbar('Thanh toán thành công', { variant: 'success' });
+      dispatch(getDetailReceipts(receiptCode));
+    }
+  }, [updateReceiptSuccess]);
+
+  const handleImport = () => {
+    try {
+      console.log('inventoryData123', inventoryData);
+      console.log('detailReceipt123', detailReceipt);
+      const data = {
+        ...detailReceipt,
+        inventoryStatus: 2,
+        supplierCost: totalPrice(),
+        totalPrice: totalPrice(),
+        totalReceivedQuantity: totalReceivedQuantity(),
+        receiptDetail: inventoryData,
+        updateAt: new Date(),
+      };
+      dispatch(updateReceiptDraft(detailReceipt?._id, data));
+      onClose();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const inventoryStatus = detailReceipt?.inventoryStatus;
+  const labelVariant = theme.palette.mode === 'light' ? 'ghost' : 'filled';
+  let labelColor = 'default';
+  let labelText = 'Nhập';
+  let costDisplay;
+  const supplierCost = detailReceipt?.supplierCost;
+  if (inventoryStatus === 2) {
+    labelText = 'Đã nhập hàng';
+    labelColor = 'success';
+  } else if (inventoryStatus === 3) {
+    labelText = 'Đã xuất trả';
+    labelColor = 'success';
+  }
+
+  if (totalPrice()) {
+    costDisplay = formatPriceInVND(totalPrice());
+  } else {
+    costDisplay = formatPriceInVND(supplierCost);
+  }
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetReceipt());
+    };
+  }, []);
 
   return (
     <Container sx={{ paddingRight: '0px !important', paddingLeft: '0px !important' }}>
@@ -151,29 +248,69 @@ export default function InventoryReceivesNew() {
               <Box className="flex py-1 px-2 flex-col border-l-[1px]">
                 <Box className="text-[#6c798f} font-medium leading-5 text-xs uppercase">TRẠNG THÁI</Box>
                 <Box className="text-lg leading-6 text-[#212121]">
-                  <Label
-                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                    color={detailReceipt?.inventoryStatus ? 'success' : 'default'}
-                  >
-                    {detailReceipt?.inventoryStatus ? 'Đã nhập hàng' : 'Đã xuất trả'}
+                  <Label variant={labelVariant} color={labelColor}>
+                    {labelText}
                   </Label>
                 </Box>
               </Box>
             </Box>
           </Grid>
           <Grid container xs={4} sx={{ marginBottom: '30px', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <Box className="flex  text-end">
+            <Box className="flex  text-end gap-3 ">
               <Button
                 size="small"
                 variant="contained"
                 color="primary"
-                sx={{ padding: '8px 0px !important', width: '50px', marginRight: '10px' }}
+                sx={{ padding: '8px 0px !important', width: '50px' }}
               >
                 In
               </Button>
-              <Button size="small" variant="contained" color="primary" sx={{ padding: '8px 20px !important' }}>
-                Thanh toán
-              </Button>
+              {(inventoryStatus === 2 || inventoryStatus === 3) && (
+                <Box className="flex gap-3 ">
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    size="small"
+                    color="inherit"
+                    sx={{ padding: '8px 20px !important' }}
+                  >
+                    Trả hàng
+                  </Button>
+                  {detailReceipt?.supplierPaidCost === 0 && (
+                    <Button
+                      id="demo-customized-button"
+                      aria-controls={openMenu ? 'demo-customized-menu' : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={openMenu ? 'true' : undefined}
+                      variant="contained"
+                      disableElevation
+                      onClick={handleClick}
+                      endIcon={<KeyboardArrowDownIcon />}
+                      size="small"
+                      color="primary"
+                      sx={{ padding: '8px 20px !important' }}
+                    >
+                      Thanh toán
+                    </Button>
+                  )}
+                </Box>
+              )}
+
+              <Box>
+                <StyledMenu
+                  id="demo-customized-menu"
+                  MenuListProps={{
+                    'aria-labelledby': 'demo-customized-button',
+                  }}
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={() => onOpen()} disableRipple>
+                    Thanh toán cho nhà cung cấp
+                  </MenuItem>
+                </StyledMenu>
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -272,7 +409,13 @@ export default function InventoryReceivesNew() {
 
                     <TableBody>
                       {(isLoading ? [...Array(rowsPerPage)] : groupByReceiptDetail).map((row, index) => (
-                        <InventoryEditTableRow key={row.id} row={row} />
+                        <InventoryEditTableRow
+                          groupByReceiptDetail={groupByReceiptDetail}
+                          key={row.id}
+                          row={row}
+                          setInventoryData={setInventoryData}
+                          inventoryData={inventoryData}
+                        />
                       ))}
                     </TableBody>
                   </Table>
@@ -294,37 +437,67 @@ export default function InventoryReceivesNew() {
                   <div className="mt-4 mb-4">
                     <div className="flex justify-between py-1.5 text-sm">
                       <div>Tổng số lượng nhập</div>
-                      <div>{detailReceipt?.totalReceivedQuantity}</div>
+                      <div>
+                        {totalReceivedQuantity() ? totalReceivedQuantity() : detailReceipt?.totalReceivedQuantity}
+                      </div>
                     </div>
+
                     <div className="flex justify-between py-1.5 text-sm">
                       <div>Tổng tiền hàng</div>
-                      <div>{formatPriceInVND(detailReceipt?.totalPrice)}</div>
+                      <div>
+                        {totalPrice() ? formatPriceInVND(totalPrice()) : formatPriceInVND(detailReceipt?.totalPrice)}
+                      </div>
                     </div>
                   </div>
                   <hr />
                   <div className="mt-4 mb-4">
                     <div className="flex justify-between py-1.5 text-sm font-bold">
                       <div>Tổng giá trị nhập hàng</div>
-                      <div>{formatPriceInVND(detailReceipt?.totalPrice)}</div>
+                      <div>
+                        {totalPrice() ? formatPriceInVND(totalPrice()) : formatPriceInVND(detailReceipt?.totalPrice)}
+                      </div>
                     </div>
                   </div>
                   <hr />
                   <div className="mt-4">
                     <div className="flex justify-between py-1.5 text-sm">
                       <div>Đã thanh toán NCC</div>
-                      <div>{detailReceipt?.debt > 0 ? '0 ₫' : formatPriceInVND(detailReceipt?.debt)}</div>
+                      <div>
+                        {detailReceipt?.supplierPaidCost > 0
+                          ? formatPriceInVND(detailReceipt?.supplierPaidCost)
+                          : '0 ₫'}
+                      </div>
                     </div>
                     <div className="flex justify-between py-1.5 text-sm font-bold">
                       <div>Còn nợ</div>
-                      <div>{detailReceipt?.debt > 0 ? formatPriceInVND(detailReceipt?.debt) : 'Không có nợ'}</div>
+                      <div>{detailReceipt?.supplierPaidCost > 0 ? 'Không có nợ' : costDisplay}</div>
                     </div>
                   </div>
+                  {inventoryStatus === 1 && (
+                    <div className="mt-4">
+                      <LoadingButton
+                        size="large"
+                        variant="contained"
+                        sx={{ width: '100%', height: '40px', textTransform: 'none' }}
+                        onClick={() => handleOpenConfirmImport()}
+                      >
+                        Nhập hàng
+                      </LoadingButton>
+                    </div>
+                  )}
                 </div>
               </Card>
             </Grid>
           </Grid>
         </Box>
       </Box>
+      {/* {openPayment && <SupplierPaymentDialog open={open} />} */}
+      <SupplierPaymentDialog open={open} onClose={onClose} detailReceipt={detailReceipt} />
+      <ConfirmImport
+        open={openConfirmImport}
+        onClose={() => handleCloseConfirmImport()}
+        onSave={() => handleImport()}
+      />
     </Container>
   );
 }

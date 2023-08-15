@@ -60,6 +60,7 @@ import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@
 import SearchModelProductRow from './SearchModelProductRow';
 import useToggle from '../../../../hooks/useToggle';
 import { createReceipt } from '../../../../redux/slices/receipt';
+import ConfirmImport from './ConfirmImport';
 
 const SearchbarStyle = styled('div')(({ theme }) => ({
   marginTop: 20,
@@ -108,7 +109,14 @@ export default function InventoryReceivesNew() {
   const dispatch = useDispatch();
 
   const { toggle: open, onOpen, onClose } = useToggle();
-
+  const [openConfirmImport, setOpenConfirmImport] = useState(false);
+  const handleCloseConfirmImport = () => {
+    setOpenConfirmImport(false);
+  };
+  const handleOpenConfirmImport = () => {
+    setOpenConfirmImport(true);
+  };
+  console.log('selectedInventory', selectedInventory);
   const groupBySelectedInventory = _(selectedInventory)
     .groupBy((x) => x.idProduct.name)
     .map((value, key) => ({
@@ -158,10 +166,14 @@ export default function InventoryReceivesNew() {
   const { handleSubmit, watch, control } = methods;
 
   const values = watch();
+  console.log('inventoryDataNew', inventoryData);
+
   console.log('values', values);
   const onSubmit = async (data) => {
     console.log('data', data);
-    console.log('inventoryData', inventoryData);
+
+    const inventoryStatus = openConfirmImport ? 2 : 1;
+
     const newData = {
       supplier: data.supplier._id,
       receivingWarehouse: {
@@ -172,8 +184,8 @@ export default function InventoryReceivesNew() {
       totalPrice: totalPrice(),
       totalReceivedQuantity: totalReceivedQuantity(),
       inventoryData,
+      inventoryStatus,
     };
-    console.log('newData', newData);
 
     try {
       dispatch(createReceipt(newData));
@@ -182,6 +194,9 @@ export default function InventoryReceivesNew() {
     }
   };
 
+  const handleSaveDraft = () => {
+    console.log('handleSaveDraft');
+  };
   // useEffect(() => {
   //   if (error) {
   //     enqueueSnackbar('Tạo nhà cung cấp không thành công!', { variant: 'error' });
@@ -210,9 +225,9 @@ export default function InventoryReceivesNew() {
 
   const [isReadyCreateSupplier, setIsReadyCreateSupplier] = useState(false);
   useEffect(() => {
-    if (values.supplier) setIsReadyCreateSupplier(true);
+    if (values.supplier && selectedInventory.length > 0) setIsReadyCreateSupplier(true);
     else setIsReadyCreateSupplier(false);
-  }, [values.supplier]);
+  }, [values.supplier, selectedInventory]);
 
   const dataFiltered = applySortFilter({
     tableData,
@@ -357,6 +372,7 @@ export default function InventoryReceivesNew() {
                       {(isLoading ? [...Array(rowsPerPage)] : groupBySelectedInventory).map((row, index) =>
                         row ? (
                           <InventoryTableRow
+                            selectedInventory={selectedInventory}
                             key={row.id}
                             row={row}
                             setInventoryData={setInventoryData}
@@ -366,34 +382,9 @@ export default function InventoryReceivesNew() {
                           !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                         )
                       )}
-
-                      {/* <TableEmptyRows
-                          height={denseHeight}
-                          emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                        /> */}
-
-                      {/* <TableNoData isNotFound={isNotFound} /> */}
                     </TableBody>
                   </Table>
                 </TableContainer>
-                {/* </Scrollbar> */}
-                {/* <SearchbarStyle>
-                  <Input
-                    autoFocus
-                    fullWidth
-                    disableUnderline
-                    placeholder="Tìm kiếm sản phẩm"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                      </InputAdornment>
-                    }
-                    sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
-                  />
-                  <Button variant="contained" sx={{ width: '15%', fontSize: 14 }}>
-                    Tìm kiếm
-                  </Button>
-                </SearchbarStyle> */}
               </Card>
             </Grid>
             <Grid item xs={4} sx={{ paddingTop: '0px !important' }}>
@@ -411,7 +402,7 @@ export default function InventoryReceivesNew() {
                   <div className="mt-4 mb-4">
                     <div className="flex justify-between py-1.5 text-sm">
                       <div>Tổng số lượng nhập</div>
-                      <div>{isNaN(totalReceivedQuantity()) ? 0 : totalReceivedQuantity()}</div>
+                      <div>{Number.isNaN(totalReceivedQuantity()) ? 0 : totalReceivedQuantity()}</div>
                     </div>
                     <div className="flex justify-between py-1.5 text-sm">
                       <div>Tổng tiền hàng</div>
@@ -432,11 +423,31 @@ export default function InventoryReceivesNew() {
                       <div>{totalPrice() ? formatPriceInVND(totalPrice()) : 'Không có nợ'}</div>
                     </div>
                   </div>
+                  <div className="mt-4">
+                    <LoadingButton
+                      size="large"
+                      variant="contained"
+                      sx={{ width: '100%', height: '40px', textTransform: 'none' }}
+                      disabled={!isReadyCreateSupplier}
+                      onClick={() => handleOpenConfirmImport()}
+                    >
+                      Nhập hàng
+                    </LoadingButton>
+                  </div>
                 </div>
               </Card>
             </Grid>
           </Grid>
-          <SaveCancelButtons onSave={handleSubmit(onSubmit)} isDisabledSave={isReadyCreateSupplier} />
+          <SaveCancelButtons
+            onSave={handleSubmit(onSubmit)}
+            isDisabledSave={isReadyCreateSupplier}
+            textCreate="Lưu nháp"
+          />
+          <ConfirmImport
+            open={openConfirmImport}
+            onClose={() => handleCloseConfirmImport()}
+            onSave={handleSubmit(onSubmit)}
+          />
         </FormProvider>
       </Box>
     </Container>

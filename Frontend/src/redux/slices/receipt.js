@@ -13,6 +13,8 @@ const initialState = {
   success: '',
   receiptList: [],
   detailReceipt: null,
+  updateReceiptSuccess: null,
+  updateReceiptDraftSuccess: null,
 };
 
 const slice = createSlice({
@@ -40,13 +42,25 @@ const slice = createSlice({
       state.isLoading = false;
       state.receiptList = action.payload;
     },
-    getDetailReceiptSuccess (state, action) {
+    getDetailReceiptSuccess(state, action) {
       state.isLoading = false;
       state.detailReceipt = action.payload;
     },
+    updateReceiptSuccess(state, action) {
+      state.isLoading = false;
+      state.updateReceiptSuccess = action.payload;
+    },
+    updateReceiptDraftSuccess(state, action) {
+      state.isLoading = false;
+      state.updateReceiptDraftSuccess = action.payload;
+    },
+
     resetReceipt(state) {
       state.error = null;
       state.newReceipt = null;
+      state.isLoading = false;
+      state.updateReceiptSuccess = null;
+      state.detailReceipt = null;
     },
   },
 });
@@ -71,7 +85,6 @@ export function createReceipt(receipt) {
   };
 }
 
-
 export function getReceipts() {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -84,14 +97,36 @@ export function getReceipts() {
   };
 }
 
-
-
 export function getDetailReceipts(receiptCode) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/v1/receipts/${receiptCode}`);
       dispatch(slice.actions.getDetailReceiptSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateReceipt(id, data) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`/api/v1/receipts/${id}`, data);
+      dispatch(slice.actions.updateReceiptSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateReceiptDraft(id, data) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`/api/v1/receipts/update-receipt-draft/${id}`, data);
+      dispatch(slice.actions.updateReceiptDraftSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
