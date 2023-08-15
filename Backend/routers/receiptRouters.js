@@ -9,6 +9,8 @@ router.route('/').get(receiptController.getAllReceipt);
 
 router.post('/', authController.protect, receiptController.createReceipt);
 
+router.patch('/update-receipt-draft/:id', receiptController.updateReceiptDraft);
+
 router
   .route('/:id')
   .get(receiptController.getDetailReceipt)

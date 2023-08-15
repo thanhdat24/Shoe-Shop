@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 
 const receiptDetailSchema = new mongoose.Schema(
   {
-    quantity: { type: Number, required: true },
-    price: { type: Number, required: true },
+    quantity: { type: Number,  },
+    price: { type: Number,  },
     totalPrice: {
       type: Number,
-      required: true,
     },
     idReceipt: {
       type: mongoose.Schema.ObjectId,

@@ -1,6 +1,7 @@
 const Receipt = require('../models/receiptModel');
 const Product = require('../models/productModel');
 const ReceiptDetail = require('../models/receiptDetailModel');
+const ProductDetail = require('../models/productDetailModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -57,21 +58,38 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
 
     const receiptData = {
       ...req.body,
-      debt: req.body.totalPrice,
+      supplierCost: req.body.totalPrice,
+      supplierPaidCost: 0,
       receiptCode: nextReceiptCode,
     };
 
     const receipt = await Receipt.create(receiptData);
-
+    console.log('req.body.inventoryData', req.body.inventoryData);
     if (receipt._id) {
       const receiptDetailData = req.body.inventoryData.map((item, index) => ({
-        price: item.price,
-        quantity: item.quantity,
-        totalPrice: item.price * item.quantity,
+        price: item.price || 0,
+        quantity: item.quantity || 0,
+        totalPrice: (item.price || 0) * (item.quantity || 1),
         idReceipt: receipt._id,
         idProductDetail: item.id,
       }));
       await ReceiptDetail.insertMany(receiptDetailData);
+
+      req.body.inventoryData.forEach(async (detail) => {
+        const productDetail = await ProductDetail.findOne({ _id: detail.id });
+
+        if (productDetail) {
+          const totalQuantity = productDetail.quantity + detail.quantity;
+
+          // Cập nhật quantity của ProductDetail
+          await ProductDetail.updateOne(
+            { _id: detail.id },
+            { $set: { quantity: totalQuantity } }
+          );
+        }
+      });
+    } else {
+      return next(new AppError('Không thể tạo phiếu nhập hàng', 404));
     }
 
     res.status(201).json({
@@ -87,32 +105,38 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
     });
   }
 });
-
-exports.updateReceipt = catchAsync(async (req, res, next) => {
+exports.updateReceiptDraft = catchAsync(async (req, res, next) => {
   const _id = req.params.id;
-
-  let doc = await Receipt.findByIdAndUpdate(_id, req.body, {
+  console.log('_id', _id);
+  const doc = await Receipt.findByIdAndUpdate(_id, req.body, {
     new: true,
     runValidators: true,
   });
 
-  if (!doc) {
-    return next(new AppError('No document found with that ID', 404));
+  if (doc) {
+    const updates = req.body.receiptDetail.map((detail) => {
+      const totalPrice = detail.quantity * detail.price; // Calculate the total price
+      return {
+        updateOne: {
+          filter: { _id: detail.id },
+          update: { $set: { ...detail, totalPrice } }, // Include totalPrice in the update
+        },
+      };
+    });
+
+    const result = await ReceiptDetail.bulkWrite(updates);
+
+    res.status(200).json({
+      status: 'success',
+      result: result.modifiedCount,
+      data: result,
+    });
+  } else {
+    return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
   }
-
-  let query = Product.findById(req.body.bookId);
-  let book = await query;
-  console.log('book', book);
-
-  book.quantity = book.quantity + req.body.quantity;
-  await book.save();
-
-  res.status(200).json({
-    status: 'success',
-    result: doc.length,
-    data: doc,
-  });
 });
+
+exports.updateReceipt = factory.updateOne(Receipt);
 
 exports.receiptRevenueStatisticsForWeek = catchAsync(async (req, res, next) => {
   let array = await Receipt.find({

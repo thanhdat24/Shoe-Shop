@@ -9,11 +9,9 @@ const receiptSchema = new mongoose.Schema(
     },
     totalPrice: {
       type: Number,
-      required: true,
     },
     totalReceivedQuantity: {
       type: Number,
-      required: true,
     },
     staffProcessor: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
     supplier: { type: mongoose.Schema.ObjectId, ref: 'Supplier' },
@@ -21,13 +19,15 @@ const receiptSchema = new mongoose.Schema(
       warehouseAddress: { type: String, required: true },
       warehousePhoneNumber: { type: String, required: true },
     },
-    debt : {
+    supplierCost: {
       type: Number,
-      required: true,
+    },
+    supplierPaidCost: {
+      type: Number,
     },
     inventoryStatus: {
-      type: Boolean,
-      default: true,
+      type: Number,
+      default: 2,
     },
   },
   {
