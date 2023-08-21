@@ -29,9 +29,14 @@ const receiptSchema = new mongoose.Schema(
       type: Number,
       default: 2,
     },
+    createdAt: {
+      type: Date,
+    },
+    updatedAt: {
+      type: Date,
+    },
   },
   {
-    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }

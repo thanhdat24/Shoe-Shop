@@ -38,6 +38,23 @@ exports.deleteReceipt = factory.deleteOne(Receipt);
 
 exports.createReceipt = catchAsync(async (req, res, next) => {
   try {
+    const { inventoryData, totalPrice, inventoryStatus } = req.body;
+
+    let validInventoryData = inventoryData;
+
+    if (inventoryStatus !== 1) {
+      validInventoryData = inventoryData.filter((item) => item.quantity > 0);
+    }
+
+    const totalQuantity = inventoryData.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
+
+    if (totalQuantity <= 0 && inventoryStatus !== 1) {
+      return next(new AppError('Tổng số lượng nhập phải lớn hơn 0', 400));
+    }
+
     // Tìm mã phiếu nhập hàng lớn nhất hiện có
     const lastReceipt = await Receipt.findOne(
       {},
@@ -58,15 +75,14 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
 
     const receiptData = {
       ...req.body,
-      supplierCost: req.body.totalPrice,
+      supplierCost: totalPrice,
       supplierPaidCost: 0,
       receiptCode: nextReceiptCode,
     };
 
     const receipt = await Receipt.create(receiptData);
-    console.log('req.body.inventoryData', req.body.inventoryData);
     if (receipt._id) {
-      const receiptDetailData = req.body.inventoryData.map((item, index) => ({
+      const receiptDetailData = validInventoryData.map((item, index) => ({
         price: item.price || 0,
         quantity: item.quantity || 0,
         totalPrice: (item.price || 0) * (item.quantity || 1),
@@ -75,7 +91,7 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
       }));
       await ReceiptDetail.insertMany(receiptDetailData);
 
-      req.body.inventoryData.forEach(async (detail) => {
+      validInventoryData.forEach(async (detail) => {
         const productDetail = await ProductDetail.findOne({ _id: detail.id });
 
         if (productDetail) {
@@ -101,7 +117,7 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
     console.error('Error creating receipt:', error);
     res.status(500).json({
       status: 'error',
-      message: 'An error occurred while creating the receipt.',
+      message: 'Nhập hàng không thành công',
     });
   }
 });
@@ -113,26 +129,44 @@ exports.updateReceiptDraft = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if (doc) {
-    const updates = req.body.receiptDetail.map((detail) => {
-      const totalPrice = detail.quantity * detail.price; // Calculate the total price
-      return {
+  if (!doc) {
+    return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
+  }
+
+  const updates = [];
+  const deletePromises = [];
+
+  for (const detail of req.body.receiptDetail) {
+    if (detail.quantity === 0) {
+      deletePromises.push(ReceiptDetail.findByIdAndDelete(detail.id));
+    } else {
+      const totalPrice = detail.quantity * detail.price;
+      updates.push({
         updateOne: {
           filter: { _id: detail.id },
-          update: { $set: { ...detail, totalPrice } }, // Include totalPrice in the update
+          update: { $set: { ...detail, totalPrice } },
         },
-      };
-    });
+      });
+    }
+  }
 
+  if (deletePromises.length > 0) {
+    await Promise.all(deletePromises);
+  }
+
+  if (updates.length > 0) {
     const result = await ReceiptDetail.bulkWrite(updates);
-
     res.status(200).json({
       status: 'success',
       result: result.modifiedCount,
       data: result,
     });
   } else {
-    return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
+    res.status(200).json({
+      status: 'success',
+      result: 0,
+      data: [],
+    });
   }
 });
 
