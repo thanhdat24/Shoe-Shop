@@ -19,24 +19,21 @@ import {
   Table,
 } from '@mui/material';
 import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
-import { formatPriceInVND } from '../../../../utils/formatNumber';
-import { useDispatch } from '../../../../redux/store';
-import { updateReceipt } from '../../../../redux/slices/receipt';
 
 ConfirmImport.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  onSave : PropTypes.func,
+  onSave: PropTypes.func,
+  title: PropTypes.string,
+  content: PropTypes.string,
 };
 
-export default function ConfirmImport({ open, onClose, onSave }) {
-  const dispatch = useDispatch();
-  const handlePaymentClick = () => {};
+export default function ConfirmImport({ open, onClose, onSave, title, content }) {
   return (
     <Dialog fullWidth maxWidth="xs" open={open} sx={{ zIndex: '10000' }} onClose={onClose}>
-      <ModalDialog onClose={onClose}> Xác nhận nhập hàng</ModalDialog>
+      <ModalDialog onClose={onClose}> {title}</ModalDialog>
       <hr />
-      <DialogContent className="!py-4">Bạn có chắc chắn muốn tạo phiếu nhập hàng?</DialogContent>
+      <DialogContent className="!py-4"> {content}</DialogContent>
 
       <DialogActions>
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
@@ -68,7 +65,6 @@ export default function ConfirmImport({ open, onClose, onSave }) {
             }}
             size="large"
             variant="contained"
-            // disabled={!isDisabledSave}
             onClick={onSave}
           >
             Đồng ý

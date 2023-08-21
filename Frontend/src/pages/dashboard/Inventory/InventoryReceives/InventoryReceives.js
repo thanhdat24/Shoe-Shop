@@ -58,6 +58,7 @@ import SupplierTableToolBar from '../../../../sections/@dashboard/supplier/Suppl
 import { getReceipts } from '../../../../redux/slices/receipt';
 import ReceiptTableRow from '../../../../sections/@dashboard/receipt/ReceiptTableRow';
 // ----------------------------------------------------------------------
+import 'moment/locale/vi';
 
 const TABLE_HEAD = [
   { id: 'code', label: 'Mã phiếu nhập', align: 'left' },

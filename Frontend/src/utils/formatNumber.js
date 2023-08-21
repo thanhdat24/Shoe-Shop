@@ -46,9 +46,6 @@ export function fNumberVND(number) {
 
 
 export function formatPriceInVND(price) {
-   if (!price) {
-    return "-- ₫";
-  }
   const formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",

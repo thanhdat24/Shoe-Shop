@@ -31,7 +31,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as Yup from 'yup';
 import _ from 'lodash';
 
-import moment from 'moment';
 // import { LoadingButton } from '@mui/lab';
 import { useFormik, Form, Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,6 +66,7 @@ import { InventoryEditTableRow } from '../../../../sections/@dashboard/Inventory
 import Label from '../../../../components/Label';
 import SupplierPaymentDialog from './SupplierPaymentDialog';
 import ConfirmImport from './ConfirmImport';
+import { formatDate } from '../../../../utils/formatTime';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -141,23 +141,28 @@ export default function InventoryReceivesNew() {
 
   const { toggle: open, onOpen, onClose } = useToggle();
   const [openConfirmImport, setOpenConfirmImport] = useState(false);
+  const [openConfirmInvalidProduct, setOpenConfirmInvalidProduct] = useState(false);
   const { receiptCode } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { detailReceipt, updateReceiptSuccess } = useSelector((state) => state.receipt);
+  const { detailReceipt, updateReceiptSuccess, updateReceiptDraftSuccess, newReceipt } = useSelector(
+    (state) => state.receipt
+  );
 
   const { products, isLoading } = useSelector((state) => state.product);
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const [inventoryData, setInventoryData] = useState([]);
-console.log('inventoryData456', inventoryData);
+  console.log('inventoryData456', inventoryData);
   const handleCloseConfirmImport = () => {
     setOpenConfirmImport(false);
   };
   const handleOpenConfirmImport = () => {
     setOpenConfirmImport(true);
   };
-
+  const handleCloseConfirmInvalidProduct = () => {
+    setOpenConfirmInvalidProduct(false);
+  };
   const totalReceivedQuantity = () => {
     return inventoryData.reduce((sum, item) => sum + item.quantity, 0);
   };
@@ -176,32 +181,57 @@ console.log('inventoryData456', inventoryData);
 
   useEffect(() => {
     dispatch(getDetailReceipts(receiptCode));
-  }, [dispatch]);
+  }, [dispatch,  newReceipt]);
 
   useEffect(() => {
     if (updateReceiptSuccess) {
       enqueueSnackbar('Thanh toán thành công', { variant: 'success' });
       dispatch(getDetailReceipts(receiptCode));
+      handleCloseConfirmImport();
     }
-  }, [updateReceiptSuccess]);
+    if (updateReceiptDraftSuccess) {
+      enqueueSnackbar('Cập nhật phiếu nhập hàng thành công', { variant: 'success' });
+      dispatch(getDetailReceipts(receiptCode));
+      handleCloseConfirmImport();
+    }
+  }, [updateReceiptSuccess, updateReceiptDraftSuccess]);
 
-  const handleImport = () => {
-    try {
-      console.log('inventoryData123', inventoryData);
-      console.log('detailReceipt123', detailReceipt);
-      const data = {
-        ...detailReceipt,
-        inventoryStatus: 2,
-        supplierCost: totalPrice(),
-        totalPrice: totalPrice(),
-        totalReceivedQuantity: totalReceivedQuantity(),
-        receiptDetail: inventoryData,
-        updateAt: new Date(),
-      };
-      dispatch(updateReceiptDraft(detailReceipt?._id, data));
-      onClose();
-    } catch (err) {
-      console.log(err);
+  const handleImport = async () => {
+    const handleSave = async () => {
+      try {
+        dispatch(updateReceiptDraft(detailReceipt?._id, data));
+        handleCloseConfirmImport();
+        handleCloseConfirmInvalidProduct();
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    console.log('inventoryData123', inventoryData);
+    console.log('detailReceipt123', detailReceipt);
+    const data = {
+      ...detailReceipt,
+      inventoryStatus: 2,
+      supplierCost: totalPrice(),
+      totalPrice: totalPrice(),
+      totalReceivedQuantity: totalReceivedQuantity(),
+      receiptDetail: inventoryData,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const totalQuantity = inventoryData.reduce((total, item) => total + item.quantity, 0);
+
+    if (totalQuantity <= 0) {
+      enqueueSnackbar('Tổng số lượng nhập phải lớn hơn 0', { variant: 'error' });
+      handleCloseConfirmImport();
+    } else {
+      const hasInvalidProducts = inventoryData.some((item) => item.quantity === 0);
+      if (hasInvalidProducts && !openConfirmInvalidProduct) {
+        setOpenConfirmInvalidProduct(true);
+        handleCloseConfirmImport();
+      } else {
+        await handleSave();
+      }
     }
   };
 
@@ -229,7 +259,7 @@ console.log('inventoryData456', inventoryData);
     return () => {
       dispatch(resetReceipt());
     };
-  }, []);
+  }, [updateReceiptDraftSuccess, updateReceiptSuccess]);
 
   return (
     <Container sx={{ paddingRight: '0px !important', paddingLeft: '0px !important' }}>
@@ -243,7 +273,7 @@ console.log('inventoryData456', inventoryData);
               </Box>
               <Box className="flex py-1 px-2 flex-col">
                 <Box className="text-[#6c798f} font-medium leading-5 text-xs uppercase">NGÀY NHẬP HÀNG</Box>
-                <Box className="text-lg leading-6 text-[#212121]">{detailReceipt?.createdAt}</Box>
+                <Box className="text-lg leading-6 text-[#212121]">{formatDate(detailReceipt?.createdAt)}</Box>
               </Box>
               <Box className="flex py-1 px-2 flex-col border-l-[1px]">
                 <Box className="text-[#6c798f} font-medium leading-5 text-xs uppercase">TRẠNG THÁI</Box>
@@ -273,6 +303,7 @@ console.log('inventoryData456', inventoryData);
                     size="small"
                     color="inherit"
                     sx={{ padding: '8px 20px !important' }}
+                    onClick={() => navigate(PATH_DASHBOARD.inventory.inventory_receives_return(receiptCode))}
                   >
                     Trả hàng
                   </Button>
@@ -376,7 +407,7 @@ console.log('inventoryData456', inventoryData);
                 <div className="">
                   <div className="mb-4 font-semibold  ">Nhân Viên Xử Lý</div>
                   <hr />
-                  <Box>{detailReceipt?.staffProcessor.email}</Box>
+                  <Box className="mt-4">{detailReceipt?.staffProcessor.email}</Box>
                   {/* <RHFTextField name="staffProcessor.email" className="!mt-3" /> */}
                 </div>
               </Card>
@@ -494,8 +525,17 @@ console.log('inventoryData456', inventoryData);
       {/* {openPayment && <SupplierPaymentDialog open={open} />} */}
       <SupplierPaymentDialog open={open} onClose={onClose} detailReceipt={detailReceipt} />
       <ConfirmImport
+        title="Xác nhận nhập hàng"
+        content="Bạn có chắc chắn muốn tạo phiếu nhập hàng?"
         open={openConfirmImport}
         onClose={() => handleCloseConfirmImport()}
+        onSave={() => handleImport()}
+      />
+      <ConfirmImport
+        title="Số lượng sản phẩm không hợp lệ"
+        content="Những sản phẩm có số lượng nhập hàng bằng 0 sẽ được loại ra khỏi danh sách nhập hàng. Bạn có chắc muốn tiếp tục?"
+        open={openConfirmInvalidProduct}
+        onClose={() => handleCloseConfirmInvalidProduct()}
         onSave={() => handleImport()}
       />
     </Container>

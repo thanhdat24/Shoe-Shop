@@ -12,6 +12,7 @@ import Label from '../../../components/Label';
 // utils
 import { formatPriceInVND } from '../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import { formatDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,13 @@ export default function ReceiptTableRow({ row, selected }) {
 
   const { receiptCode, createdAt, supplier, inventoryStatus, totalPrice, supplierPaidCost, supplierCost } = row;
   console.log('row123', row);
+  let labelText = 'Nháp';
+  if (inventoryStatus === 2) {
+    labelText = 'Đã nhập hàng';
+  } else if (inventoryStatus === 3) {
+    labelText = 'Đã xuất trả';
+  }
+
   return (
     <TableRow hover selected={selected}>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
@@ -47,7 +55,8 @@ export default function ReceiptTableRow({ row, selected }) {
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{createdAt}</TableCell>
+      <TableCell align="left">{formatDate(createdAt)}</TableCell>
+
       <TableCell align="left">{supplier.name}</TableCell>
       <TableCell align="left">Địa chỉ mặc định</TableCell>
       <TableCell align="left">
@@ -56,12 +65,12 @@ export default function ReceiptTableRow({ row, selected }) {
           color={inventoryStatus === 2 || inventoryStatus === 3 ? 'success' : 'default'}
           sx={{ textTransform: 'none' }}
         >
-          {inventoryStatus === 2 ? 'Đã nhập hàng' : inventoryStatus === 3 ? 'Đã xuất trả' : 'Nháp'}
+          {labelText}
         </Label>
       </TableCell>
       <TableCell align="left">{formatPriceInVND(totalPrice)}</TableCell>
       <TableCell align="left">
-        <Box className="text-red-500">{supplierPaidCost > 0 ? '—' : formatPriceInVND(supplierCost)}</Box>
+        <Box className="text-red-500">{supplierPaidCost > 0 ? '--' : formatPriceInVND(supplierCost)}</Box>
       </TableCell>
     </TableRow>
   );

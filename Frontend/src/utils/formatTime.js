@@ -25,6 +25,10 @@ export function fToNow(date) {
 }
 
 export function formatDate(d) {
+  if (d === null) {
+    return '--'; // Nếu giá trị d là null, trả về '--'
+  }
+
   const date = new Date(d);
   if (isValidDate(date)) {
     const now = moment(new Date());

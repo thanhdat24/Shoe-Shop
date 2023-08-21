@@ -28,7 +28,6 @@ import {
 import * as Yup from 'yup';
 import _ from 'lodash';
 
-import moment from 'moment';
 // import { LoadingButton } from '@mui/lab';
 import { useFormik, Form, Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +39,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { styled } from '@mui/material/styles';
-import { createDiscount, resetDiscount } from '../../../../redux/slices/promotion';
+import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
@@ -59,7 +58,7 @@ import useTable, { getComparator } from '../../../../hooks/useTable';
 import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
 import SearchModelProductRow from './SearchModelProductRow';
 import useToggle from '../../../../hooks/useToggle';
-import { createReceipt } from '../../../../redux/slices/receipt';
+import { createReceipt, resetReceipt } from '../../../../redux/slices/receipt';
 import ConfirmImport from './ConfirmImport';
 
 const SearchbarStyle = styled('div')(({ theme }) => ({
@@ -110,13 +109,23 @@ export default function InventoryReceivesNew() {
 
   const { toggle: open, onOpen, onClose } = useToggle();
   const [openConfirmImport, setOpenConfirmImport] = useState(false);
+  const [openConfirmInvalidProduct, setOpenConfirmInvalidProduct] = useState(false);
+  console.log('openConfirmInvalidProduct', openConfirmInvalidProduct);
   const handleCloseConfirmImport = () => {
     setOpenConfirmImport(false);
   };
   const handleOpenConfirmImport = () => {
     setOpenConfirmImport(true);
   };
+
+  const handleCloseConfirmInvalidProduct = () => {
+    setOpenConfirmInvalidProduct(false);
+  };
+  const handleOpenConfirmInvalidProduct = () => {
+    setOpenConfirmInvalidProduct(true);
+  };
   console.log('selectedInventory', selectedInventory);
+
   const groupBySelectedInventory = _(selectedInventory)
     .groupBy((x) => x.idProduct.name)
     .map((value, key) => ({
@@ -129,7 +138,11 @@ export default function InventoryReceivesNew() {
 
   const { user } = useAuth();
 
-  const { newSupplier, error, supplierList } = useSelector((state) => state.supplier);
+  const { supplierList } = useSelector((state) => state.supplier);
+
+  const { newReceipt, error } = useSelector((state) => state.receipt);
+
+  console.log('newReceipt', newReceipt);
 
   const { products, isLoading } = useSelector((state) => state.product);
 
@@ -137,7 +150,7 @@ export default function InventoryReceivesNew() {
 
   const [inventoryData, setInventoryData] = useState([]);
 
-  const [confirm, setConfirm] = useState(false);
+  const [confirmSaveDraft, setConfirmSaveDraft] = useState(false);
   console.log('inventoryData', inventoryData);
   const [tableData, setTableData] = useState([]);
 
@@ -169,10 +182,11 @@ export default function InventoryReceivesNew() {
   console.log('inventoryDataNew', inventoryData);
 
   console.log('values', values);
-  const onSubmit = async (data) => {
-    console.log('data', data);
 
-    const inventoryStatus = openConfirmImport ? 2 : 1;
+  const onSubmit = async (data) => {
+    console.log('data1234', data);
+
+    const inventoryStatus = openConfirmImport || openConfirmInvalidProduct ? 2 : 1;
 
     const newData = {
       supplier: data.supplier._id,
@@ -185,29 +199,71 @@ export default function InventoryReceivesNew() {
       totalReceivedQuantity: totalReceivedQuantity(),
       inventoryData,
       inventoryStatus,
+      createdAt: inventoryStatus === 2 ? new Date() : null,
+      updatedAt: new Date(),
+    };
+
+    const handleSave = async () => {
+      try {
+        dispatch(createReceipt(newData));
+        handleCloseConfirmImport();
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    const totalQuantity = inventoryData.reduce((total, item) => total + item.quantity, 0);
+    if (totalQuantity <= 0) {
+      enqueueSnackbar('Tổng số lượng nhập phải lớn hơn 0', { variant: 'error' });
+      handleCloseConfirmImport();
+    } else {
+      const hasInvalidProducts = inventoryData.some((item) => item.quantity === 0);
+      if (hasInvalidProducts && !openConfirmInvalidProduct) {
+        setOpenConfirmInvalidProduct(true);
+        handleCloseConfirmImport();
+      } else {
+        await handleSave();
+      }
+    }
+  };
+
+  const onSubmitDraft = async (data) => {
+    const inventoryStatus = openConfirmImport || openConfirmInvalidProduct ? 2 : 1;
+
+    const newData = {
+      supplier: data.supplier._id,
+      receivingWarehouse: {
+        warehouseAddress: data.warehouseAddress,
+        warehousePhoneNumber: data.warehousePhoneNumber,
+      },
+      staffProcessor: data.staffProcessor._id,
+      totalPrice: totalPrice(),
+      totalReceivedQuantity: totalReceivedQuantity(),
+      inventoryData,
+      inventoryStatus,
+      createdAt: inventoryStatus === 2 ? new Date() : null,
+      updatedAt: new Date(),
     };
 
     try {
       dispatch(createReceipt(newData));
     } catch (error) {
-      console.error('error', error);
+      console.log('error', error);
     }
   };
 
-  const handleSaveDraft = () => {
-    console.log('handleSaveDraft');
-  };
-  // useEffect(() => {
-  //   if (error) {
-  //     enqueueSnackbar('Tạo nhà cung cấp không thành công!', { variant: 'error' });
-  //   } else if (newSupplier) {
-  //     enqueueSnackbar('Tạo nhà cung cấp thành công!');
-  //     navigate(PATH_DASHBOARD.inventory.suppliers);
-  //   }
-  //   setTimeout(() => {
-  //     dispatch(resetSupplier());
-  //   }, 3000);
-  // }, [error, newSupplier]);
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error' }); // Hiển thị thông báo lỗi bằng enqueueSnackbar
+    } else if (newReceipt) {
+      enqueueSnackbar('Nhập hàng thành công!');
+      navigate(PATH_DASHBOARD.inventory.inventory_receives_edit(newReceipt.receiptCode));
+    }
+
+    setTimeout(() => {
+      dispatch(resetReceipt());
+    }, 1000);
+  }, [error, newReceipt]);
 
   useEffect(() => {
     dispatch(getSuppliers());
@@ -237,11 +293,6 @@ export default function InventoryReceivesNew() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  const handleCancel = () => {
-    setSelectedInventory([]);
-    setConfirm(false);
-  };
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -439,13 +490,23 @@ export default function InventoryReceivesNew() {
             </Grid>
           </Grid>
           <SaveCancelButtons
-            onSave={handleSubmit(onSubmit)}
+            onSave={handleSubmit(onSubmitDraft)}
             isDisabledSave={isReadyCreateSupplier}
             textCreate="Lưu nháp"
           />
           <ConfirmImport
+            title="Xác nhận nhập hàng"
+            content="Bạn có chắc chắn muốn tạo phiếu nhập hàng?"
             open={openConfirmImport}
             onClose={() => handleCloseConfirmImport()}
+            onSave={handleSubmit(onSubmit)}
+          />
+
+          <ConfirmImport
+            title="Số lượng sản phẩm không hợp lệ"
+            content="Những sản phẩm có số lượng nhập hàng bằng 0 sẽ được loại ra khỏi danh sách nhập hàng. Bạn có chắc muốn tiếp tục?"
+            open={openConfirmInvalidProduct}
+            onClose={() => handleCloseConfirmInvalidProduct()}
             onSave={handleSubmit(onSubmit)}
           />
         </FormProvider>

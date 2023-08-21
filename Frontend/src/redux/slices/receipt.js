@@ -29,7 +29,7 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
-      state.error = action.payload;
+      state.error = action.payload.message;
     },
 
     // CRREATE ADMIN
@@ -61,6 +61,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.updateReceiptSuccess = null;
       state.detailReceipt = null;
+      state.updateReceiptDraftSuccess = null;
     },
   },
 });
