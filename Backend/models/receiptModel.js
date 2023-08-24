@@ -1,7 +1,22 @@
 const mongoose = require('mongoose');
+const { paymentModelSchema } = require('./paymentModel');
 
 const receiptSchema = new mongoose.Schema(
   {
+    paymentHistory: [
+      {
+        casNumber: { type: String, required: true, unique: true },
+        reasonName: {
+          type: String,
+          required: true,
+          default: 'Chi tiền trả NCC',
+        },
+        amount: { type: Number, required: true },
+        tranDate: { type: Date, required: true, default: Date.now() },
+        paymentMethod: paymentModelSchema,
+        paidBy: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
+      },
+    ],
     receiptCode: {
       type: String,
       required: true,
@@ -52,10 +67,15 @@ receiptSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'supplier',
     select: 'name phoneNumber fullAddress',
-  }).populate({
-    path: 'staffProcessor',
-    select: 'displayName phoneNumber email',
-  });
+  })
+    .populate({
+      path: 'staffProcessor',
+      select: 'displayName phoneNumber email',
+    })
+    .populate({
+      path: 'paymentHistory.paidBy',
+      select: 'displayName phoneNumber email',
+    });
 
   next();
 });

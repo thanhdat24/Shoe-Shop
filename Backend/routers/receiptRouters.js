@@ -11,6 +11,12 @@ router.post('/', authController.protect, receiptController.createReceipt);
 
 router.patch('/update-receipt-draft/:id', receiptController.updateReceiptDraft);
 
+router.patch(
+  '/make-supplier-payment/:id',
+  authController.protect,
+  receiptController.makeSupplierPayment
+);
+
 router
   .route('/:id')
   .get(receiptController.getDetailReceipt)

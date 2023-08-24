@@ -172,6 +172,54 @@ exports.updateReceiptDraft = catchAsync(async (req, res, next) => {
 
 exports.updateReceipt = factory.updateOne(Receipt);
 
+exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
+  const _id = req.params.id;
+  const { supplierPaidCost, paymentHistory } = req.body;
+  // Tìm phiếu nhập hàng dựa trên _id
+  const receipt = await Receipt.findById(_id);
+
+  if (!receipt) {
+    return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
+  }
+  receipt.supplierPaidCost = receipt.supplierPaidCost + supplierPaidCost;
+
+  // Tính toán casNumber mới cho khoản thanh toán
+  let newCasNumber = 'CPIR100000'; // Giá trị mặc định
+  if (receipt.paymentHistory.length > 0) {
+    const lastPayment =
+      receipt.paymentHistory[receipt.paymentHistory.length - 1];
+
+    const lastCasNumber = lastPayment.casNumber;
+    const casNumberParts = lastCasNumber.split('CPIR');
+    const lastCasNumberValue = parseInt(casNumberParts[1]);
+    newCasNumber = `CPIR${(lastCasNumberValue + 1)
+      .toString()
+      .padStart(6, '0')}`;
+  }
+
+  // Tạo khoản thanh toán mới
+  const newPayment = {
+    casNumber: newCasNumber,
+    // reasonName: paymentHistory.reasonName || 'Chi tiền trả NCC',
+    amount: supplierPaidCost,
+    // tranDate: paymentHistory.tranDate || Date.now(),
+    paymentMethod: paymentHistory.paymentMethod, // Cần đảm bảo paymentMethod đã được định nghĩa trong yêu cầu
+    paidBy: req.user._id,
+  };
+
+  // Thêm khoản thanh toán mới vào paymentHistory
+  receipt.paymentHistory.push(newPayment);
+
+  // Lưu phiếu nhập hàng đã cập nhật
+  const updatedReceipt = await receipt.save();
+
+  res.status(200).json({
+    status: 'success',
+    result: updatedReceipt.paymentHistory.length,
+    data: updatedReceipt,
+  });
+});
+
 exports.receiptRevenueStatisticsForWeek = catchAsync(async (req, res, next) => {
   let array = await Receipt.find({
     createdAt: {
@@ -219,16 +267,12 @@ exports.receiptRevenueStatisticsForMonth = catchAsync(
       }))
       .value();
     let receiptMonth = moment().toDate();
-    console.log(
-      ' receiptMonth.getMonth()',
-      moment(receiptMonth).format('MM-YYYY')
-    );
+
     let receiptMonthFormat = moment(receiptMonth).format('MM-YYYY');
 
     let receiptByMonth = result1.filter(
       (item) => item.name === receiptMonthFormat
     );
-    console.log('receiptByMonth', receiptByMonth);
     try {
       res.status(200).json({
         status: 'success',
@@ -245,7 +289,6 @@ exports.receiptRevenueStatisticsForYear = catchAsync(async (req, res, next) => {
   let array = await Receipt.find({
     inventoryStatus: true,
   }).sort({ createdAt: 1 });
-  console.log('array', array);
   let result = _(array)
     .groupBy((x) => moment(x.createdAt).format('MM-YYYY'))
     .map((value, key) => ({ name: key, receiptRevenue: value }))
