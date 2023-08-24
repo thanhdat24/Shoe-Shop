@@ -18,31 +18,35 @@ function SnackbarStyles() {
     <GlobalStyles
       styles={{
         '#root': {
-          '& .SnackbarContent-root': {
-            width: '100%',
-            padding: theme.spacing(1),
-            margin: theme.spacing(0.25, 0),
-            boxShadow: theme.customShadows.z8,
-            borderRadius: theme.shape.borderRadius,
-            color: theme.palette.grey[isLight ? 0 : 800],
-            backgroundColor: theme.palette.grey[isLight ? 900 : 0],
-            '&.SnackbarItem-variantSuccess, &.SnackbarItem-variantError, &.SnackbarItem-variantWarning, &.SnackbarItem-variantInfo':
-              {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.background.paper,
+          '& .SnackbarContainer-root': {
+            zIndex: '999999 !important',
+            '& .SnackbarContent-root': {
+              width: '100%',
+              padding: theme.spacing(1),
+              margin: theme.spacing(0.25, 0),
+              boxShadow: theme.customShadows.z8,
+
+              borderRadius: theme.shape.borderRadius,
+              color: theme.palette.grey[isLight ? 0 : 800],
+              backgroundColor: theme.palette.grey[isLight ? 900 : 0],
+              '&.SnackbarItem-variantSuccess, &.SnackbarItem-variantError, &.SnackbarItem-variantWarning, &.SnackbarItem-variantInfo':
+                {
+                  color: theme.palette.text.primary,
+                  backgroundColor: theme.palette.background.paper,
+                },
+              [theme.breakpoints.up('md')]: {
+                minWidth: 240,
               },
-            [theme.breakpoints.up('md')]: {
-              minWidth: 240,
             },
-          },
-          '& .SnackbarItem-message': {
-            padding: '0 !important',
-            fontWeight: theme.typography.fontWeightMedium,
-          },
-          '& .SnackbarItem-action': {
-            marginRight: 0,
-            color: theme.palette.action.active,
-            '& svg': { width: 20, height: 20 },
+            '& .SnackbarItem-message': {
+              padding: '0 !important',
+              fontWeight: theme.typography.fontWeightMedium,
+            },
+            '& .SnackbarItem-action': {
+              marginRight: 0,
+              color: theme.palette.action.active,
+              '& svg': { width: 20, height: 20 },
+            },
           },
         },
       }}
