@@ -70,7 +70,9 @@ export default function ReceiptTableRow({ row, selected }) {
       </TableCell>
       <TableCell align="left">{formatPriceInVND(totalPrice)}</TableCell>
       <TableCell align="left">
-        <Box className="text-red-500">{supplierPaidCost > 0 ? '--' : formatPriceInVND(supplierCost)}</Box>
+        <Box className="text-red-500">
+          {supplierPaidCost === supplierCost ? '--' : formatPriceInVND(supplierCost - supplierPaidCost)}
+        </Box>
       </TableCell>
     </TableRow>
   );

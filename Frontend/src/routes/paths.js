@@ -150,6 +150,7 @@ export const PATH_DASHBOARD = {
   inventory: {
     inventory_receives: path(ROOTS_DASHBOARD, '/inventory/inventory_receives'),
     inventory_receives_edit: (receiptCode) => path(ROOTS_DASHBOARD, `/inventory/inventory_receives/${receiptCode}`),
+    inventory_receives_return: (receiptCode) => path(ROOTS_DASHBOARD, `/inventory/inventory_receives/${receiptCode}/return`),
 
     inventory_receives_new: path(ROOTS_DASHBOARD, '/inventory/inventory_receives_new'),
     suppliers: path(ROOTS_DASHBOARD, '/inventory/suppliers'),

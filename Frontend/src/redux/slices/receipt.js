@@ -15,6 +15,7 @@ const initialState = {
   detailReceipt: null,
   updateReceiptSuccess: null,
   updateReceiptDraftSuccess: null,
+  makeSupplierPaymentSuccess: null,
 };
 
 const slice = createSlice({
@@ -54,6 +55,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.updateReceiptDraftSuccess = action.payload;
     },
+    makeSupplierPaymentSuccess(state, action) {
+      state.isLoading = false;
+      state.makeSupplierPaymentSuccess = action.payload;
+    },
 
     resetReceipt(state) {
       state.error = null;
@@ -62,6 +67,7 @@ const slice = createSlice({
       state.updateReceiptSuccess = null;
       state.detailReceipt = null;
       state.updateReceiptDraftSuccess = null;
+      state.makeSupplierPaymentSuccess = null;
     },
   },
 });
@@ -116,6 +122,18 @@ export function updateReceipt(id, data) {
     try {
       const response = await axios.patch(`/api/v1/receipts/${id}`, data);
       dispatch(slice.actions.updateReceiptSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function makeSupplierPayment(id, data) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`/api/v1/receipts/make-supplier-payment/${id}`, data);
+      dispatch(slice.actions.makeSupplierPaymentSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
