@@ -13,7 +13,7 @@ import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestor
 import Hex from 'crypto-js/enc-hex';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
 import { FIREBASE_API } from '../config';
-import { isValidToken, setSession } from '../utils/jwt';
+import { isValidToken, setSession, setUser } from '../utils/jwt';
 import axios from '../utils/axios';
 
 // ----------------------------------------------------------------------
@@ -72,68 +72,15 @@ function AuthProvider({ children }) {
 
   const [profile, setProfile] = useState(null);
 
-  useEffect(
-    () =>
-      onAuthStateChanged(AUTH, async (user) => {
-        // const secretKey = '2083a81b8586094aa6f24c3b5ce89998';
-
-        console.log('userAUTH', user);
-
-        // const crispTokenIdUser = `token_${user?.uid}`;
-        // console.log('crispTokenIdUser', crispTokenIdUser);
-
-        // const crispTokenIdGuest = `token_${Math.floor(100000000000 + Math.random() * 900000000000)}`;
-
-        if (user) {
-          const { accessToken } = user;
-          setSession(accessToken);
-          // const hmacDigest = Hex.stringify(hmacSHA256(user?.email, secretKey));
-
-          // window.$crisp?.push(['set', 'user:email', [user?.email, hmacDigest]]);
-          // setProfile(user);
-          dispatch({
-            type: 'INITIALISE',
-            payload: { isAuthenticated: true, user },
-          });
-
-        //   window.CRISP_TOKEN_ID = crispTokenIdUser;
-        //   window.CRISP_WEBSITE_ID = '3ff4579a-29ac-4939-93d5-612cabb088c6';
-        //   // (function () {
-        //   const d = document;
-        //   const s = d.createElement('script');
-        //   s.src = 'https://client.crisp.chat/l.js';
-        //   s.async = 1;
-        //   d.getElementsByTagName('head')[0].appendChild(s);
-        // } else {
-        //   window.CRISP_TOKEN_ID = crispTokenIdGuest;
-        //   setTimeout(() => {
-        //     window.CRISP_WEBSITE_ID = '3ff4579a-29ac-4939-93d5-612cabb088c6';
-        //     // (function () {
-        //     const d = document;
-        //     const s = d.createElement('script');
-        //     s.src = 'https://client.crisp.chat/l.js';
-        //     s.async = 1;
-        //     d.getElementsByTagName('head')[0].appendChild(s);
-        //   }, 1000);
-        }
-        else {
-          dispatch({
-            type: 'INITIALISE',
-            payload: { isAuthenticated: false, user: null },
-          });
-        }
-      }),
-
-    [dispatch]
-  );
-
   useEffect(() => {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
+        const user = window.localStorage.getItem('user');
+
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-
+          setUser(user);
           const response = await axios.get('/api/v1/admin/getMe');
           const { data } = response.data;
 
@@ -174,8 +121,9 @@ function AuthProvider({ children }) {
       password,
     });
     const { accessToken, user } = response.data;
-
+    console.log('user123', user);
     setSession(accessToken);
+    setUser(user);
     dispatch({
       type: 'LOGIN',
       payload: { isAuthenticated: true, user },
@@ -221,6 +169,7 @@ function AuthProvider({ children }) {
 
   const logout = () => {
     setSession(null);
+    setUser(null);
     signOut(AUTH);
   };
   const logoutAdmin = async () => {

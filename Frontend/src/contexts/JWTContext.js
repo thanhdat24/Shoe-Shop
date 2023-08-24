@@ -2,7 +2,7 @@ import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
 import axios from '../utils/axios';
-import { isValidToken, setSession } from '../utils/jwt';
+import { isValidToken, setSession, setUser } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -71,11 +71,12 @@ function AuthProvider({ children }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
+        const user = window.localStorage.getItem('user');
         console.log('accessToken', accessToken);
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-
+          setUser(user); 
           const response = await axios.get('/api/v1/admin/getMe');
           const { data } = response.data;
           dispatch({
@@ -117,6 +118,7 @@ function AuthProvider({ children }) {
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
+    setUser(user);
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -162,6 +164,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+    setUser(null);
     dispatch({ type: 'LOGOUT' });
   };
 

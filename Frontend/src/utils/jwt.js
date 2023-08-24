@@ -45,4 +45,8 @@ const setSession = (accessToken) => {
   }
 };
 
-export { isValidToken, setSession };
+const setUser = (user) => {
+  localStorage.setItem('user', JSON.stringify(user));
+};
+
+export { isValidToken, setSession, setUser };
