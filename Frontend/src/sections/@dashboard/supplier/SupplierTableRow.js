@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 import _ from 'lodash';
 // @mui
 
 import { useTheme, alpha, styled } from '@mui/material/styles';
 import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
 import Label from '../../../components/Label';
+import { formatPriceInVND } from '../../../utils/formatNumber';
 // utils
 
 // ----------------------------------------------------------------------
@@ -30,17 +29,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function SupplierTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, contactPhone, contactEmail, active } = row;
-
-  const [openMenu, setOpenMenuActions] = useState(null);
-
-  const handleOpenMenu = (event) => {
-    setOpenMenuActions(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setOpenMenuActions(null);
-  };
+  const { name, contactPhone, contactEmail, active, totalDebt, totalCost } = row;
 
   return (
     <TableRow hover selected={selected}>
@@ -62,6 +51,8 @@ export default function SupplierTableRow({ row, selected, onEditRow, onSelectRow
       </TableCell>
       <TableCell align="left">{contactPhone}</TableCell>
       <TableCell align="left">{contactEmail}</TableCell>
+      <TableCell align="left">{formatPriceInVND(totalDebt)}</TableCell>
+      <TableCell align="left">{formatPriceInVND(totalCost)}</TableCell>
     </TableRow>
   );
 }

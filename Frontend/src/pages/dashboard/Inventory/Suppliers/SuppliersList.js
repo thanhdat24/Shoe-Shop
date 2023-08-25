@@ -61,7 +61,9 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Nhà cung cấp', align: 'left' },
   { id: 'active', label: 'Trạng thái', align: 'left' },
   { id: 'phoneNumber', label: 'Số điện thoại', align: 'left' },
-  { id: 'Email', label: 'Email', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'debt', label: 'Nợ phải trả', align: 'left' },
+  { id: 'totalCost', label: 'Tổng mua', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------

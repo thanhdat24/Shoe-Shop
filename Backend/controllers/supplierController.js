@@ -1,11 +1,12 @@
 const factory = require('../controllers/handlerFactory');
+const Receipt = require('../models/receiptModel');
 const Supplier = require('../models/supplierModel');
+const catchAsync = require('../utils/catchAsync');
 
 exports.getDetailSupplier = factory.getOne(Supplier);
 exports.updateSupplier = factory.updateOne(Supplier);
 exports.deleteSupplier = factory.deleteOne(Supplier);
-exports.createSupplier = (req, res, next) => {
-
+exports.createSupplier = catchAsync(async (req, res, next) => {
   // Destructuring assignment với giá trị mặc định
   const {
     address = '',
@@ -30,7 +31,47 @@ exports.createSupplier = (req, res, next) => {
   };
 
   factory.createOne(Supplier)(req, res, next);
-};
+});
 
+exports.getAllSupplier = catchAsync(async (req, res, next) => {
+  const suppliers = await Supplier.find({}).sort({ createdAt: -1 });
+  const receipts = await Receipt.find({}).sort({ createdAt: -1 });
 
-exports.getAllSupplier = factory.getAll(Supplier);
+  const supplierInfo = new Map();
+
+  // Tính tổng tiền và nợ cho từng nhà cung cấp
+  receipts.forEach((receipt) => {
+    const supplierId = receipt.supplier.id;
+    const supplierCost = receipt.supplierCost;
+    const supplierPaidCost = receipt.supplierPaidCost;
+
+    if (!supplierInfo.has(supplierId)) {
+      supplierInfo.set(supplierId, {
+        totalCost: 0,
+        totalDebt: 0,
+      });
+    }
+
+    const currentInfo = supplierInfo.get(supplierId);
+    currentInfo.totalCost += supplierCost;
+    currentInfo.totalDebt += supplierCost - supplierPaidCost;
+  });
+
+  // Tạo mảng object chứa thông tin tổng tiền và nợ của từng nhà cung cấp
+  const suppliersWithInfo = suppliers.map((supplier) => {
+    const supplierId = supplier.id.toString();
+    const info = supplierInfo.get(supplierId) || { totalCost: 0, totalDebt: 0 };
+    return {
+      ...supplier.toObject(),
+      totalCost: info.totalCost,
+      totalDebt: info.totalDebt,
+    };
+  });
+
+  res.status(200).json({
+    status: 'success',
+    length: suppliersWithInfo.length,
+    data: suppliersWithInfo,
+  });
+});
+
