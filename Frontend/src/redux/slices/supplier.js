@@ -12,6 +12,7 @@ const initialState = {
   error: null,
   success: '',
   supplierList: null,
+  updateSupplierSuccess: null,
 };
 
 const slice = createSlice({
@@ -44,7 +45,11 @@ const slice = createSlice({
     openModal(state) {
       state.isOpenModal = true;
     },
-
+    // UPDATE ADMIN
+    updateSupplierSuccess(state, action) {
+      state.isLoading = false;
+      state.updateSupplierSuccess = action.payload;
+    },
     // CLOSE MODAL
     closeModal(state) {
       state.isOpenModal = false;
@@ -54,6 +59,7 @@ const slice = createSlice({
     resetSupplier(state) {
       state.error = null;
       state.newSupplier = null;
+      state.updateSupplierSuccess = null;
     },
   },
 });
@@ -84,6 +90,18 @@ export function getSuppliers() {
     try {
       const response = await axios.get('/api/v1/suppliers');
       dispatch(slice.actions.getSupplierSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateSupplier(data, id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`/api/v1/suppliers/${id}`, data);
+      dispatch(slice.actions.updateSupplierSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

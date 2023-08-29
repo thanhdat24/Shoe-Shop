@@ -84,7 +84,7 @@ export default function SuppliersNew() {
   const values = watch();
   const onSubmit = async (data) => {
     try {
-        dispatch(createSupplier(data));
+      dispatch(createSupplier(data));
     } catch (error) {
       console.error(error);
     }
@@ -220,16 +220,16 @@ export default function SuppliersNew() {
                 <Stack spacing={1}>
                   <Box sx={{ display: 'grid', gridTemplateRows: '1fr 3fr', alignItems: 'center' }}>
                     <Box className="flex text-gray-500 font-semibold mb-1">Tên người liên hệ</Box>
-                    <TextField fullWidth autoComplete="contactName" type="text" label="Điền tên người liên hệ" />
+                    <RHFTextField name="contactName" label="Điền tên người liên hệ" />
                   </Box>
                   <Stack direction="row" spacing={1}>
                     <Box sx={{ display: 'grid', gridTemplateRows: '1fr 3fr', alignItems: 'center', width: '100%' }}>
                       <Box className="flex text-gray-500 font-semibold mb-1">Địa chỉ email</Box>
-                      <TextField fullWidth autoComplete="contactPhone" type="text" label="Nhập địa chỉ email" />
+                      <RHFTextField name="contactEmail" label="Nhập địa chỉ email" />
                     </Box>
                     <Box sx={{ display: 'grid', gridTemplateRows: '1fr 3fr', alignItems: 'center', width: '100%' }}>
                       <Box className="flex text-gray-500 font-semibold mb-1">Số điện thoại</Box>
-                      <TextField fullWidth autoComplete="contactEmail" type="text" label="Nhập số điện thoại" />
+                      <RHFTextField name="contactPhone" label="Nhập số điện thoại" />
                     </Box>
                   </Stack>
                 </Stack>

@@ -201,6 +201,7 @@ export default function Router() {
             { path: 'inventory_receives/:receiptCode/return', element: <InventoryReceivesReturn /> },
             { path: 'inventory_receives_new', element: <InventoryReceivesNew /> },
             { path: 'suppliers', element: <SuppliersList /> },
+            { path: 'suppliers/:supplierId', element: <SuppliersEdit /> },
             { path: 'suppliers_new', element: <SuppliersNew /> },
           ],
         },
@@ -304,6 +305,7 @@ const InventoryReceivesReturn = Loadable(
 );
 
 const SuppliersList = Loadable(lazy(() => import('../pages/dashboard/Inventory/Suppliers/SuppliersList')));
+const SuppliersEdit = Loadable(lazy(() => import('../pages/dashboard/Inventory/Suppliers/SuppliersEdit')));
 const SuppliersNew = Loadable(lazy(() => import('../pages/dashboard/Inventory/Suppliers/SuppliersNew')));
 
 // INVOICE

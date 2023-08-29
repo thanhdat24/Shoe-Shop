@@ -2,29 +2,14 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // @mui
-import {
-  Box,
-  Stack,
-  Dialog,
-  Button,
-  Divider,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography,
-  Autocomplete,
-  TextField,
-  TableContainer,
-  TableBody,
-  Table,
-} from '@mui/material';
+import { Box, Stack, Dialog, Button, DialogContent, DialogActions, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
 import { formatPriceInVND } from '../../../../utils/formatNumber';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { makeSupplierPayment, updateReceipt } from '../../../../redux/slices/receipt';
-import { FormProvider, RHFMultiCheckbox, RHFRadioGroupName } from '../../../../components/hook-form';
+import { makeSupplierPayment,  } from '../../../../redux/slices/receipt';
+import { FormProvider, RHFRadioGroupName } from '../../../../components/hook-form';
 
 SupplierPaymentDialog.propTypes = {
   open: PropTypes.bool,
@@ -43,12 +28,13 @@ export default function SupplierPaymentDialog({ open, onClose, detailReceipt }) 
   };
   const methods = useForm({ defaultValues });
 
-  const { reset, watch, setValue } = methods;
+  const {  watch, setValue } = methods;
   const values = watch();
 
   const handlePaymentClick = () => {
     const receipt = {
-      supplierPaidCost: amount,
+      totalPrice: detailReceipt?.totalPrice,
+      amount,
       paymentHistory: {
         amount,
         paymentMethod: {
@@ -67,19 +53,19 @@ export default function SupplierPaymentDialog({ open, onClose, detailReceipt }) 
             horizontal: 'center',
           },
         });
-      } else if (amount > detailReceipt?.supplierCost- detailReceipt?.supplierPaidCost){
-          enqueueSnackbar('Tổng số tiền thanh toán không được lớn hơn số tiền cần thanh toán', {
-            variant: 'error',
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center',
-            },
-          });
-        } else {
-          dispatch(makeSupplierPayment(detailReceipt?._id, receipt));
-          setValue('paymentMethod', null);
-          onClose();
-        }
+      } else if (amount > detailReceipt?.supplierCost - detailReceipt?.supplierPaidCost) {
+        enqueueSnackbar('Tổng số tiền thanh toán không được lớn hơn số tiền cần thanh toán', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+        });
+      } else {
+        dispatch(makeSupplierPayment(detailReceipt?._id, receipt));
+        setValue('paymentMethod', null);
+        onClose();
+      }
     } catch (err) {
       console.log(err);
     }

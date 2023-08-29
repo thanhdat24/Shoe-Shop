@@ -16,17 +16,21 @@ exports.createSupplier = catchAsync(async (req, res, next) => {
   } = req.body;
 
   // Tạo fullAddress từ các phần tồn tại
-  const fullAddress = [address, ward.name, district.name, city.name]
-    .filter(Boolean)
+  const fullAddress = [
+    address,
+    ward && ward.name ? ward.name : '',
+    district && district.name ? district.name : '',
+    city && city.name ? city.name : '',
+  ]
+    .filter((val) => val !== undefined && val !== null && val !== '')
     .join(', ');
-
   // Cập nhật req.body
   req.body = {
     ...req.body,
     address,
-    ward: ward.name,
-    district: district.name,
-    city: city.name,
+    ward: ward && ward.name ? ward.name : '',
+    district: district && district.name ? district.name : '',
+    city: city && city.name ? city.name : '',
     fullAddress,
   };
 
@@ -45,6 +49,8 @@ exports.getAllSupplier = catchAsync(async (req, res, next) => {
     const supplierCost = receipt.supplierCost;
     const supplierPaidCost = receipt.supplierPaidCost;
 
+    const paymentHistory = receipt.paymentHistory || [];
+
     if (!supplierInfo.has(supplierId)) {
       supplierInfo.set(supplierId, {
         totalCost: 0,
@@ -55,6 +61,7 @@ exports.getAllSupplier = catchAsync(async (req, res, next) => {
     const currentInfo = supplierInfo.get(supplierId);
     currentInfo.totalCost += supplierCost;
     currentInfo.totalDebt += supplierCost - supplierPaidCost;
+    currentInfo.paymentHistory = paymentHistory;
   });
 
   // Tạo mảng object chứa thông tin tổng tiền và nợ của từng nhà cung cấp
@@ -65,6 +72,7 @@ exports.getAllSupplier = catchAsync(async (req, res, next) => {
       ...supplier.toObject(),
       totalCost: info.totalCost,
       totalDebt: info.totalDebt,
+      paymentHistory: info.paymentHistory,
     };
   });
 
@@ -74,4 +82,3 @@ exports.getAllSupplier = catchAsync(async (req, res, next) => {
     data: suppliersWithInfo,
   });
 });
-

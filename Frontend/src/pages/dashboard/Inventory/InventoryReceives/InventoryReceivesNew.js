@@ -1,75 +1,33 @@
-import { DateRangePicker, DateRange, LoadingButton } from '@mui/lab';
-import React, { Fragment, useEffect, useState } from 'react';
+import { LoadingButton } from '@mui/lab';
+import React, { useEffect, useState } from 'react';
 
-import {
-  Container,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Stack,
-  Grid,
-  Card,
-  Button,
-  Switch,
-  Box,
-  TextField,
-  Alert,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Autocomplete,
-  Input,
-  InputAdornment,
-  TableContainer,
-  Table,
-  TableBody,
-  IconButton,
-} from '@mui/material';
+import { Container, Grid, Card, Box, TextField, Autocomplete, TableContainer, Table, TableBody } from '@mui/material';
 import * as Yup from 'yup';
 import _ from 'lodash';
 
 // import { LoadingButton } from '@mui/lab';
-import { useFormik, Form, Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { useHistory, useNavigate, Link as RouterLink } from 'react-router-dom';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { useNavigate } from 'react-router-dom';
 
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { styled } from '@mui/material/styles';
-import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
-import { fNumber, fNumberVND, formatPriceInVND } from '../../../../utils/formatNumber';
+import { formatPriceInVND } from '../../../../utils/formatNumber';
 import SaveCancelButtons from '../../../../components/SaveCancelButtons/SaveCancelButtons';
-import { province } from '../../../../_mock';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
-import { getListProvince, getListWard } from '../../../../redux/slices/address';
-import { createSupplier, getSuppliers, resetSupplier } from '../../../../redux/slices/supplier';
+import { getSuppliers } from '../../../../redux/slices/supplier';
 import useAuth from '../../../../hooks/useAuth';
-import Iconify from '../../../../components/Iconify';
-import Scrollbar from '../../../../components/Scrollbar';
-import { TableHeadCustom, TableSelectedActions, TableSkeleton } from '../../../../components/table';
+import { TableHeadCustom, TableSkeleton } from '../../../../components/table';
 import { getProducts } from '../../../../redux/slices/product';
-import useTable, { getComparator } from '../../../../hooks/useTable';
+import useTable from '../../../../hooks/useTable';
 import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
 import SearchModelProductRow from './SearchModelProductRow';
 import useToggle from '../../../../hooks/useToggle';
 import { createReceipt, resetReceipt } from '../../../../redux/slices/receipt';
 import ConfirmImport from './ConfirmImport';
-
-const SearchbarStyle = styled('div')(({ theme }) => ({
-  marginTop: 20,
-  height: 60,
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 3),
-  boxShadow: theme.customShadows.z8,
-}));
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Tên sản phẩm', align: 'left', minWidth: 150 },
@@ -82,24 +40,13 @@ const TABLE_HEAD = [
 export default function InventoryReceivesNew() {
   const {
     dense,
-    page,
-    order,
-    orderBy,
     rowsPerPage,
     setPage,
     //
-    selected,
-    setSelected,
     selectedInventory,
-    onSelectRow,
     onSelectRowInventory,
-    onSelectAllRows,
-    setSelectedInventory,
     //
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -110,7 +57,6 @@ export default function InventoryReceivesNew() {
   const { toggle: open, onOpen, onClose } = useToggle();
   const [openConfirmImport, setOpenConfirmImport] = useState(false);
   const [openConfirmInvalidProduct, setOpenConfirmInvalidProduct] = useState(false);
-  console.log('openConfirmInvalidProduct', openConfirmInvalidProduct);
   const handleCloseConfirmImport = () => {
     setOpenConfirmImport(false);
   };
@@ -121,10 +67,6 @@ export default function InventoryReceivesNew() {
   const handleCloseConfirmInvalidProduct = () => {
     setOpenConfirmInvalidProduct(false);
   };
-  const handleOpenConfirmInvalidProduct = () => {
-    setOpenConfirmInvalidProduct(true);
-  };
-  console.log('selectedInventory', selectedInventory);
 
   const groupBySelectedInventory = _(selectedInventory)
     .groupBy((x) => x.idProduct.name)
@@ -133,7 +75,6 @@ export default function InventoryReceivesNew() {
       productDetail: value,
     }))
     .value();
-  console.log('groupBySelectedInventory', groupBySelectedInventory);
   const { enqueueSnackbar } = useSnackbar();
 
   const { user } = useAuth();
@@ -142,8 +83,6 @@ export default function InventoryReceivesNew() {
 
   const { newReceipt, error } = useSelector((state) => state.receipt);
 
-  console.log('newReceipt', newReceipt);
-
   const { products, isLoading } = useSelector((state) => state.product);
 
   const [filterName, setFilterName] = useState('');
@@ -151,7 +90,7 @@ export default function InventoryReceivesNew() {
   const [inventoryData, setInventoryData] = useState([]);
 
   const [confirmSaveDraft, setConfirmSaveDraft] = useState(false);
-  console.log('inventoryData', inventoryData);
+  
   const [tableData, setTableData] = useState([]);
 
   const totalReceivedQuantity = () => {
@@ -327,14 +266,15 @@ export default function InventoryReceivesNew() {
                         <Autocomplete
                           {...field}
                           className="!mt-5"
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => option.name || ''}
+                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                          getOptionLabel={(option) => option?.name || ''}
                           onChange={(event, newValue) => field.onChange(newValue)}
-                          options={supplierList?.length > 0 && supplierList.map((options) => options)}
+                          options={supplierList?.length > 0 ? supplierList.map((option) => option) : []}
                           renderInput={(params) => <TextField label="Chọn nhà cung cấp" {...params} />}
                         />
                       )}
                     />
+
                     {values.supplier && (
                       <Box className="pt-3 text-sm text-[#637381]">
                         <Box>{values.supplier.fullAddress} Vietnam</Box>

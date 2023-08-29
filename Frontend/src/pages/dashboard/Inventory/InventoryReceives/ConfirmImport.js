@@ -26,11 +26,12 @@ ConfirmImport.propTypes = {
   onSave: PropTypes.func,
   title: PropTypes.string,
   content: PropTypes.string,
+  maxWidth: PropTypes.string,
 };
 
-export default function ConfirmImport({ open, onClose, onSave, title, content }) {
+export default function ConfirmImport({ open, onClose, onSave, title, content, maxWidth = 'xs' }) {
   return (
-    <Dialog fullWidth maxWidth="xs" open={open} sx={{ zIndex: '10000' }} onClose={onClose}>
+    <Dialog fullWidth maxWidth={maxWidth} open={open} sx={{ zIndex: '10000' }} onClose={onClose}>
       <ModalDialog onClose={onClose}> {title}</ModalDialog>
       <hr />
       <DialogContent className="!py-4"> {content}</DialogContent>

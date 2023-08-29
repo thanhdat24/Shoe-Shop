@@ -11,6 +11,7 @@ const receiptSchema = new mongoose.Schema(
           required: true,
           default: 'Chi tiền trả NCC',
         },
+        totalDebt: { type: Number, required: true },
         amount: { type: Number, required: true },
         tranDate: { type: Date, required: true, default: Date.now() },
         paymentMethod: paymentModelSchema,

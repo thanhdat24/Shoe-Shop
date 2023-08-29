@@ -79,27 +79,27 @@ export default function InventoryTableRow({
     const updatedPriceQuantity = [...priceQuantity];
 
     sortedProductDetail.forEach((product) => {
-      const product_id = product.id;
+      const productId = product.id;
       const name = product.name;
-      const quantity = quantityValues[product_id] || 0;
-      const price = priceValues[product_id] || 0;
+      const quantity = quantityValues[productId] || 0;
+      const price = priceValues[productId] || 0;
 
-      const existingIndex = updatedPriceQuantity.findIndex((item) => item.id === product_id);
+      const existingIndex = updatedPriceQuantity.findIndex((item) => item.id === productId);
       if (existingIndex !== -1) {
         // Update existing item
         updatedPriceQuantity[existingIndex] = {
-          id: product_id,
-          name: name,
-          quantity: quantity,
-          price: price,
+          id: productId,
+          name,
+          quantity,
+          price,
         };
       } else {
         // Add new item
         updatedPriceQuantity.push({
-          id: product_id,
-          name: name,
-          quantity: quantity,
-          price: price,
+          id: productId,
+          name,
+          quantity,
+          price,
         });
       }
     });
@@ -116,44 +116,46 @@ export default function InventoryTableRow({
 
     setInventoryData(updatedData);
   }, [selectedInventory]);
-  const handlePriceChange = (newPriceValues, idProduct) => {
-    const updatedInventoryData = inventoryData.map((item) => ({ ...item })); // Tạo bản sao của mảng
+const handlePriceChange = (newPriceValues, idProduct) => {
+  setInventoryData((prevInventoryData) => {
+    const updatedInventoryData = prevInventoryData.map((item) => ({ ...item }));
 
-    for (const key in newPriceValues) {
+    Object.keys(newPriceValues).forEach((key) => {
       const value = newPriceValues[key];
+      const existingItem = updatedInventoryData.find((item) => item.id === key);
 
-      // Kiểm tra xem key có tồn tại trong mảng không
-      const index = updatedInventoryData.findIndex((item) => item.id === key);
-
-      if (index !== -1) {
-        // Nếu key đã tồn tại, cập nhật giá trị
-        updatedInventoryData[index].price = value;
+      if (existingItem) {
+        existingItem.price = value;
       } else {
-        // Nếu key chưa tồn tại, thêm mới vào mảng
         updatedInventoryData.push({ id: key, price: value, idProduct });
       }
-    }
+    });
 
-    setInventoryData(updatedInventoryData);
-  };
+    return updatedInventoryData;
+  });
+};
 
-  const handleQuantityChange = (newQuantityValues, idProduct) => {
-    const updatedInventoryData = inventoryData.map((item) => ({ ...item })); // Tạo bản sao của mảng
 
-    for (const key in newQuantityValues) {
+
+const handleQuantityChange = (newQuantityValues, idProduct) => {
+  setInventoryData((prevInventoryData) => {
+    const updatedInventoryData = prevInventoryData.map((item) => ({ ...item }));
+
+    Object.keys(newQuantityValues).forEach((key) => {
       const value = newQuantityValues[key];
+      const existingItem = updatedInventoryData.find((item) => item.id === key);
 
-      const index = updatedInventoryData.findIndex((item) => item.id === key);
-
-      if (index !== -1) {
-        updatedInventoryData[index].quantity = value;
+      if (existingItem) {
+        existingItem.quantity = value;
       } else {
         updatedInventoryData.push({ id: key, quantity: value, idProduct });
       }
-    }
+    });
 
-    setInventoryData(updatedInventoryData);
-  };
+    return updatedInventoryData;
+  });
+};
+
 
   console.log('sortedProductDetail', sortedProductDetail);
   console.log('priceQuantity', priceQuantity);
@@ -180,24 +182,25 @@ export default function InventoryTableRow({
     ));
   };
 
-  const renderQuantity = () => {
-    return sortedProductDetail.map((item, index) => (
-      <TableCell key={index} sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '73px !important' }}>
-        <TextField
-          sx={{ width: '100px !important', height: '8px !important' }}
-          type="number"
-          size="small"
-          onChange={(e) => {
-            const newQuantityValues = { ...quantityValues };
-            const newValue = parseInt(e.target.value, 10);
-            newQuantityValues[item.id] = isNaN(newValue) ? 0 : newValue;
-            setQuantityValues(newQuantityValues);
-            handleQuantityChange(newQuantityValues, item.idProduct.id);
-          }}
-        />
-      </TableCell>
-    ));
-  };
+const renderQuantity = () => {
+  return sortedProductDetail.map((item, index) => (
+    <TableCell key={index} sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '73px !important' }}>
+      <TextField
+        sx={{ width: '100px !important', height: '8px !important' }}
+        type="number"
+        size="small"
+        onChange={(e) => {
+          const newQuantityValues = { ...quantityValues };
+          const newValue = parseInt(e.target.value, 10);
+          newQuantityValues[item.id] = Number.isNaN(newValue) ? 0 : newValue;
+          setQuantityValues(newQuantityValues);
+          handleQuantityChange(newQuantityValues, item.idProduct.id);
+        }}
+      />
+    </TableCell>
+  ));
+};
+
   const renderPrice = () => {
     return sortedProductDetail.map((item, index) => (
       <TableCell key={index} sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '73px !important' }}>
@@ -208,7 +211,7 @@ export default function InventoryTableRow({
           onChange={(e) => {
             const newPriceValues = { ...priceValues };
             const newValue = parseInt(e.target.value, 10);
-            newPriceValues[item.id] = isNaN(newValue) ? 0 : newValue;
+            newPriceValues[item.id] = Number.isNaN(newValue) ? 0 : newValue;
             setPriceValues(newPriceValues);
             handlePriceChange(newPriceValues, item.idProduct.id);
             // setInventoryData([...dat,newPriceValues]);

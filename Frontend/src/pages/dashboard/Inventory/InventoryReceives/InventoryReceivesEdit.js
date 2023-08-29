@@ -405,12 +405,12 @@ export default function InventoryReceivesNew() {
                   boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 }}
               >
-                <div className="">
-                  <div className="mb-4 font-semibold  ">Nhân Viên Xử Lý</div>
+                <Box className="">
+                  <Box className="mb-4 font-semibold  ">Nhân Viên Xử Lý</Box>
                   <hr />
                   <Box className="mt-4">{detailReceipt?.staffProcessor.email}</Box>
                   {/* <RHFTextField name="staffProcessor.email" className="!mt-3" /> */}
-                </div>
+                </Box>
               </Card>
             </Grid>
           </Grid>

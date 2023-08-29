@@ -174,14 +174,14 @@ exports.updateReceipt = factory.updateOne(Receipt);
 
 exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
   const _id = req.params.id;
-  const { supplierPaidCost, paymentHistory } = req.body;
+  const { paymentHistory, supplierCost, amount, totalPrice } = req.body;
   // Tìm phiếu nhập hàng dựa trên _id
   const receipt = await Receipt.findById(_id);
 
   if (!receipt) {
     return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
   }
-  receipt.supplierPaidCost = receipt.supplierPaidCost + supplierPaidCost;
+  receipt.supplierPaidCost = receipt.supplierPaidCost + amount;
 
   // Tính toán casNumber mới cho khoản thanh toán
   let newCasNumber = 'CPIR100000'; // Giá trị mặc định
@@ -201,7 +201,8 @@ exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
   const newPayment = {
     casNumber: newCasNumber,
     // reasonName: paymentHistory.reasonName || 'Chi tiền trả NCC',
-    amount: supplierPaidCost,
+    amount,
+    totalDebt: totalPrice - receipt.supplierPaidCost,
     // tranDate: paymentHistory.tranDate || Date.now(),
     paymentMethod: paymentHistory.paymentMethod, // Cần đảm bảo paymentMethod đã được định nghĩa trong yêu cầu
     paidBy: req.user._id,

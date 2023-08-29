@@ -12,7 +12,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-SupplierTableRow.propTypes = {
+SupplierEditTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -28,7 +28,7 @@ const IconStyle = styled('div')(({ theme }) => ({
   boxShadow: `inset -1px 1px 2px ${alpha(theme.palette.common.black, 0.24)}`,
 }));
 
-export default function SupplierTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function SupplierEditTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
   const { name, contactPhone, contactEmail, active, totalDebt, totalCost, id } = row;
