@@ -90,7 +90,7 @@ export default function InventoryReceivesNew() {
   const [inventoryData, setInventoryData] = useState([]);
 
   const [confirmSaveDraft, setConfirmSaveDraft] = useState(false);
-  
+
   const [tableData, setTableData] = useState([]);
 
   const totalReceivedQuantity = () => {
@@ -269,7 +269,7 @@ export default function InventoryReceivesNew() {
                           isOptionEqualToValue={(option, value) => option?._id === value?._id}
                           getOptionLabel={(option) => option?.name || ''}
                           onChange={(event, newValue) => field.onChange(newValue)}
-                          options={supplierList?.length > 0 ? supplierList.map((option) => option) : []}
+                          options={supplierList?.filter((item) => item.active) || []}
                           renderInput={(params) => <TextField label="Chọn nhà cung cấp" {...params} />}
                         />
                       )}
@@ -433,6 +433,7 @@ export default function InventoryReceivesNew() {
             onSave={handleSubmit(onSubmitDraft)}
             isDisabledSave={isReadyCreateSupplier}
             textCreate="Lưu nháp"
+            onCancel={() => navigate(PATH_DASHBOARD.inventory.inventory_receives)}
           />
           <ConfirmImport
             title="Xác nhận nhập hàng"

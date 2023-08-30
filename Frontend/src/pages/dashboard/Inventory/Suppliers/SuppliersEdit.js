@@ -3,7 +3,8 @@ import { Container, Grid, Card, Button, Box, Menu, MenuItem, Tabs, Tab } from '@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { styled, alpha } from '@mui/material/styles';
 import { useParams } from 'react-router';
-import { getSuppliers } from '../../../../redux/slices/supplier';
+import { useSnackbar } from 'notistack';
+import { getSuppliers, resetSupplier, updateSupplier } from '../../../../redux/slices/supplier';
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { formatPriceInVND } from '../../../../utils/formatNumber';
 import Label from '../../../../components/Label';
@@ -68,6 +69,7 @@ export default function SuppliersEdit() {
     dispatch(getSuppliers());
     dispatch(getReceipts());
   }, [dispatch]);
+  const { enqueueSnackbar } = useSnackbar();
 
   const supplier = supplierList?.find((item) => item.id === supplierId);
   console.log('supplier', supplier);
@@ -76,7 +78,7 @@ export default function SuppliersEdit() {
   console.log('supplierAll', supplierAll);
   const { updateSupplierSuccess } = useSelector((state) => state.supplier);
   const { currentTab, onChangeTab } = useTabs('Lịch sử nhập');
-
+  console.log('updateSupplierSuccess', updateSupplierSuccess);
   const TABS = [
     {
       value: 'Lịch sử nhập',
@@ -108,12 +110,27 @@ export default function SuppliersEdit() {
     setAnchorEl(null);
   };
 
-  const handleStopSupplier = () => {};
+  const handleStopSupplier = () => {
+    dispatch(updateSupplier({ active: !supplier.active }, supplierId));
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
-    if (updateSupplierSuccess) {
-      dispatch(getSuppliers());
+    if (updateSupplierSuccess && supplier.active && open) {
+      enqueueSnackbar('Tạm ngưng nhà cung cấp thành công', { variant: 'success' });
+    } else if (updateSupplierSuccess && !supplier.active && open) {
+      enqueueSnackbar('Kích hoạt nhà cung cấp thành công', { variant: 'success' });
     }
+
+    if (updateSupplierSuccess && openEditSupplier) {
+      enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+    }
+    dispatch(getSuppliers());
+    handleCloseEditSupplier();
+    onClose();
+    return () => {
+      dispatch(resetSupplier());
+    };
   }, [updateSupplierSuccess]);
 
   return (
@@ -146,7 +163,7 @@ export default function SuppliersEdit() {
             onClose={handleClose}
           >
             <MenuItem onClick={() => onOpen()} disableRipple sx={{ color: 'red' }}>
-              Tạm ngưng nhà cung cấp
+              {supplier?.active ? ' Tạm ngưng nhà cung cấp' : 'Kích hoạt nhà cung cấp'}
             </MenuItem>
           </StyledMenu>
         </Box>
@@ -264,12 +281,19 @@ export default function SuppliersEdit() {
       </Grid>
 
       <ConfirmImport
-        title="Tạm ngừng nhà cung cấp"
+        title={supplier?.active ? 'Tạm ngưng nhà cung cấp' : 'Kích hoạt nhà cung cấp'}
         content={
           <div>
-            {`Bạn có chắc chắn muốn tạm ngừng hoạt động của nhà cung cấp `}
-            <b>{supplier?.name}</b>
-            {` ? Bạn sẽ không thể mua hàng từ nhà cung cấp này nữa, thông tin lịch sử nhập/trả hàng và công nợ vẫn được giữ lại.`}
+            {supplier?.active ? (
+              <>
+                Bạn có chắc chắn muốn tạm ngừng hoạt động của nhà cung cấp <b>{supplier?.name}</b> ? Bạn sẽ không thể
+                mua hàng từ nhà cung cấp này nữa, thông tin lịch sử nhập/trả hàng và công nợ vẫn được giữ lại.
+              </>
+            ) : (
+              <>
+                Bạn có chắc chắn muốn kích hoạt nhà cung cấp <b>{supplier?.name}</b>
+              </>
+            )}
           </div>
         }
         open={open}

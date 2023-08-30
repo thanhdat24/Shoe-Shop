@@ -13,7 +13,6 @@ import {
   TextField,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
 import { province } from '../../../../_mock';
@@ -30,7 +29,6 @@ SupplierEditDialog.propTypes = {
 
 export default function SupplierEditDialog({ open, onClose, supplierDetail, supplierId }) {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
   console.log('supplierDetail', supplierDetail);
   const [districtList, setDistrictList] = useState([]);
   const { updateSupplierSuccess } = useSelector((state) => state.supplier);
@@ -83,16 +81,14 @@ export default function SupplierEditDialog({ open, onClose, supplierDetail, supp
     onClose();
   };
 
-  useEffect(() => {
-    if (updateSupplierSuccess) {
-      enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-      resetField();
-      onClose();
-      setTimeout(() => {
-        dispatch(resetSupplier());
-      }, 3000);
-    }
-  }, [updateSupplierSuccess]);
+  // useEffect(() => {
+  //   if (updateSupplierSuccess) {
+  //     enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+  //     resetField();
+  //     onClose();
+
+  //   }
+  // }, [updateSupplierSuccess]);
   return (
     <FormProvider methods={methods}>
       <Dialog fullWidth maxWidth="md" open={open} sx={{ zIndex: '10000' }} onClose={handleCloseModal}>

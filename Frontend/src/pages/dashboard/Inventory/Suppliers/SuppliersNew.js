@@ -251,7 +251,11 @@ export default function SuppliersNew() {
               </Card>
             </Grid>
           </Grid>
-          <SaveCancelButtons onSave={handleSubmit(onSubmit)} isDisabledSave={isReadyCreateSupplier} />
+          <SaveCancelButtons
+            onSave={handleSubmit(onSubmit)}
+            isDisabledSave={isReadyCreateSupplier}
+            onCancel={() => navigate(PATH_DASHBOARD.inventory.suppliers)}
+          />
         </FormProvider>
       </Box>
     </Container>
