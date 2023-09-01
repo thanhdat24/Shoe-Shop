@@ -2,23 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // @mui
-import {
-  Box,
-  Stack,
-  Dialog,
-  Button,
-  DialogContent,
-  DialogActions,
-  Autocomplete,
-  TextField,
-} from '@mui/material';
+import { Box, Stack, Dialog, Button, DialogContent, DialogActions, Autocomplete, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
 import { province } from '../../../../_mock';
 
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { resetSupplier, updateSupplier } from '../../../../redux/slices/supplier';
+import { updateSupplier } from '../../../../redux/slices/supplier';
 
 SupplierEditDialog.propTypes = {
   open: PropTypes.bool,
@@ -67,7 +58,7 @@ export default function SupplierEditDialog({ open, onClose, supplierDetail, supp
   const values = watch();
 
   const onSubmit = async (data) => {
-    const fullAddress = data?.address || '' + data?.ward || '' + data?.district || '' + data?.city || '';
+    const fullAddress = `${data?.address || ''} ${data?.ward || ''} ${data?.district || ''} ${data?.city || ''}`;
     try {
       console.log('data');
       dispatch(updateSupplier({ ...data, fullAddress }, supplierId));

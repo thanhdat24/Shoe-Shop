@@ -67,7 +67,6 @@ receiptSchema.virtual('receiptDetail', {
 receiptSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'supplier',
-    select: 'name phoneNumber fullAddress',
   })
     .populate({
       path: 'staffProcessor',

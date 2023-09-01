@@ -8056,6 +8056,11 @@
   dependencies:
     "argparse" "^2.0.1"
 
+"jsbarcode@^3.11.5":
+  "integrity" "sha512-zv3KsH51zD00I/LrFzFSM6dst7rDn0vIMzaiZFL7qusTjPZiPtxg3zxetp0RR7obmjTw4f6NyGgbdkBCgZUIrA=="
+  "resolved" "https://registry.npmjs.org/jsbarcode/-/jsbarcode-3.11.5.tgz"
+  "version" "3.11.5"
+
 "jsdom@^16.6.0":
   "integrity" "sha512-u9Smc2G1USStM+s/x1ru5Sxrl6mPYCbByG1U/hUmqaVsm4tbNyS7CicOSRyuGQYZhTu0h84qkZZQ/I+dzizSVw=="
   "resolved" "https://registry.npmjs.org/jsdom/-/jsdom-16.7.0.tgz"

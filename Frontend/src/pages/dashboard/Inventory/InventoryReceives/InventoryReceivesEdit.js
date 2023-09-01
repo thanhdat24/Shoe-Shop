@@ -68,6 +68,8 @@ import SupplierPaymentDialog from './SupplierPaymentDialog';
 import ConfirmImport from './ConfirmImport';
 import { formatDate } from '../../../../utils/formatTime';
 import { getPayments } from '../../../../redux/slices/payment';
+import InventoryReceivesPrint from './InventoryReceivesPrint';
+
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -142,6 +144,7 @@ export default function InventoryReceivesNew() {
 
   const { toggle: open, onOpen, onClose } = useToggle();
   const [openConfirmImport, setOpenConfirmImport] = useState(false);
+  const [openPrint, setOpenPrint] = useState(false);
   const [openConfirmInvalidProduct, setOpenConfirmInvalidProduct] = useState(false);
   const { receiptCode } = useParams();
   const { enqueueSnackbar } = useSnackbar();
@@ -154,9 +157,16 @@ export default function InventoryReceivesNew() {
   const navigate = useNavigate();
   const [inventoryData, setInventoryData] = useState([]);
   console.log('inventoryData456', inventoryData);
+  const handleClosePrint = () => {
+    setOpenPrint(false);
+  };
+  const handleOpenPrint = () => {
+    setOpenPrint(true);
+  };
   const handleCloseConfirmImport = () => {
     setOpenConfirmImport(false);
   };
+
   const handleOpenConfirmImport = () => {
     setOpenConfirmImport(true);
   };
@@ -293,6 +303,7 @@ export default function InventoryReceivesNew() {
                 variant="contained"
                 color="primary"
                 sx={{ padding: '8px 0px !important', width: '50px' }}
+                onClick={handleOpenPrint}
               >
                 In
               </Button>
@@ -523,7 +534,7 @@ export default function InventoryReceivesNew() {
           </Grid>
         </Box>
       </Box>
-      {/* {openPayment && <SupplierPaymentDialog open={open} />} */}
+      <InventoryReceivesPrint open={openPrint} onClose={handleClosePrint} detailReceipt={detailReceipt} />
       <SupplierPaymentDialog open={open} onClose={onClose} detailReceipt={detailReceipt} />
       <ConfirmImport
         title="Xác nhận nhập hàng"

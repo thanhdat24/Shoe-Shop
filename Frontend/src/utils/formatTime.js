@@ -1,5 +1,7 @@
 import { format, getTime, formatDistanceToNow } from 'date-fns';
 import moment from 'moment';
+
+moment.locale('vi');
 // ----------------------------------------------------------------------
 
 export function fDate(date) {
@@ -41,6 +43,19 @@ export function formatDate(d) {
       return dateToFormat.format('dddd, h:mm A');
     }
     return dateToFormat.format('MMM D, YYYY, h:mm A');
+  }
+  return '--';
+}
+
+export function formatDateReceipt(d) {
+  if (d === null) {
+    return '--'; // Nếu giá trị d là null, trả về '--'
+  }
+
+  const date = new Date(d);
+  if (isValidDate(date)) {
+    const dateToFormat = moment(date);
+    return dateToFormat.format('DD/MM/YYYY');
   }
   return '--';
 }
