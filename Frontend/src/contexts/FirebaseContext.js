@@ -18,13 +18,13 @@ import axios from '../utils/axios';
 
 // ----------------------------------------------------------------------
 
-const ADMIN_EMAILS = ['demo@minimals.cc'];
+const ADMIN_EMAILS = ['demo@gmail.com'];
 
 const firebaseApp = initializeApp(FIREBASE_API);
 
 const AUTH = getAuth(firebaseApp);
 
-const DB = getFirestore(firebaseApp);
+// const DB = getFirestore(firebaseApp);
 
 const initialState = {
   isAuthenticated: false,
@@ -115,13 +115,42 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(AUTH, async (user) => {
+      if (user !== null) {
+        const accessToken = await user.getIdToken();
+        const data = {
+          user: {
+            googleId: user?.uid,
+            email: user?.email,
+            photoURL: user?.photoURL,
+            displayName: user?.displayName,
+            role: user?.role || 'khách hàng',
+            phoneNumber: user?.phoneNumber || '',
+          },
+        };
+        setSession(accessToken);
+        setUser(data);
+        dispatch({
+          type: 'INITIALISE',
+          payload: { isAuthenticated: true, user },
+        });
+
+      }
+    });
+
+    return () => {
+      // Unsubscribe from the onAuthStateChanged listener when the component unmounts
+      unsubscribe();
+    };
+  }, [dispatch]);
+
   const login = async (email, password) => {
     const response = await axios.post('/api/v1/auth/login', {
       email,
       password,
     });
     const { accessToken, user } = response.data;
-    console.log('user123', user);
     setSession(accessToken);
     setUser(user);
     dispatch({
@@ -155,7 +184,6 @@ function AuthProvider({ children }) {
   //   });
 
   const registerUser = async (data) => {
-    console.log('data', data);
     const response = await axios.post('/api/v1/user/createUser', data);
     const { user } = response.data;
 
