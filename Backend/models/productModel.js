@@ -71,6 +71,9 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'ObjectUse',
     },
+    urlImage :{
+      type: String,
+    },
     // idProductImages: [
     //   'https://cdn.tgdd.vn/Products/Images/9980/295241/giay-lifestyle-nam-nike-air-max-97-dm0027-001-1.jpg',
     //   'https://cdn.tgdd.vn/Products/Images/9980/295241/giay-lifestyle-nam-nike-air-max-97-dm0027-001-2.jpg',

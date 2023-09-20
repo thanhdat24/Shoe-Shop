@@ -29,6 +29,7 @@ const paymentRouters = require('./routers/paymentRouters');
 const ratingRouters = require('./routers/ratingRouters');
 const receiptRouters = require('./routers/receiptRouters');
 const receiptDetailRouters = require('./routers/receiptDetailRouters');
+const transactionsRouters = require('./routers/transactionsRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -78,6 +79,7 @@ app.use('/api/v1/payments', paymentRouters);
 app.use('/api/v1/ratings', ratingRouters);
 app.use('/api/v1/receipts', receiptRouters);
 app.use('/api/v1/receipt-details', receiptDetailRouters);
+app.use('/api/v1/transactions', transactionsRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {

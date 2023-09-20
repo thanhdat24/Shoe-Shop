@@ -1,5 +1,6 @@
 const Receipt = require('../models/receiptModel');
 const Product = require('../models/productModel');
+const Transactions = require('../models/transactionsModel');
 const ReceiptDetail = require('../models/receiptDetailModel');
 const ProductDetail = require('../models/productDetailModel');
 const factory = require('./handlerFactory');
@@ -172,9 +173,58 @@ exports.updateReceiptDraft = catchAsync(async (req, res, next) => {
 
 exports.updateReceipt = factory.updateOne(Receipt);
 
+// exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
+//   const _id = req.params.id;
+//   const { paymentHistory, supplierCost, amount, totalPrice } = req.body;
+//   // Tìm phiếu nhập hàng dựa trên _id
+//   const receipt = await Receipt.findById(_id);
+
+//   if (!receipt) {
+//     return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
+//   }
+//   receipt.supplierPaidCost = receipt.supplierPaidCost + amount;
+
+//   // Tính toán casNumber mới cho khoản thanh toán
+//   let newCasNumber = 'CPIR100000'; // Giá trị mặc định
+//   if (receipt.paymentHistory.length > 0) {
+//     const lastPayment =
+//       receipt.paymentHistory[receipt.paymentHistory.length - 1];
+
+//     const lastCasNumber = lastPayment.casNumber;
+//     const casNumberParts = lastCasNumber.split('CPIR');
+//     const lastCasNumberValue = parseInt(casNumberParts[1]);
+//     newCasNumber = `CPIR${(lastCasNumberValue + 1)
+//       .toString()
+//       .padStart(6, '0')}`;
+//   }
+
+//   // Tạo khoản thanh toán mới
+//   const newPayment = {
+//     casNumber: newCasNumber,
+//     // reasonName: paymentHistory.reasonName || 'Chi tiền trả NCC',
+//     amount,
+//     totalDebt: totalPrice - receipt.supplierPaidCost,
+//     // tranDate: paymentHistory.tranDate || Date.now(),
+//     paymentMethod: paymentHistory.paymentMethod, // Cần đảm bảo paymentMethod đã được định nghĩa trong yêu cầu
+//     paidBy: req.user._id,
+//   };
+
+//   // Thêm khoản thanh toán mới vào paymentHistory
+//   receipt.paymentHistory.push(newPayment);
+
+//   // Lưu phiếu nhập hàng đã cập nhật
+//   const updatedReceipt = await receipt.save();
+
+//   res.status(200).json({
+//     status: 'success',
+//     result: updatedReceipt.paymentHistory.length,
+//     data: updatedReceipt,
+//   });
+// });
+
 exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
   const _id = req.params.id;
-  const { paymentHistory, supplierCost, amount, totalPrice } = req.body;
+  const { paymentHistory, amount, totalPrice } = req.body;
   // Tìm phiếu nhập hàng dựa trên _id
   const receipt = await Receipt.findById(_id);
 
@@ -182,42 +232,74 @@ exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
     return next(new AppError('Không tìm thấy phiếu nhập hàng', 404));
   }
   receipt.supplierPaidCost = receipt.supplierPaidCost + amount;
+  await receipt.save();
+  // Tìm mã phiếu nhập hàng lớn nhất hiện có
+  const lastTransactions = await Transactions.findOne(
+    {},
+    { casNumber: 1 },
+    { sort: { casNumber: -1 } }
+  );
 
-  // Tính toán casNumber mới cho khoản thanh toán
-  let newCasNumber = 'CPIR100000'; // Giá trị mặc định
-  if (receipt.paymentHistory.length > 0) {
-    const lastPayment =
-      receipt.paymentHistory[receipt.paymentHistory.length - 1];
+  let nextCasNumber = 'CPIR100000'; // Mã mặc định nếu không có phiếu nhập hàng nào
 
-    const lastCasNumber = lastPayment.casNumber;
-    const casNumberParts = lastCasNumber.split('CPIR');
-    const lastCasNumberValue = parseInt(casNumberParts[1]);
-    newCasNumber = `CPIR${(lastCasNumberValue + 1)
-      .toString()
-      .padStart(6, '0')}`;
+  if (lastTransactions) {
+    // Lấy số phiếu nhập hàng từ mã cuối cùng và tăng lên 1 đơn vị
+    const lastTransactionsNumber = parseInt(
+      lastTransactions.casNumber.substring(4),
+      10
+    );
+    nextCasNumber = `CPIR${lastTransactionsNumber + 1}`;
   }
 
-  // Tạo khoản thanh toán mới
-  const newPayment = {
-    casNumber: newCasNumber,
-    // reasonName: paymentHistory.reasonName || 'Chi tiền trả NCC',
-    amount,
+  const transactionsData = {
+    casNumber: nextCasNumber,
+    amount: -amount,
+    receiptId: _id,
     totalDebt: totalPrice - receipt.supplierPaidCost,
-    // tranDate: paymentHistory.tranDate || Date.now(),
     paymentMethod: paymentHistory.paymentMethod, // Cần đảm bảo paymentMethod đã được định nghĩa trong yêu cầu
     paidBy: req.user._id,
   };
 
-  // Thêm khoản thanh toán mới vào paymentHistory
-  receipt.paymentHistory.push(newPayment);
-
-  // Lưu phiếu nhập hàng đã cập nhật
-  const updatedReceipt = await receipt.save();
+  const transactions = await Transactions.create(transactionsData);
 
   res.status(200).json({
     status: 'success',
-    result: updatedReceipt.paymentHistory.length,
-    data: updatedReceipt,
+    result: transactions.length,
+    data: transactions,
+  });
+});
+
+exports.getAllTransactionsByReceiptId = catchAsync(async (req, res, next) => {
+  console.log('req.params.id', req.params.id);
+  const transactions = await Transactions.find({ receiptId: req.params.id });
+
+  if (transactions.length === 0) {
+    return next(new AppError('Không tìm thấy mã phiếu nhập', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    results: transactions.length,
+    data: transactions,
+  });
+});
+
+exports.getAllDebtsReceipt = catchAsync(async (req, res, next) => {
+  const transactions = await Transactions.find().populate('receiptId');
+  const receiptId = req.params.id;
+  console.log('receiptId', receiptId);
+  if (transactions.length === 0) {
+    return next(new AppError('Không tìm thấy mã phiếu nhập', 404));
+  }
+
+  const filterData = transactions.filter(
+    (item) => item.receiptId.supplier.id === receiptId
+  );
+
+  res.status(200).json({
+    status: 'success',
+    results: filterData.length,
+    data: filterData,
   });
 });
 

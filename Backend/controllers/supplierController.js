@@ -55,13 +55,14 @@ exports.getAllSupplier = catchAsync(async (req, res, next) => {
       supplierInfo.set(supplierId, {
         totalCost: 0,
         totalDebt: 0,
+        paymentHistory: [],
       });
     }
 
     const currentInfo = supplierInfo.get(supplierId);
     currentInfo.totalCost += supplierCost;
     currentInfo.totalDebt += supplierCost - supplierPaidCost;
-    currentInfo.paymentHistory = paymentHistory;
+    currentInfo.paymentHistory.push(...paymentHistory);
   });
 
   // Tạo mảng object chứa thông tin tổng tiền và nợ của từng nhà cung cấp
@@ -75,7 +76,7 @@ exports.getAllSupplier = catchAsync(async (req, res, next) => {
       paymentHistory: info.paymentHistory,
     };
   });
-
+  // console.log('suppliersWithInfo', suppliersWithInfo);
   res.status(200).json({
     status: 'success',
     length: suppliersWithInfo.length,

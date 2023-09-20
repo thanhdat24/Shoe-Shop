@@ -5,7 +5,7 @@ const receiptSchema = new mongoose.Schema(
   {
     paymentHistory: [
       {
-        casNumber: { type: String, required: true, unique: true },
+        casNumber: { type: String, required: true },
         reasonName: {
           type: String,
           required: true,
