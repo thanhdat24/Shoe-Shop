@@ -47,7 +47,6 @@ export default function CartWidget() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  console.log('checkoutCartWidget', checkout);
   const totalItems = sum(checkout.cart.map((item) => item.quantity));
 
   useEffect(() => {
