@@ -26,6 +26,8 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Tab,
+  Tabs,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as Yup from 'yup';
@@ -61,7 +63,13 @@ import useTable, { getComparator } from '../../../../hooks/useTable';
 import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
 import SearchModelProductRow from './SearchModelProductRow';
 import useToggle from '../../../../hooks/useToggle';
-import { createReceipt, getDetailReceipts, resetReceipt, updateReceiptDraft } from '../../../../redux/slices/receipt';
+import {
+  createReceipt,
+  getAllTransactionsByReceiptId,
+  getDetailReceipts,
+  resetReceipt,
+  updateReceiptDraft,
+} from '../../../../redux/slices/receipt';
 import { InventoryEditTableRow } from '../../../../sections/@dashboard/Inventory/InventoryReceivesEdit';
 import Label from '../../../../components/Label';
 import SupplierPaymentDialog from './SupplierPaymentDialog';
@@ -69,7 +77,9 @@ import ConfirmImport from './ConfirmImport';
 import { formatDate } from '../../../../utils/formatTime';
 import { getPayments } from '../../../../redux/slices/payment';
 import InventoryReceivesPrint from './InventoryReceivesPrint';
-
+import useTabs from '../../../../hooks/useTabs';
+import InventoryReceivesListEdit from './InventoryReceivesListEdit';
+import InventoryReceivesHistory from './InventoryReceivesHistory';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -149,14 +159,20 @@ export default function InventoryReceivesNew() {
   const { receiptCode } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { detailReceipt, updateReceiptSuccess, updateReceiptDraftSuccess, newReceipt, makeSupplierPaymentSuccess } =
-    useSelector((state) => state.receipt);
+  const {
+    detailReceipt,
+    updateReceiptSuccess,
+    updateReceiptDraftSuccess,
+    newReceipt,
+    makeSupplierPaymentSuccess,
+    paymentHistory,
+  } = useSelector((state) => state.receipt);
   console.log('makeSupplierPaymentSuccess', makeSupplierPaymentSuccess);
   const { products, isLoading } = useSelector((state) => state.product);
   const theme = useTheme();
   const navigate = useNavigate();
   const [inventoryData, setInventoryData] = useState([]);
-  console.log('inventoryData456', inventoryData);
+  console.log('detailReceipt', detailReceipt);
   const handleClosePrint = () => {
     setOpenPrint(false);
   };
@@ -183,16 +199,25 @@ export default function InventoryReceivesNew() {
 
   const groupByReceiptDetail = _(detailReceipt?.receiptDetail)
     .groupBy((x) => x.idProductDetail.idProduct.name)
-    .map((value, key) => ({
-      name: key,
-      receiptDetail: value,
-    }))
+    .map((value, key) => {
+      const urlImage = value[0].idProductDetail.idProduct.urlImage;
+
+      return {
+        name: key,
+        urlImage,
+        receiptDetail: value,
+      };
+    })
     .value();
 
   useEffect(() => {
     dispatch(getDetailReceipts(receiptCode));
     dispatch(getPayments());
   }, [dispatch, newReceipt]);
+
+  useEffect(() => {
+    dispatch(getAllTransactionsByReceiptId(detailReceipt?.id));
+  }, [dispatch, detailReceipt]);
 
   useEffect(() => {
     if (makeSupplierPaymentSuccess) {
@@ -249,7 +274,7 @@ export default function InventoryReceivesNew() {
   const inventoryStatus = detailReceipt?.inventoryStatus;
   const labelVariant = theme.palette.mode === 'light' ? 'ghost' : 'filled';
   let labelColor = 'default';
-  let labelText = 'Nhập';
+  let labelText = 'Nháp';
   let costDisplay;
   const supplierCost = detailReceipt?.supplierCost;
   if (inventoryStatus === 2) {
@@ -271,6 +296,26 @@ export default function InventoryReceivesNew() {
       dispatch(resetReceipt());
     };
   }, [updateReceiptDraftSuccess, updateReceiptSuccess]);
+
+  const { currentTab, onChangeTab } = useTabs('Sản phẩm');
+
+  const TABS = [
+    {
+      value: 'Sản phẩm',
+      component: (
+        <InventoryReceivesListEdit
+          groupByReceiptDetail={groupByReceiptDetail}
+          setInventoryData={setInventoryData}
+          isLoading={isLoading}
+          inventoryData={inventoryData}
+        />
+      ),
+    },
+    {
+      value: 'Lịch sử thanh toán',
+      component: <InventoryReceivesHistory paymentHistory={paymentHistory} />,
+    },
+  ];
 
   return (
     <Container sx={{ paddingRight: '0px !important', paddingLeft: '0px !important' }}>
@@ -438,9 +483,8 @@ export default function InventoryReceivesNew() {
                   width: '100%',
                 }}
               >
-                <div className="mb-4 font-semibold  ">Sản Phẩm</div>
+                {/* <div className="mb-4 font-semibold  ">Sản Phẩm</div>
                 <hr />
-                {/* <Scrollbar> */}
                 <TableContainer sx={{ marginTop: 5 }}>
                   <Table size={dense ? 'small' : 'medium'}>
                     <TableHeadCustom
@@ -462,7 +506,32 @@ export default function InventoryReceivesNew() {
                       ))}
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
+                <Box className="p-4 !pb-0">
+                  <Tabs
+                    allowScrollButtonsMobile
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    value={currentTab}
+                    onChange={onChangeTab}
+                  >
+                    {TABS.map((tab) => (
+                      <Tab
+                        disableRipple
+                        key={tab.value}
+                        label={tab.value}
+                        value={tab.value}
+                        sx={{ textTransform: 'initial' }}
+                      />
+                    ))}
+                  </Tabs>
+                </Box>
+                <Box sx={{ mb: 3 }} />
+
+                {TABS.map((tab) => {
+                  const isMatched = tab.value === currentTab;
+                  return isMatched && <Box key={tab.value}>{tab.component}</Box>;
+                })}
               </Card>
             </Grid>
             <Grid item xs={4} sx={{ paddingTop: '0px !important' }}>

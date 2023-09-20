@@ -20,10 +20,8 @@ SupplierEditDialog.propTypes = {
 
 export default function SupplierEditDialog({ open, onClose, supplierDetail, supplierId }) {
   const dispatch = useDispatch();
-  console.log('supplierDetail', supplierDetail);
   const [districtList, setDistrictList] = useState([]);
   const { updateSupplierSuccess } = useSelector((state) => state.supplier);
-  console.log('province', province);
   const [wardList, setWardList] = useState([]);
   const defaultValues = useMemo(
     () => ({

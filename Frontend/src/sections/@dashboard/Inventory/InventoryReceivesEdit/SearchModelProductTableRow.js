@@ -94,7 +94,7 @@ export default function SearchModelProductTableRow({
         </Box>
         <TableRow>{renderSortedProductDetail()}</TableRow>
       </TableCell>
-      <TableCell sx={{ opacity: '0' }}>123</TableCell>
+      <TableCell sx={{ opacity: '0' }}>12345</TableCell>
       <TableCell sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', opacity: '0' }}>
           <Checkbox checked={selected} onClick={onSelectRow} />

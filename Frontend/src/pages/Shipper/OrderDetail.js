@@ -31,8 +31,6 @@ export default function OrderDetail() {
 
   const { orderDetail, orderUpdate } = useSelector((state) => state.order);
 
-  console.log('orderDetail', orderDetail);
-
   useEffect(() => {
     dispatch(getOrderDetail(id));
     return dispatch(resetOrder());

@@ -5,6 +5,7 @@ import { Box, Dialog, Button, Divider, DialogTitle, DialogContent, DialogActions
 import { LoadingButton } from '@mui/lab';
 // firebase
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+
 import { useSnackbar } from 'notistack';
 import { RHFCheckbox, RHFRadioGroup, RHFSelect, RHFTextField, FormProvider } from '../../components/hook-form';
 import { LoginForm } from '../../sections/auth/login';
@@ -56,7 +57,7 @@ function a11yProps(index) {
 }
 
 export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilling }) {
-  const { user, registerUser } = useAuth();
+  const { user, registerUser, loginFacebook } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -81,6 +82,8 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
   const google = () => {
     signInWithGoogle();
   };
+
+  const facebook = () => {};
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -126,7 +129,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
               size="large"
               color="inherit"
               variant="outlined"
-              // onClick={google}
+              onClick={loginFacebook}
               sx={{
                 backgroundColor: '#2D88FF',
                 justifyContent: 'space-between',

@@ -100,7 +100,6 @@ export default function StaffList() {
       setTableData(accountList);
     }
   }, [accountList]);
-  console.log('tableData', tableData);
 
   const handleFilterRole = (event) => {
     setFilterRole(event.target.value);

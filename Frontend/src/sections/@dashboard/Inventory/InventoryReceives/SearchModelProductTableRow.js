@@ -30,7 +30,7 @@ export default function SearchModelProductTableRow({
   onSelectRow,
   onSelectRowInventory,
 }) {
-  const { name, productDetail, productImages, price, idCate, idSupplier, priceSale } = row;
+  const { name, productDetail, productImages, price, idCate, idSupplier, priceSale, urlImage } = row;
 
   const renderSortedProductDetail = () => {
     const sortedProductDetail = [...productDetail].sort((item1, item2) => {
@@ -40,7 +40,6 @@ export default function SearchModelProductTableRow({
         ? sizeComparison
         : parseInt(item1.sku.split('-')[1], 10) - parseInt(item2.sku.split('-')[1], 10);
     });
-
     return sortedProductDetail.map((item, index) => (
       <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
         <Checkbox
@@ -88,6 +87,8 @@ export default function SearchModelProductTableRow({
           />
           <Typography variant="subtitle2" noWrap>
             <Link variant="subtitle2" component={RouterLink} to={PATH_DASHBOARD.eCommerce.view(paramCase(name))}>
+              {name}
+            </Link> <Link variant="subtitle2" component={RouterLink} to={PATH_DASHBOARD.eCommerce.view(paramCase(name))}>
               {name}
             </Link>
           </Typography>

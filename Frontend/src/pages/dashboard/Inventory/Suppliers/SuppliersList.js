@@ -118,7 +118,6 @@ export default function SuppliersList() {
   useEffect(() => {
     dispatch(getSuppliers());
   }, [dispatch]);
-  console.log('supplierList', supplierList);
   useEffect(() => {
     if (supplierList?.length) {
       setTableData(supplierList);

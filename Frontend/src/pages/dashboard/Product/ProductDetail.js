@@ -49,7 +49,6 @@ export default function ProductDetail() {
   useEffect(() => {
     if (product === null) dispatch(getProduct(name));
   }, [dispatch]);
-  console.log('product', product);
 
   return (
     <Page title="Ecommerce: Danh sách sản phẩm">

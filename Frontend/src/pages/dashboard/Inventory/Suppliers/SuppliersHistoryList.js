@@ -67,8 +67,6 @@ export default function SuppliersHistoryList({ supplierAll }) {
 
   const dispatch = useDispatch();
 
-  console.log('supplierAll123', supplierAll);
-
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = !supplierAll?.length || (!isLoading && !supplierAll?.length);

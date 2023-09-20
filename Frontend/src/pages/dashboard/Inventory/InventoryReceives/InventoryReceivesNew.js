@@ -67,7 +67,7 @@ export default function InventoryReceivesNew() {
   const handleCloseConfirmInvalidProduct = () => {
     setOpenConfirmInvalidProduct(false);
   };
-
+  console.log('selectedInventory', selectedInventory);
   const groupBySelectedInventory = _(selectedInventory)
     .groupBy((x) => x.idProduct.name)
     .map((value, key) => ({
@@ -118,12 +118,8 @@ export default function InventoryReceivesNew() {
   const { handleSubmit, watch, control } = methods;
 
   const values = watch();
-  console.log('inventoryDataNew', inventoryData);
-
-  console.log('values', values);
 
   const onSubmit = async (data) => {
-    console.log('data1234', data);
 
     const inventoryStatus = openConfirmImport || openConfirmInvalidProduct ? 2 : 1;
 
@@ -183,7 +179,6 @@ export default function InventoryReceivesNew() {
       createdAt: inventoryStatus === 2 ? new Date() : null,
       updatedAt: new Date(),
     };
-
     try {
       dispatch(createReceipt(newData));
     } catch (error) {

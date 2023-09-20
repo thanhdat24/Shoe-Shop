@@ -150,7 +150,6 @@ export default function InventoryReceivesReturn() {
   const theme = useTheme();
 
   const [inventoryData, setInventoryData] = useState([]);
-  console.log('inventoryData456', inventoryData);
   const handleCloseConfirmImport = () => {
     setOpenConfirmImport(false);
   };
@@ -187,8 +186,6 @@ export default function InventoryReceivesReturn() {
 
   const handleImport = () => {
     try {
-      console.log('inventoryData123', inventoryData);
-      console.log('detailReceipt123', detailReceipt);
       const data = {
         ...detailReceipt,
         inventoryStatus: 2,

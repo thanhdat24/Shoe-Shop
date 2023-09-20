@@ -48,8 +48,6 @@ export default function InventoryTableRow({
   inventoryData,
 }) {
   const { name, productDetail } = row;
-  console.log('row123', row);
-  console.log('productDetail', productDetail);
   const [quantityValues, setQuantityValues] = useState(
     productDetail.reduce((quantities, item) => {
       quantities[item.id] = 0;
@@ -62,8 +60,7 @@ export default function InventoryTableRow({
       return prices;
     }, {})
   );
-  console.log('priceValues', priceValues);
-  console.log('quantityValues', quantityValues);
+
 
   const sortedProductDetail = [...productDetail].sort((item1, item2) => {
     const sizeComparison = item1.idSize.name - item2.idSize.name;
@@ -116,49 +113,45 @@ export default function InventoryTableRow({
 
     setInventoryData(updatedData);
   }, [selectedInventory]);
-const handlePriceChange = (newPriceValues, idProduct) => {
-  setInventoryData((prevInventoryData) => {
-    const updatedInventoryData = prevInventoryData.map((item) => ({ ...item }));
+  const handlePriceChange = (newPriceValues, idProduct) => {
+    setInventoryData((prevInventoryData) => {
+      const updatedInventoryData = prevInventoryData.map((item) => ({ ...item }));
 
-    Object.keys(newPriceValues).forEach((key) => {
-      const value = newPriceValues[key];
-      const existingItem = updatedInventoryData.find((item) => item.id === key);
+      Object.keys(newPriceValues).forEach((key) => {
+        const value = newPriceValues[key];
+        const existingItem = updatedInventoryData.find((item) => item.id === key);
 
-      if (existingItem) {
-        existingItem.price = value;
-      } else {
-        updatedInventoryData.push({ id: key, price: value, idProduct });
-      }
+        if (existingItem) {
+          existingItem.price = value;
+        } else {
+          updatedInventoryData.push({ id: key, price: value, idProduct });
+        }
+      });
+
+      return updatedInventoryData;
     });
+  };
 
-    return updatedInventoryData;
-  });
-};
+  const handleQuantityChange = (newQuantityValues, idProduct) => {
+    setInventoryData((prevInventoryData) => {
+      const updatedInventoryData = prevInventoryData.map((item) => ({ ...item }));
 
+      Object.keys(newQuantityValues).forEach((key) => {
+        const value = newQuantityValues[key];
+        const existingItem = updatedInventoryData.find((item) => item.id === key);
 
+        if (existingItem) {
+          existingItem.quantity = value;
+        } else {
+          updatedInventoryData.push({ id: key, quantity: value, idProduct });
+        }
+      });
 
-const handleQuantityChange = (newQuantityValues, idProduct) => {
-  setInventoryData((prevInventoryData) => {
-    const updatedInventoryData = prevInventoryData.map((item) => ({ ...item }));
-
-    Object.keys(newQuantityValues).forEach((key) => {
-      const value = newQuantityValues[key];
-      const existingItem = updatedInventoryData.find((item) => item.id === key);
-
-      if (existingItem) {
-        existingItem.quantity = value;
-      } else {
-        updatedInventoryData.push({ id: key, quantity: value, idProduct });
-      }
+      return updatedInventoryData;
     });
-
-    return updatedInventoryData;
-  });
-};
+  };
 
 
-  console.log('sortedProductDetail', sortedProductDetail);
-  console.log('priceQuantity', priceQuantity);
   const renderSortedProductDetail = () => {
     return sortedProductDetail.map((item, index) => (
       <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
@@ -182,24 +175,24 @@ const handleQuantityChange = (newQuantityValues, idProduct) => {
     ));
   };
 
-const renderQuantity = () => {
-  return sortedProductDetail.map((item, index) => (
-    <TableCell key={index} sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '73px !important' }}>
-      <TextField
-        sx={{ width: '100px !important', height: '8px !important' }}
-        type="number"
-        size="small"
-        onChange={(e) => {
-          const newQuantityValues = { ...quantityValues };
-          const newValue = parseInt(e.target.value, 10);
-          newQuantityValues[item.id] = Number.isNaN(newValue) ? 0 : newValue;
-          setQuantityValues(newQuantityValues);
-          handleQuantityChange(newQuantityValues, item.idProduct.id);
-        }}
-      />
-    </TableCell>
-  ));
-};
+  const renderQuantity = () => {
+    return sortedProductDetail.map((item, index) => (
+      <TableCell key={index} sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '73px !important' }}>
+        <TextField
+          sx={{ width: '100px !important', height: '8px !important' }}
+          type="number"
+          size="small"
+          onChange={(e) => {
+            const newQuantityValues = { ...quantityValues };
+            const newValue = parseInt(e.target.value, 10);
+            newQuantityValues[item.id] = Number.isNaN(newValue) ? 0 : newValue;
+            setQuantityValues(newQuantityValues);
+            handleQuantityChange(newQuantityValues, item.idProduct.id);
+          }}
+        />
+      </TableCell>
+    ));
+  };
 
   const renderPrice = () => {
     return sortedProductDetail.map((item, index) => (
@@ -243,10 +236,16 @@ const renderQuantity = () => {
           alignItems: 'start',
           flexDirection: 'column',
           width: '230px',
-          padding: '0px !important',
+          padding: ' 10px 0 0 0 !important',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Image
+            disabledEffect
+            alt={name}
+            src={productDetail[0]?.idProduct.urlImage}
+            sx={{ borderRadius: 1.5, width: 48, height: 48, mx: 2 }}
+          />
           <Typography variant="subtitle2" noWrap>
             <Link variant="subtitle2" component={RouterLink} to={PATH_DASHBOARD.eCommerce.view(paramCase(name))}>
               {name}
@@ -255,10 +254,10 @@ const renderQuantity = () => {
         </Box>
         <TableRow>{renderSortedProductDetail()}</TableRow>
       </TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>{renderSortedInventory()}</TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>{renderQuantity()}</TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>{renderPrice()}</TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>{renderTotalPrice()}</TableCell>
+      <TableCell sx={{ padding: '65px 0 0 0 !important' }}>{renderSortedInventory()}</TableCell>
+      <TableCell sx={{ padding: '65px 0 0 0 !important' }}>{renderQuantity()}</TableCell>
+      <TableCell sx={{ padding: '65px 0 0 0 !important' }}>{renderPrice()}</TableCell>
+      <TableCell sx={{ padding: '65px 0 0 0 !important' }}>{renderTotalPrice()}</TableCell>
     </TableRow>
   );
 }

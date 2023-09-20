@@ -33,7 +33,6 @@ export default function ReceiptTableRow({ row, selected }) {
   const theme = useTheme();
 
   const { receiptCode, createdAt, supplier, inventoryStatus, totalPrice, supplierPaidCost, supplierCost } = row;
-  console.log('row123', row);
   let labelText = 'Nháp';
   if (inventoryStatus === 2) {
     labelText = 'Đã nhập hàng';

@@ -5,6 +5,8 @@ import {
   getAuth,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
+  FacebookAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
@@ -23,6 +25,8 @@ const ADMIN_EMAILS = ['demo@gmail.com'];
 const firebaseApp = initializeApp(FIREBASE_API);
 
 const AUTH = getAuth(firebaseApp);
+
+const provider = new FacebookAuthProvider();
 
 // const DB = getFirestore(firebaseApp);
 
@@ -56,6 +60,7 @@ const AuthContext = createContext({
   method: 'firebase',
   login: () => Promise.resolve(),
   loginShipper: () => Promise.resolve(),
+  loginFacebook: () => Promise.resolve(),
   registerUser: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   logoutAdmin: () => Promise.resolve(),
@@ -135,7 +140,6 @@ function AuthProvider({ children }) {
           type: 'INITIALISE',
           payload: { isAuthenticated: true, user },
         });
-
       }
     });
 
@@ -157,6 +161,28 @@ function AuthProvider({ children }) {
       type: 'LOGIN',
       payload: { isAuthenticated: true, user },
     });
+  };
+
+  const loginFacebook = () => {
+    signInWithPopup(AUTH, provider)
+      .then((result) => {
+        // setUser(result.user);
+        console.log('result', result);
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        // const credential = FacebookAuthProvider.credentialFromResult(result);
+        // const accessToken = credential.accessToken;
+        // fetch facebook graph api to get user actual profile picture
+        // fetch(
+        //   `https://graph.facebook.com/${result.user.providerData[0].uid}/picture?type=large&access_token=${accessToken}`
+        // )
+        //   .then((response) => response.blob())
+        //   .then((blob) => {
+        //     setProfilePicture(URL.createObjectURL(blob));
+        //   });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const loginShipper = async (email, password) => {
@@ -235,6 +261,7 @@ function AuthProvider({ children }) {
         logout,
         logoutAdmin,
         loginShipper,
+        loginFacebook,
       }}
     >
       {children}
@@ -242,4 +269,4 @@ function AuthProvider({ children }) {
   );
 }
 
-export { AuthContext, AuthProvider, AUTH };
+export { AuthContext, AuthProvider, AUTH, provider };

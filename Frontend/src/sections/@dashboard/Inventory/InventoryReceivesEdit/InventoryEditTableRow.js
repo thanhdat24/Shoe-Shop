@@ -11,6 +11,7 @@ import { Link as RouterLink } from 'react-router-dom';
 //
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { formatPriceInVND } from '../../../../utils/formatNumber';
+import Image from '../../../../components/Image';
 
 // ----------------------------------------------------------------------
 
@@ -22,11 +23,7 @@ InventoryEditTableRow.propTypes = {
 };
 
 export default function InventoryEditTableRow({ row, setInventoryData, inventoryData, groupByReceiptDetail }) {
-  const { name, receiptDetail } = row;
-  console.log('row123', row);
-  console.log('inventoryData', inventoryData);
-  console.log('receiptDetail', receiptDetail);
-  console.log('groupByReceiptDetail', groupByReceiptDetail);
+  const { name, urlImage, receiptDetail } = row;
 
   const [quantityValues, setQuantityValues] = useState(
     receiptDetail.reduce((quantities, item) => {
@@ -53,8 +50,6 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
     setInventoryData(data);
   }, []);
 
-  console.log('quantityValues', quantityValues);
-  console.log('priceValues', priceValues);
   const handleQuantityChange = (newQuantityValues, idProduct) => {
     const updatedInventoryData = inventoryData.map((item) => ({ ...item }));
 
@@ -91,6 +86,26 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
     setInventoryData(updatedInventoryData);
   };
 
+  const renderTotalPrice = () => {
+    return receiptDetail.map((item, index) => {
+      const calculatedPrice = priceValues[item.id] * quantityValues[item.id];
+      return (
+        <TableCell
+          key={index + 1}
+          sx={{
+            padding: '16px 30px 16px 16px !important',
+            height: 76,
+            display: 'flex',
+            justifyContent: 'end !important',
+            alignItems: 'start',
+          }}
+        >
+          <Typography>{formatPriceInVND(calculatedPrice)}</Typography>
+        </TableCell>
+      );
+    });
+  };
+
   return (
     <TableRow>
       <TableCell
@@ -99,10 +114,11 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
           alignItems: 'start',
           flexDirection: 'column',
           width: '230px',
-          padding: '0px !important',
+          padding: ' 10px 0 0 0 !important',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Image disabledEffect alt={name} src={urlImage} sx={{ borderRadius: 1.5, width: 48, height: 48, mx: 2 }} />
           <Typography variant="subtitle2" noWrap>
             <Link variant="subtitle2" component={RouterLink} to={PATH_DASHBOARD.eCommerce.view(paramCase(name))}>
               {name}
@@ -110,7 +126,6 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
           </Typography>
         </Box>
         <TableRow>
-          {' '}
           {receiptDetail.map((item, index) => (
             <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
               <Box className="flex flex-col ml-2">
@@ -125,11 +140,13 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
           ))}
         </TableRow>
       </TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>
-        {' '}
+      <TableCell sx={{ padding: ' 65px 0 0 0 !important' }}>
         {receiptDetail.map((item, index) =>
           item.idReceipt.inventoryStatus === 2 || item.idReceipt.inventoryStatus === 3 ? (
-            <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
+            <TableCell
+              key={index}
+              sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '30px !important' }}
+            >
               <Box>{item.quantity}</Box>
             </TableCell>
           ) : (
@@ -154,11 +171,14 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
           )
         )}
       </TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>
+      <TableCell sx={{ padding: ' 65px 0 0 0 !important' }}>
         {' '}
         {receiptDetail.map((item, index) =>
           item.idReceipt.inventoryStatus === 2 || item.idReceipt.inventoryStatus === 3 ? (
-            <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
+            <TableCell
+              key={index}
+              sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '30px !important' }}
+            >
               <Box>{formatPriceInVND(item.price)}</Box>
             </TableCell>
           ) : (
@@ -185,23 +205,7 @@ export default function InventoryEditTableRow({ row, setInventoryData, inventory
           )
         )}
       </TableCell>
-      <TableCell sx={{ padding: '0px !important' }}>
-        {' '}
-        {receiptDetail.map((item, index) =>
-          item.idReceipt.inventoryStatus === 2 || item.idReceipt.inventoryStatus === 3 ? (
-            <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
-              <Box>{formatPriceInVND(item.totalPrice)}</Box>
-            </TableCell>
-          ) : (
-            <TableCell
-              key={index}
-              sx={{ height: 76, display: 'flex', alignItems: 'start', paddingLeft: '30px !important' }}
-            >
-              {/* <Typography>{formatPriceInVND(calculatedPrice)}</Typography> */}
-            </TableCell>
-          )
-        )}
-      </TableCell>
+      <TableCell sx={{ padding: '65px 0 0 0 !important' }}>{renderTotalPrice()}</TableCell>
     </TableRow>
   );
 }

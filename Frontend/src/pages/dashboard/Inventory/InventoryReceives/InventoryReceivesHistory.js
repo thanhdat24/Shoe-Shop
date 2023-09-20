@@ -12,25 +12,23 @@ import useTable, { emptyRows } from '../../../../hooks/useTable';
 import { TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom } from '../../../../components/table';
 // sections
 import SupplierDebtTableRow from '../../../../sections/@dashboard/supplier/SupplierDebt/SupplierDebtTableRow';
+import ReceiptTableHistory from '../../../../sections/@dashboard/receipt/ReceiptTableHistory';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'receiptCode', label: 'Mã phiếu', align: 'left' },
   { id: 'time', label: 'Thời gian', align: 'left' },
-  { id: 'type', label: 'Loại', align: 'left' },
+  { id: 'type', label: 'Phương thức', align: 'left' },
   { id: 'amount', label: 'Giá trị', align: 'right' },
-  { id: 'totalDebt', label: 'Nợ phải trả', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-SuppliersDebtList.propTypes = {
-  supplier: PropTypes.shape({
-    debtsReceiptList: PropTypes.arrayOf(),
-  }),
+InventoryReceivesHistory.propTypes = {
+  paymentHistory: PropTypes.arrayOf(),
 };
 
-export default function SuppliersDebtList({ debtsReceiptList }) {
+export default function InventoryReceivesHistory({ paymentHistory }) {
   const {
     dense,
     page,
@@ -46,11 +44,13 @@ export default function SuppliersDebtList({ debtsReceiptList }) {
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
-  const { isLoading } = useSelector((state) => state.receipt);
+  const { isLoading } = useSelector((state) => state.supplier);
+
+  console.log('paymentHistory123', paymentHistory);
 
   const denseHeight = dense ? 60 : 80;
 
-  const isNotFound = !debtsReceiptList?.length || (!isLoading && !debtsReceiptList?.length);
+  const isNotFound = !paymentHistory?.length || (!isLoading && !paymentHistory?.length);
 
   return (
     <Box>
@@ -60,23 +60,23 @@ export default function SuppliersDebtList({ debtsReceiptList }) {
             order={order}
             orderBy={orderBy}
             headLabel={TABLE_HEAD}
-            rowCount={debtsReceiptList?.length}
+            rowCount={paymentHistory?.length}
             numSelected={selected.length}
             onSort={onSort}
           />
 
           <TableBody>
-            {(isLoading ? [...Array(rowsPerPage)] : debtsReceiptList)
-              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              ?.map((row, index) =>
+            {(isLoading ? [...Array(rowsPerPage)] : paymentHistory)
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) =>
                 row ? (
-                  <SupplierDebtTableRow key={row.id} row={row} />
+                  <ReceiptTableHistory key={row.id} row={row} />
                 ) : (
                   !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                 )
               )}
 
-            <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, debtsReceiptList?.length)} />
+            <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, paymentHistory?.length)} />
 
             <TableNoData isNotFound={isNotFound} />
           </TableBody>
@@ -87,7 +87,7 @@ export default function SuppliersDebtList({ debtsReceiptList }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={debtsReceiptList?.length}
+          count={paymentHistory?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={onChangePage}

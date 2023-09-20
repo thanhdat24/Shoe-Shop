@@ -12,10 +12,12 @@ const initialState = {
   error: null,
   success: '',
   receiptList: [],
+  paymentHistory: [],
   detailReceipt: null,
   updateReceiptSuccess: null,
   updateReceiptDraftSuccess: null,
   makeSupplierPaymentSuccess: null,
+  debtsReceiptList: null,
 };
 
 const slice = createSlice({
@@ -59,7 +61,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.makeSupplierPaymentSuccess = action.payload;
     },
-
+    getAllTransactionsByReceiptIdSuccess(state, action) {
+      state.isLoading = false;
+      state.paymentHistory = action.payload;
+    },
+    getAllDebtsReceiptSuccess(state, action) {
+      state.isLoading = false;
+      state.debtsReceiptList = action.payload;
+    },
     resetReceipt(state) {
       state.error = null;
       state.newReceipt = null;
@@ -110,6 +119,30 @@ export function getDetailReceipts(receiptCode) {
     try {
       const response = await axios.get(`/api/v1/receipts/${receiptCode}`);
       dispatch(slice.actions.getDetailReceiptSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getAllTransactionsByReceiptId(receiptId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/v1/receipts/${receiptId}/transactions`);
+      dispatch(slice.actions.getAllTransactionsByReceiptIdSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getAllDebtsReceipt(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/v1/receipts/${id}/debts`);
+      dispatch(slice.actions.getAllDebtsReceiptSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

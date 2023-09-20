@@ -122,7 +122,6 @@ export default function InventoryReceives() {
   useEffect(() => {
     dispatch(getReceipts());
   }, [dispatch]);
-  console.log('receiptList', receiptList);
   useEffect(() => {
     if (receiptList?.length) {
       setTableData(receiptList);

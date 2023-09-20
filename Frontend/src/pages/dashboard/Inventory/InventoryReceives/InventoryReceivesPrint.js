@@ -25,7 +25,6 @@ InventoryReceivesPrint.propTypes = {
 };
 
 export default function InventoryReceivesPrint({ open, onClose, detailReceipt }) {
-  console.log('detailReceipt123', detailReceipt);
   const barcodeData = '123456789'; // Dữ liệu mã vạch
   const barcodeImage = generateBarcode(detailReceipt?.receiptCode); // Tạo hình ảnh mã vạch
 

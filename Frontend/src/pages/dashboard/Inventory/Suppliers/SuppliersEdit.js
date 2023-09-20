@@ -8,7 +8,7 @@ import { getSuppliers, resetSupplier, updateSupplier } from '../../../../redux/s
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { formatPriceInVND } from '../../../../utils/formatNumber';
 import Label from '../../../../components/Label';
-import { getReceipts } from '../../../../redux/slices/receipt';
+import { getAllDebtsReceipt, getReceipts } from '../../../../redux/slices/receipt';
 import SuppliersHistoryList from './SuppliersHistoryList';
 import useTabs from '../../../../hooks/useTabs';
 import SuppliersDebtList from './SuppliersDebtList';
@@ -61,24 +61,22 @@ const StyledMenu = styled((props) => (
 
 export default function SuppliersEdit() {
   const { supplierList } = useSelector((state) => state.supplier);
-  const { receiptList } = useSelector((state) => state.receipt);
+  const { receiptList, debtsReceiptList } = useSelector((state) => state.receipt);
   const { supplierId = '' } = useParams();
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getSuppliers());
     dispatch(getReceipts());
+    dispatch(getAllDebtsReceipt(supplierId));
   }, [dispatch]);
   const { enqueueSnackbar } = useSnackbar();
 
   const supplier = supplierList?.find((item) => item.id === supplierId);
-  console.log('supplier', supplier);
-  console.log('receiptList', receiptList);
+
   const supplierAll = receiptList?.filter((item) => item.supplier.id === supplierId);
-  console.log('supplierAll', supplierAll);
   const { updateSupplierSuccess } = useSelector((state) => state.supplier);
   const { currentTab, onChangeTab } = useTabs('Lịch sử nhập');
-  console.log('updateSupplierSuccess', updateSupplierSuccess);
   const TABS = [
     {
       value: 'Lịch sử nhập',
@@ -86,7 +84,7 @@ export default function SuppliersEdit() {
     },
     {
       value: 'Nợ phải trả',
-      component: <SuppliersDebtList supplier={supplier} />,
+      component: <SuppliersDebtList debtsReceiptList={debtsReceiptList} />,
     },
   ];
   const { toggle: open, onOpen, onClose } = useToggle();
