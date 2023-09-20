@@ -167,12 +167,10 @@ export default function InventoryReceivesNew() {
     makeSupplierPaymentSuccess,
     paymentHistory,
   } = useSelector((state) => state.receipt);
-  console.log('makeSupplierPaymentSuccess', makeSupplierPaymentSuccess);
   const { products, isLoading } = useSelector((state) => state.product);
   const theme = useTheme();
   const navigate = useNavigate();
   const [inventoryData, setInventoryData] = useState([]);
-  console.log('detailReceipt', detailReceipt);
   const handleClosePrint = () => {
     setOpenPrint(false);
   };

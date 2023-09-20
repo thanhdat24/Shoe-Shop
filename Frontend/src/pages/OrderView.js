@@ -34,7 +34,6 @@ export default function OrderView() {
 
   const { orderDetail } = useSelector((state) => state.order);
 
-  console.log('orderDetail', orderDetail);
   useEffect(() => {
     dispatch(getOrderDetail(id));
     //   return dispatch(resetProduct());
