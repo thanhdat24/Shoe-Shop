@@ -46,7 +46,6 @@ export default function InventoryReceivesHistory({ paymentHistory }) {
   });
   const { isLoading } = useSelector((state) => state.supplier);
 
-  console.log('paymentHistory123', paymentHistory);
 
   const denseHeight = dense ? 60 : 80;
 
