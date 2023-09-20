@@ -67,7 +67,6 @@ export default function InventoryReceivesNew() {
   const handleCloseConfirmInvalidProduct = () => {
     setOpenConfirmInvalidProduct(false);
   };
-  console.log('selectedInventory', selectedInventory);
   const groupBySelectedInventory = _(selectedInventory)
     .groupBy((x) => x.idProduct.name)
     .map((value, key) => ({

@@ -242,8 +242,6 @@ export default function InventoryReceivesNew() {
         console.log('error', error);
       }
     };
-    console.log('inventoryData123', inventoryData);
-    console.log('detailReceipt123', detailReceipt);
     const data = {
       ...detailReceipt,
       inventoryStatus: 2,
