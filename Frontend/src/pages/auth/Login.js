@@ -68,60 +68,27 @@ export default function Login() {
   const mdUp = useResponsive('up', 'md');
 
   return (
-    <Page title="Login">
-      <RootStyle>
-        <HeaderStyle>
-          <Logo />
-        </HeaderStyle>
-
-        {mdUp && (
-          <SectionStyle>
-            <Image
-              visibleByDefault
-              disabledEffect
-              alt="login"
-              src="https://res.cloudinary.com/web-app-shoes/image/upload/v1682922011/bjafzeqxahulaqclbvmw.png"
-            />
-          </SectionStyle>
-        )}
-
-        <Container maxWidth="sm">
-          <ContentStyle>
-            <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="h4" gutterBottom>
-                  Đăng nhập vào Shoes
-                </Typography>
-              </Box>
-
-              <Tooltip title={capitalCase(method)} placement="right">
-                <>
-                  <Image
-                    disabledEffect
-                    src={`https://minimal-assets-api.vercel.app/assets/icons/auth/ic_${method}.png`}
-                    sx={{ width: 32, height: 32 }}
-                  />
-                </>
-              </Tooltip>
-            </Stack>
-            {/* 
-            <Alert severity="info" sx={{ mb: 3 }}>
-              Use email : <strong>admin@gmail.com</strong> / password :<strong> Dat123456</strong>
-            </Alert> */}
-
-            <LoginForm />
-
-            {!smUp && (
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Don’t have an account?{' '}
-                <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                  Get started
-                </Link>
-              </Typography>
-            )}
-          </ContentStyle>
-        </Container>
-      </RootStyle>
-    </Page>
+    <div className="bg-[#CFD2E1] bg-login-pattern bg-cover">
+      <div className="container flex flex-row items-center max-w-screen-lg md:px-10 mx-auto z-10 justify-center min-h-screen">
+        <div className="bg-[#eff2f7] grid   select-none ">
+          <div className="grid grid-cols-2 ">
+            <div className=" text-center items-center flex justify-center">
+              <img
+                // src="https://nentang.vn/app/images/pages/login.png"
+                src="/logo/Bluewass.png"
+                alt="login"
+              />
+            </div>
+            <div className="bg-[#10163a] text-[#c2c6dc] text-base">
+              <div className="flex flex-col px-10 py-5 ">
+                <h3 className="text-xl font-normal flex items-center justify-content py-2 text-[#c2c6dc]">Đăng nhập</h3>
+                <span className="mb-7">Chào mừng bạn đến với Bluewass, vui lòng Đăng nhập!</span>
+                <LoginForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

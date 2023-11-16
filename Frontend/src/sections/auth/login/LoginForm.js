@@ -17,6 +17,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
+import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -31,14 +32,16 @@ export default function LoginForm() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const { errorLogin } = useSelector((state) => state.admin);
+
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string().email('Email phải là địa chỉ email hợp lệ').required('Email là bắt buộc'),
+    password: Yup.string().required('Password là bắt buộc'),
   });
 
   const defaultValues = {
-    email: 'admin@gmail.com',
-    password: 'Dat123456',
+    email: '',
+    password: '',
     remember: true,
   };
 
@@ -70,20 +73,75 @@ export default function LoginForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
+      <Stack spacing={3} mb={3}>
+        {' '}
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+      </Stack>
 
-        <RHFTextField name="email" label="Email" />
+      <Stack spacing={3}>
+        <RHFTextField
+          // color="secondary"
+          sx={{
+            backgroundColor: '#262c49 !important',
+            '& label.Mui-focused': {
+              color: '#7367f0',
+            },
+            '& label': {
+              color: '#c2c6dc',
+              fontSize: '16px',
+            },
+            '& .MuiInputBase-input': {
+              color: '#c2c6dc',
+            },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#262c49',
+              },
+              '&:hover fieldset': {
+                borderColor: '#7367f0',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#7367f0',
+              },
+            },
+          }}
+          name="email"
+          label="Tài khoản"
+        />
 
         <RHFTextField
           name="password"
           label="Mật khẩu"
+          sx={{
+            backgroundColor: '#262c49 !important',
+            '& label.Mui-focused': {
+              color: '#7367f0',
+            },
+            '& label': {
+              color: '#c2c6dc',
+              fontSize: '16px',
+            },
+            '& .MuiInputBase-input': {
+              color: '#c2c6dc',
+            },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#262c49',
+              },
+              '&:hover fieldset': {
+                borderColor: '#7367f0',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#7367f0',
+              },
+            },
+          }}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  <Iconify sx={{ color: '#c2c6dc' }} icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -91,14 +149,22 @@ export default function LoginForm() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Quên mật khẩu" />
-        <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
-          Quên mật khẩu?
-        </Link>
-      </Stack>
-
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+      <LoadingButton
+        sx={{
+          my: 3,
+          backgroundColor: '#7367f0 !important',
+          fontSize: '15px',
+          '&:hover': {
+            borderColor: '#5e50ee!important',
+            boxShadow: '0 8px 25px -8px #7367f0',
+          },
+        }}
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        loading={isSubmitting}
+      >
         Đăng nhập
       </LoadingButton>
     </FormProvider>

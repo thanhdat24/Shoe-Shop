@@ -54,13 +54,13 @@ export default function UploadMultiFile({
           component="label"
           sx={{
             margin: '10px 0 20px 0',
-            padding: '4px 0px',
+            padding: '7px 0px',
             width: '24%',
             textTransform: 'none !important',
           }}
           {...getRootProps()}
         >
-          <CameraAltIcon fontSize="small" /> <span className="ml-2 text-xs">Thêm Hình ảnh</span>
+          <CameraAltIcon fontSize="small" /> <span className="ml-2 text-xs">Thêm hình ảnh</span>
           {/* <input {...getInputProps()} /> */}
         </Button>
       ) : (
