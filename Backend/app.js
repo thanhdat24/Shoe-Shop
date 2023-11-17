@@ -30,6 +30,7 @@ const ratingRouters = require('./routers/ratingRouters');
 const receiptRouters = require('./routers/receiptRouters');
 const receiptDetailRouters = require('./routers/receiptDetailRouters');
 const transactionsRouters = require('./routers/transactionsRouters');
+const OTPRouters = require('./routers/OTPRouters');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
@@ -80,7 +81,7 @@ app.use('/api/v1/ratings', ratingRouters);
 app.use('/api/v1/receipts', receiptRouters);
 app.use('/api/v1/receipt-details', receiptDetailRouters);
 app.use('/api/v1/transactions', transactionsRouters);
-
+app.use('/api/v1/otps', OTPRouters);
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
   next(new AppError(`Can'n find ${req.originalUrl} on this sever!`, 404));
