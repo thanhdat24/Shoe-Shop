@@ -50,7 +50,6 @@ export default function ChatWindow() {
     (state) => state.chat
   );
   const conversation = useSelector((state) => conversationSelector(state));
-
   const mode = conversationKey ? 'DETAIL' : 'COMPOSE';
 
   useEffect(() => {

@@ -35,18 +35,18 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { newAccount, error } = useSelector((state) => state.admin);
+  const { newAccount, error, createAdminError } = useSelector((state) => state.admin);
   useEffect(() => {
-    if (error) {
+    if (createAdminError) {
       enqueueSnackbar('Thêm người dùng không thành công!', { variant: 'error' });
     } else if (newAccount) {
-      enqueueSnackbar('Thêm người dùng  thành công!');
+      enqueueSnackbar('Thêm người dùng thành công!');
       // navigate(PATH_DASHBOARD.user.list);
     }
     setTimeout(() => {
       dispatch(resetShipper());
     }, 3000);
-  }, [error, newAccount]);
+  }, [newAccount]);
 
   const NewUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),

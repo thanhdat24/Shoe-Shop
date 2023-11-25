@@ -37,7 +37,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   const { error, adminUpdate } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const { name, displayName, email, role, gender, active, photoURL, _id } = row;
+  const { name, displayName, email, role, gender, active, photoURL, _id, phoneNumber } = row;
   const [openMenu, setOpenMenuActions] = useState(null);
   const [checked, setChecked] = useState(active);
   const handleOpen = () => {
@@ -84,7 +84,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar alt={name} src={photoURL} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
-          {displayName}
+          {displayName || phoneNumber}
         </Typography>
       </TableCell>
 

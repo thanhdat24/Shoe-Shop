@@ -75,14 +75,14 @@ export default function Login() {
             <div className=" text-center items-center flex justify-center">
               <img
                 // src="https://nentang.vn/app/images/pages/login.png"
-                src="/logo/Bluewass.png"
+                src="https://api-prod-minimal-v510.vercel.app/assets/images/m_product/product_7.jpg"
                 alt="login"
               />
             </div>
             <div className="bg-[#10163a] text-[#c2c6dc] text-base">
               <div className="flex flex-col px-10 py-5 ">
                 <h3 className="text-xl font-normal flex items-center justify-content py-2 text-[#c2c6dc]">Đăng nhập</h3>
-                <span className="mb-7">Chào mừng bạn đến với Bluewass, vui lòng Đăng nhập!</span>
+                <span className="mb-7">Chào mừng bạn đến với Shop Shoes, vui lòng Đăng nhập!</span>
                 <LoginForm />
               </div>
             </div>

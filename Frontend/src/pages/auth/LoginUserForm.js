@@ -21,14 +21,15 @@ import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router';
 
-import { RHFCheckbox, RHFRadioGroup, RHFSelect, RHFTextField, FormProvider } from '../../components/hook-form';
 import { LoginForm } from '../../sections/auth/login';
 import { RegisterForm } from '../../sections/auth/register';
 import { useDispatch } from '../../redux/store';
 import useAuth from '../../hooks/useAuth';
-import { AUTH } from '../../contexts/FirebaseContext';
-// import { auth } from './firebase.config';
+// import { AUTH } from '../../contexts/FirebaseContext';
+import { AUTH } from '../../firebaseConfig';
+import { setSession, setUser } from '../../utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,8 @@ TabPanel.propTypes = {
 };
 
 export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilling }) {
-  const { user, registerUser, loginFacebook } = useAuth();
+  const navigate = useNavigate();
+  const { user, registerUser, loginFacebook, verifyOTP } = useAuth();
   const [errorLoginOTP, setErrorLoginOTP] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [activeError, setActiveError] = useState('');
@@ -88,6 +90,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
           buttonProps.remainingTime !== 0 ? 'text-[#D2D2D2] cursor-not-allowed' : 'text-blue-500'
         }`}
         {...buttonProps}
+        onClick={handleSendOTP}
       >
         {buttonProps.remainingTime !== 0 ? `Gửi lại mã sau ${buttonProps.remainingTime}s` : 'Gửi lại mã'}
       </button>
@@ -95,25 +98,22 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
   };
   const renderTime = () => React.Fragment;
 
-  function onCaptchVerify() {
+  const onCaptchVerify = async () => {
     if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
-        'recaptcha-container',
+        'recaptcha',
         {
           size: 'invisible',
-          callback: (response) => {
-            onSignup();
-          },
+          callback: (response) => {},
           'expired-callback': () => {},
         },
         AUTH
       );
     }
-  }
+  };
 
   const handleSendOTP = (e) => {
-    console.log('phoneNumber', phoneNumber);
-    console.log('phoneNumber', phoneNumber.length);
+    e.preventDefault();
     if (phoneNumber.length !== 10 && phoneNumber.length !== 0) {
       setActiveError('Vui lòng nhập đúng định dạng số điện thoại');
     } else if (phoneNumber.length === 0) {
@@ -121,92 +121,94 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
     } else {
       setActiveError('');
       setExpandForm(true);
-    }
-    // setActiveError(true);
-    // if (phoneNumber.length >= 10) {
-    //   setActiveError(false);
-
-    //   setExpandForm(true);
-    //   // generateCaptcha();
-    //   // let appVerifier = window.recaptchaVerifier;
-    //   // signInWithPhoneNumber(authentication, phoneNumber, appVerifier)
-    //   //   .then((confirmationResult) => {
-    //   //     window.confirmationResult = confirmationResult;
-    //   //   })
-    //   //   .catch((err) => {
-    //   //     console.log('err', err);
-    //   //   });
-    // }
-  };
-
-  const verifyOTP = async (e) => {
-    let otp = e.target.value;
-    setOTP(otp);
-    if (otp.length === 6) {
-      let confirmationResult = window.confirmationResult;
-      confirmationResult
-        .confirm(otp)
-        .then((result) => {
-          const user = result.user;
-          const userObj = { user };
-          // dispatch(createUser(userObj));
-
-          // setTimeout(() => {
-          //   const getUser = async () => {
-          //     await fetch('http://127.0.0.1:8080/api/v1/users/getUserLoginOtp', {
-          //       method: 'POST',
-          //       credentials: 'include',
-          //       headers: {
-          //         Accept: 'application/json',
-          //         'Content-Type': 'application/json',
-          //         'Access-Control-Allow-Credentials': true,
-          //       },
-          //       body: JSON.stringify({
-          //         phoneNumber: user.phoneNumber,
-          //       }),
-          //     })
-          //       .then((response) => {
-          //         console.log('response', response);
-          //         if (response.status === 200) return response.json();
-          //         throw new Error('authentication has been failed!');
-          //       })
-          //       .then((resObject) => {
-          //         console.log('resObject', resObject);
-          //         if (resObject?.user.active) {
-          //           dispatch({
-          //             type: 'LOGIN_USER',
-          //             payload: {
-          //               data: resObject,
-          //             },
-          //           });
-          //           localStorage.setItem('user', JSON.stringify(resObject));
-          //           localStorage.setItem('token', resObject.token);
-          //           if (resObject) {
-          //             history.push('/');
-          //           }
-          //         } else {
-          //           Swal.fire({
-          //             icon: 'error',
-          //             title: 'Lỗi...',
-          //             text: 'Tài khoản của bạn đã bị khóa!',
-          //           });
-          //           history.push('/');
-          //         }
-          //       })
-          //       .catch((err) => {
-          //         console.log('err', err);
-          //       });
-          //   };
-          //   getUser();
-          // }, 1000);
+      onCaptchVerify();
+      const formatPhone = '+84' + phoneNumber.slice(1);
+      let appVerifier = window.recaptchaVerifier;
+      signInWithPhoneNumber(AUTH, formatPhone, appVerifier)
+        .then((confirmationResult) => {
+          window.confirmationResult = confirmationResult;
+          // enqueueSnackbar('Gửi OTP thành công');
         })
         .catch((err) => {
-          setErrorLoginOTP(true);
           console.log('err', err);
         });
-      console.log('OTP', otp);
     }
   };
+
+  useEffect(() => {
+    if (OTP.length !== 6) return;
+    window.confirmationResult
+      .confirm(OTP)
+      .then((result) => {
+        console.log('result', result);
+        const { user } = result;
+        const getUser = async () => {
+          await fetch('http://127.0.0.1:8080/api/v1/otps/verifyOTP', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Credentials': true,
+            },
+            body: JSON.stringify({
+              phoneNumber: user.phoneNumber,
+              phoneId: result._tokenResponse.localId,
+              photoURL: 'https://res.cloudinary.com/web-app-shoes/image/upload/v1700406437/qcoepcjavj4ixnhrck9k.png',
+            }),
+          })
+            .then((response) => {
+              console.log('response', response);
+              if (response.status === 200) return response.json();
+              throw new Error('authentication has been failed!');
+            })
+            .then((resObject) => {
+              console.log('resObject', resObject);
+              if (resObject?.user.active) {
+                // setSession(resObject.token);
+                // setUser(resObject);
+                enqueueSnackbar('Đăng nhập thành công');
+                onClose();
+                if (resObject) {
+                  navigate('/');
+                }
+              } else {
+                enqueueSnackbar('Tài khoản của bạn đã bị khóa!', { variant: 'error' });
+
+                navigate('/');
+              }
+              // if (resObject?.user.active) {
+              //   dispatch({
+              //     type: 'LOGIN_USER',
+              //     payload: {
+              //       data: resObject,
+              //     },
+              //   });
+              //   localStorage.setItem('user', JSON.stringify(resObject));
+              //   localStorage.setItem('token', resObject.token);
+              //   if (resObject) {
+              //     history.push('/');
+              //   }
+              // } else {
+              //   Swal.fire({
+              //     icon: 'error',
+              //     title: 'Lỗi...',
+              //     text: 'Tài khoản của bạn đã bị khóa!',
+              //   });
+              //   history.push('/');
+              // }
+            })
+            .catch((err) => {
+              console.log('err', err);
+            });
+        };
+        getUser();
+      })
+      .catch((err) => {
+        setErrorLoginOTP(true);
+        console.log('err', err);
+      });
+  }, [OTP]);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -404,7 +406,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
                 <div className="text-red-600 mt-2">Đã gửi OTP</div>
               </>
             )}
-            <Box id="captcha"></Box>
+            <Box id="recaptcha"></Box>
           </div>
         </div>
       </DialogContent>

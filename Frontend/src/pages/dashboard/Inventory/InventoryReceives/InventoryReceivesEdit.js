@@ -350,7 +350,7 @@ export default function InventoryReceivesNew() {
               </Button>
               {(inventoryStatus === 2 || inventoryStatus === 3) && (
                 <Box className="flex gap-3 ">
-                  <Button
+                  {/* <Button
                     variant="contained"
                     disableElevation
                     size="small"
@@ -359,7 +359,7 @@ export default function InventoryReceivesNew() {
                     onClick={() => navigate(PATH_DASHBOARD.inventory.inventory_receives_return(receiptCode))}
                   >
                     Trả hàng
-                  </Button>
+                  </Button> */}
                   {detailReceipt?.supplierPaidCost !== detailReceipt?.supplierCost && (
                     <Button
                       id="demo-customized-button"

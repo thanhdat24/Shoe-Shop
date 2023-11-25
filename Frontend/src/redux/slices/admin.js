@@ -31,6 +31,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+      state.createAdminError = action.payload;
     },
 
     // CRREATE ADMIN
@@ -75,6 +76,7 @@ const slice = createSlice({
       state.success = '';
       state.newAccount = '';
       state.adminUpdate = null;
+      state.createAdminError = null;
     },
   },
 });

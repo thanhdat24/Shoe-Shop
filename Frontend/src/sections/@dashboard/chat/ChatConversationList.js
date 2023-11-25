@@ -23,7 +23,6 @@ ChatConversationList.propTypes = {
 
 export default function ChatConversationList({ conversations, isOpenSidebar, activeConversationId, sx, ...other }) {
   const navigate = useNavigate();
-
   const handleSelectConversation = (conversationId) => {
     let conversationKey = '';
     const conversation = conversations[conversationId];
@@ -32,11 +31,18 @@ export default function ChatConversationList({ conversations, isOpenSidebar, act
       conversationKey = conversation.id;
     } else {
       const otherParticipant = conversation.participants.find((participant) => participant.email !== 'admin@gmail.com');
-      if (otherParticipant?.displayName) {
+      if (otherParticipant?.googleId) {
         conversationKey = otherParticipant?.displayName;
       }
+      if (otherParticipant?.phoneId) {
+        conversationKey = Number(otherParticipant?.phoneNumber);
+      }
     }
-    navigate(PATH_DASHBOARD.chat.view(fName(conversationKey)));
+    if (typeof conversationKey === 'number') {
+      navigate(PATH_DASHBOARD.chat.view(Number(conversationKey)));
+    } else {
+      navigate(PATH_DASHBOARD.chat.view(fName(conversationKey)));
+    }
   };
 
   const loading = !conversations?.length;

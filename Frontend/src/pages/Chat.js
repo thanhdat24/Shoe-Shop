@@ -32,7 +32,7 @@ export default function Chat() {
     setIsActive(!isActive);
   };
 
-  return user?.googleId ? (
+  return user?.googleId || user?.phoneId ? (
     <Box>
       <Box
         className={`fixed right-2 md:right-10 bottom-24 flex space-x-2 z-20 transition duration-150 ${

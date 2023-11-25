@@ -62,6 +62,7 @@ const AuthContext = createContext({
   loginShipper: () => Promise.resolve(),
   loginFacebook: () => Promise.resolve(),
   registerUser: () => Promise.resolve(),
+  verifyOTP: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   logoutAdmin: () => Promise.resolve(),
 });
@@ -123,15 +124,19 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(AUTH, async (user) => {
       if (user !== null) {
+        console.log('userOTP', user);
         const accessToken = await user.getIdToken();
         const data = {
           user: {
-            googleId: user?.uid,
+            googleId: user.email && user?.uid,
+            phoneId: user.phoneNumber && user?.uid,
             email: user?.email,
-            photoURL: user?.photoURL,
+            photoURL:
+              user?.photoURL ||
+              'https://res.cloudinary.com/web-app-shoes/image/upload/v1700406437/qcoepcjavj4ixnhrck9k.png',
             displayName: user?.displayName,
             role: user?.role || 'khách hàng',
-            phoneNumber: user?.phoneNumber || '',
+            phoneNumber: (user.phoneNumber && user?.phoneNumber.slice(3)) || '',
           },
         };
         setSession(accessToken);
@@ -221,6 +226,16 @@ function AuthProvider({ children }) {
     });
   };
 
+  const verifyOTP = async (phoneNumber) => {
+    const response = await axios.post('/api/v1/otps/verifyOTP', phoneNumber);
+    const { accessToken, user } = response.data;
+    setSession(accessToken);
+    dispatch({
+      type: 'LOGIN',
+      payload: { isAuthenticated: true, user },
+    });
+  };
+
   const logout = () => {
     setSession(null);
     setUser(null);
@@ -243,9 +258,13 @@ function AuthProvider({ children }) {
         ...state,
         method: 'firebase',
         user: {
-          googleId: state?.user?.uid,
+          googleId: state?.user?.email && state?.user?.uid,
+          phoneId: state?.user?.phoneNumber && state?.user?.uid,
           email: state?.user?.email,
-          photoURL: state?.user?.photoURL || profile?.photoURL,
+          photoURL:
+            state?.user?.photoURL ||
+            profile?.photoURL ||
+            'https://res.cloudinary.com/web-app-shoes/image/upload/v1700406437/qcoepcjavj4ixnhrck9k.png',
           displayName: state?.user?.displayName || profile?.displayName,
           role: state?.user?.role || 'khách hàng',
           phoneNumber: state?.user?.phoneNumber || profile?.phoneNumber || '',
@@ -262,6 +281,7 @@ function AuthProvider({ children }) {
         logoutAdmin,
         loginShipper,
         loginFacebook,
+        verifyOTP,
       }}
     >
       {children}

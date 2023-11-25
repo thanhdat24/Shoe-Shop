@@ -29,6 +29,7 @@ const MainStyle = styled('main', {
 
 export default function AccountLayoutLayout() {
   const { user } = useAuth();
+  console.log('user123', user);
 
   const { themeStretch } = useSettings();
 
@@ -73,7 +74,7 @@ export default function AccountLayoutLayout() {
                   Tài khoản của
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  {user?.displayName}
+                  {user?.displayName || user?.phoneNumber}
                 </Typography>
               </Box>
             </Box>

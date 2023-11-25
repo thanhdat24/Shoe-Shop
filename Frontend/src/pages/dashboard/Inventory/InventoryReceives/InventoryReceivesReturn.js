@@ -389,14 +389,14 @@ export default function InventoryReceivesReturn() {
                     </div>
                   </div>
                   <div className="mt-4">
-                    <LoadingButton
+                    {/* <LoadingButton
                       size="large"
                       variant="contained"
                       sx={{ width: '100%', height: '40px', textTransform: 'none' }}
                       onClick={() => handleOpenConfirmImport()}
                     >
                       Trả hàng
-                    </LoadingButton>
+                    </LoadingButton> */}
                   </div>
                 </div>
               </Card>
