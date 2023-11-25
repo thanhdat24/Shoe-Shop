@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       allowNull: true,
     },
+    phoneId: {
+      type: String,
+      allowNull: true,
+    },
     role: {
       type: String,
       default: 'khách hàng',
@@ -45,7 +49,7 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true, }
+  { timestamps: true }
 );
 
 userSchema.plugin(findOrCreate);

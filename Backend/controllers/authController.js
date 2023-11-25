@@ -132,7 +132,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 let firebaseApp = null;
 exports.protectUser = catchAsync(async (req, res, next) => {
   var admin = require('firebase-admin');
-
   var serviceAccount = require('../shoes-firebase.json');
 
   if (!firebaseApp) {
@@ -156,12 +155,15 @@ exports.protectUser = catchAsync(async (req, res, next) => {
     );
   } else {
     const { getAuth } = require('firebase-admin/auth');
+
     getAuth()
       .verifyIdToken(accessToken)
       .then(async (decodedToken) => {
         const uid = decodedToken.uid;
 
-        const currentUser = await User.find({ googleId: uid });
+        const currentUser = await User.find({
+          $or: [{ googleId: uid }, { phoneId: uid }],
+        });
 
         if (!currentUser) {
           return next(

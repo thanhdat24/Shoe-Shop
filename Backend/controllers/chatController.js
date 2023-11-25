@@ -96,7 +96,7 @@ const formatName = (name) => {
 exports.getDetailConversation = catchAsync(async (req, res, next) => {
   const { conversationKey } = req.query;
   var filter = {};
-  if (conversationKey != '') {
+  if (conversationKey !== '') {
     filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
   }
 
@@ -104,12 +104,19 @@ exports.getDetailConversation = catchAsync(async (req, res, next) => {
 
   const conversation = chat.find((obj) => {
     return obj.participants.some((participant) => {
-      return (
-        participant.displayName.toLowerCase() ===
-        formatName(conversationKey).toLowerCase()
-      );
+      if (!isNaN(conversationKey)) {
+        // Nếu conversationKey là một số, so sánh phoneNumber trực tiếp
+        return participant.phoneNumber == conversationKey;
+      } else {
+        // Nếu conversationKey không phải là số, thực hiện chuyển đổi lowercase
+        return (
+          participant.displayName.toLowerCase() ===
+          formatName(conversationKey).toLowerCase()
+        );
+      }
     });
   });
+
   if (conversation) {
     res.status(201).json({
       message: 'success',
@@ -128,24 +135,30 @@ exports.getDetailConversation = catchAsync(async (req, res, next) => {
 exports.getParticipants = catchAsync(async (req, res, next) => {
   const { conversationKey } = req.query;
   var filter = {};
-  if (conversationKey != '') {
+  if (conversationKey !== '') {
     filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
   }
   const chat = await Chat.find();
 
   const conversation = chat.find((obj) => {
     return obj.participants.some((participant) => {
-      return (
-        participant.displayName.toLowerCase() ===
-        formatName(conversationKey).toLowerCase()
-      );
+      if (!isNaN(conversationKey)) {
+        // Nếu conversationKey là một số, so sánh phoneNumber trực tiếp
+        return participant.phoneNumber == conversationKey;
+      } else {
+        // Nếu conversationKey không phải là số, thực hiện chuyển đổi lowercase
+        return (
+          participant.displayName.toLowerCase() ===
+          formatName(conversationKey).toLowerCase()
+        );
+      }
     });
   });
 
-  const displayParticipants = conversation.participants.filter(
-    (item) => item.email !== 'admin@gmail.com'
-  );
   if (conversation) {
+    const displayParticipants = conversation.participants.filter(
+      (item) => item.email !== 'admin@gmail.com'
+    );
     res.status(201).json({
       message: 'success',
       length: 1,

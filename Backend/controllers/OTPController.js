@@ -66,29 +66,48 @@ exports.createOTP = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.verifyOTP = catchAsync(async (req, res, next) => {
-  const { phoneNumber, code } = req.body;
-
-  // Kiểm tra xem mã OTP có chính xác không và user có tồn tại không
-  let isValidOTP = await OTP.findOne({
-    phoneNumber: Number(phoneNumber),
-    code,
+exports.verifyOTPGoogle = catchAsync(async (req, res, next) => {
+  const { phoneNumber, phoneId } = req.body;
+  console.log('req.body', req.body);
+  const customPhoneNumber = 0 + phoneNumber.slice(3);
+  let existUser = await User.findOne({
+    phoneNumber: Number(customPhoneNumber),
   });
-
-  let existUser = await User.findOne({ phoneNumber: Number(phoneNumber) });
-
-  if (isValidOTP && existUser) {
-    // Nếu mã OTP chính xác và user tồn tại, tạo và gửi token
-    await OTP.deleteOne({ phoneNumber: Number(phoneNumber), code });
-
+  if (existUser) {
     createSendToken(existUser, 200, res);
-  } else if (isValidOTP && !existUser) {
-    // Nếu mã OTP chính xác nhưng user không tồn tại, tạo user mới và gửi token
-    await OTP.deleteOne({ phoneNumber: Number(phoneNumber), code });
-    let newUser = await User.create({ phoneNumber: Number(phoneNumber) });
+  }
+  if (!existUser) {
+    let newUser = await User.create({
+      phoneNumber: Number(customPhoneNumber),
+      phoneId,
+    });
     createSendToken(newUser, 200, res);
-  } else {
-    // Nếu mã OTP không chính xác hoặc user không tồn tại, thông báo lỗi
-    return next(new AppError('Mã OTP không chính xác', 404));
   }
 });
+
+// exports.verifyOTP = catchAsync(async (req, res, next) => {
+//   const { phoneNumber, code } = req.body;
+
+//   // Kiểm tra xem mã OTP có chính xác không và user có tồn tại không
+//   let isValidOTP = await OTP.findOne({
+//     phoneNumber: Number(phoneNumber),
+//     code,
+//   });
+
+//   let existUser = await User.findOne({ phoneNumber: Number(phoneNumber) });
+
+//   if (isValidOTP && existUser) {
+//     // Nếu mã OTP chính xác và user tồn tại, tạo và gửi token
+//     await OTP.deleteOne({ phoneNumber: Number(phoneNumber), code });
+
+//     createSendToken(existUser, 200, res);
+//   } else if (isValidOTP && !existUser) {
+//     // Nếu mã OTP chính xác nhưng user không tồn tại, tạo user mới và gửi token
+//     await OTP.deleteOne({ phoneNumber: Number(phoneNumber), code });
+//     let newUser = await User.create({ phoneNumber: Number(phoneNumber) });
+//     createSendToken(newUser, 200, res);
+//   } else {
+//     // Nếu mã OTP không chính xác hoặc user không tồn tại, thông báo lỗi
+//     return next(new AppError('Mã OTP không chính xác', 404));
+//   }
+// });

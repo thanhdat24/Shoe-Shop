@@ -307,7 +307,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 });
 
 exports.updateOrder = catchAsync(async (req, res, next) => {
-  console.log('req.body.status', req.body.status);
   const _id = req.params.id;
   const options = { new: true, runValidators: true };
   if (req.body.status === 'Đã hủy') {
@@ -321,7 +320,10 @@ exports.updateOrder = catchAsync(async (req, res, next) => {
         let idColorAndSize = await ProductDetail.find({
           idColor: item.idColor,
           idSize: item.idSize,
+          idProduct: item.idProduct._id,
         });
+        console.log('idColorAndSize', idColorAndSize);
+
         if (idColorAndSize) {
           idColorAndSize[0].quantity += item.quantity;
 
