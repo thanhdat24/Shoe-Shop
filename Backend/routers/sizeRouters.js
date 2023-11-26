@@ -9,7 +9,7 @@ router
   .get(sizeController.getAllSize);
 
 router
-  .route('/:sizeId')
+  .route('/:id')
   .delete(sizeController.deleteSize)
   .get(sizeController.getDetailSize)
   .put(sizeController.updateSize);

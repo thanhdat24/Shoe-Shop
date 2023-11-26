@@ -9,7 +9,7 @@ router
   .get(objectUseController.getAllObjectUse);
 
 router
-  .route('/:objectUseId')
+  .route('/:id')
   .delete(objectUseController.deleteObjectUse)
   .get(objectUseController.getDetailObjectUse)
   .put(objectUseController.updateObjectUse);

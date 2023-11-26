@@ -46,7 +46,7 @@ import {
 } from '../../../components/table';
 // sections
 import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
-import { createObjUse, getObjects } from '../../../redux/slices/objectUse';
+import { createObjUse, deleteObjUses, getObjects, resetObj } from '../../../redux/slices/objectUse';
 
 import { createCate, resetCate } from '../../../redux/slices/cate';
 import { createBrand, getBrands, resetBrand } from '../../../redux/slices/brand';
@@ -109,7 +109,7 @@ export default function ObjectUseList() {
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { objects, isLoading, error, newObj } = useSelector((state) => state.objectUse);
+  const { objects, isLoading, error, newObj, deleteObjUse } = useSelector((state) => state.objectUse);
 
   const [tableData, setTableData] = useState([]);
 
@@ -127,9 +127,20 @@ export default function ObjectUseList() {
       // navigate(PATH_DASHBOARD.user.list);
     }
     setTimeout(() => {
-      dispatch(resetCate());
+      dispatch(resetObj());
     }, 3000);
   }, [error, newObj]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Xóa đối tượng sử dụng không thành công!', { variant: 'error' });
+    } else if (deleteObjUse) {
+      enqueueSnackbar('Xóa đối tượng sử dụng thành công!');
+      dispatch(getObjects());
+    }
+    return () => dispatch(resetObj());
+  }, [error, deleteObjUse]);
+
   useEffect(() => {
     if (objects?.length) {
       setTableData(objects);
@@ -142,9 +153,11 @@ export default function ObjectUseList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    console.log('4324');
+    dispatch(deleteObjUses(id));
+    // const deleteRow = tableData.filter((row) => row.id !== id);
+    // setSelected([]);
+    // setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected) => {

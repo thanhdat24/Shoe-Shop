@@ -77,7 +77,7 @@ export default function ObjectUseTableRow({ row, selected, onEditRow, onSelectRo
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Delete
+                Xóa
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -86,7 +86,7 @@ export default function ObjectUseTableRow({ row, selected, onEditRow, onSelectRo
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
-                Edit
+                Chỉnh sửa
               </MenuItem>
             </>
           }

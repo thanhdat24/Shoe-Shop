@@ -16,6 +16,7 @@ const initialState = {
   brandList: null,
   newBrand: null,
   newDiscount: null,
+  deleteBrand: null,
 };
 
 const slice = createSlice({
@@ -31,13 +32,17 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
     createBrandSuccess(state, action) {
       state.isLoading = false;
       state.newBrand = action.payload;
+    },
+    // CRREATE ADMIN
+    deleteBrandsSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteBrand = action.payload;
     },
     // UPDATE ADMIN
     updatePromotionSuccess(state, action) {
@@ -63,6 +68,7 @@ const slice = createSlice({
     resetBrand(state) {
       state.error = null;
       state.newBrand = '';
+      state.deleteBrand = '';
     },
   },
 });
@@ -105,6 +111,17 @@ export function getBrands() {
     try {
       const response = await axios.get('/api/v1/brands');
       dispatch(slice.actions.getBrandsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function deleteBrands(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/brands/${id}`);
+      dispatch(slice.actions.deleteBrandsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

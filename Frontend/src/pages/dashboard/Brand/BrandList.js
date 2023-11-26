@@ -47,7 +47,7 @@ import {
 // sections
 import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
 
-import { createBrand, getBrands, resetBrand } from '../../../redux/slices/brand';
+import { createBrand, deleteBrands, getBrands, resetBrand } from '../../../redux/slices/brand';
 import BrandTableToolbar from '../../../sections/@dashboard/brand/list/BrandTableToolbar';
 import { DialogAnimate } from '../../../components/animate';
 
@@ -105,7 +105,7 @@ export default function BrandList() {
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { brandList, isLoading, newBrand, error } = useSelector((state) => state.brand);
+  const { brandList, isLoading, newBrand, error, deleteBrand } = useSelector((state) => state.brand);
 
   const [tableData, setTableData] = useState([]);
 
@@ -114,17 +114,31 @@ export default function BrandList() {
   useEffect(() => {
     dispatch(getBrands());
   }, [dispatch]);
+
   useEffect(() => {
     if (error) {
       enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
     } else if (newBrand) {
       enqueueSnackbar('Thêm thương hiệu  thành công!');
+      dispatch(getBrands());
       // navigate(PATH_DASHBOARD.user.list);
     }
     setTimeout(() => {
       dispatch(resetBrand());
     }, 3000);
   }, [error, newBrand]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Xóa thương hiệu không thành công!', { variant: 'error' });
+    } else if (deleteBrand) {
+      enqueueSnackbar('Xóa thương hiệu thành công!');
+      dispatch(getBrands());
+      // navigate(PATH_DASHBOARD.user.list);
+    }
+    return () => dispatch(resetBrand());
+  }, [error, deleteBrand]);
+
   useEffect(() => {
     if (brandList?.length) {
       setTableData(brandList);
@@ -137,9 +151,7 @@ export default function BrandList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    dispatch(deleteBrands(id));
   };
 
   const handleDeleteRows = (selected) => {

@@ -54,7 +54,7 @@ import {
 
 import { getBrands } from '../../../redux/slices/brand';
 import ColorTableRow from '../../../sections/@dashboard/color/list/ColorTableRow';
-import { createSize, getSizes, resetSize } from '../../../redux/slices/size';
+import { createSize, deleteSizes, getSizes, resetSize } from '../../../redux/slices/size';
 import ColorTableToolBar from '../../../sections/@dashboard/color/list/ColorTableToolBar';
 import SizeTableToolBar from '../../../sections/@dashboard/size/list/SizeTableToolBar';
 import SizeTableRow from '../../../sections/@dashboard/size/list/SizeTableRow';
@@ -87,7 +87,7 @@ export default function ColorList() {
     defaultOrderBy: 'createdAt',
   });
   const { enqueueSnackbar } = useSnackbar();
-  const { sizes, isLoading, newSize, error } = useSelector((state) => state.size);
+  const { sizes, isLoading, newSize, error, deleteSize } = useSelector((state) => state.size);
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
@@ -127,15 +127,24 @@ export default function ColorList() {
 
   useEffect(() => {
     if (error) {
-      enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
+      enqueueSnackbar('Thêm kích thước không thành công!', { variant: 'error' });
     } else if (newSize) {
-      enqueueSnackbar('Thêm thương hiệu  thành công!');
+      enqueueSnackbar('Thêm kích thước thành công!');
+      dispatch(getSizes());
       // navigate(PATH_DASHBOARD.user.list);
     }
-    setTimeout(() => {
-      dispatch(resetSize());
-    }, 3000);
+    return () => dispatch(resetSize());
   }, [error, newSize]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Xóa kich thước không thành công!', { variant: 'error' });
+    } else if (deleteSize) {
+      enqueueSnackbar('Xóa kich thước thành công!');
+      dispatch(getSizes());
+    }
+    return () => dispatch(resetSize());
+  }, [error, deleteSize]);
 
   const handleClose = () => {
     setOpen(false);
@@ -171,9 +180,8 @@ export default function ColorList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    console.log('$324', id);
+    dispatch(deleteSizes(id));
   };
 
   const handleDeleteRows = (selected) => {

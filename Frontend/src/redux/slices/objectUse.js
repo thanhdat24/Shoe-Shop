@@ -16,6 +16,7 @@ const initialState = {
   objects: null,
   newObj: null,
   newDiscount: null,
+  deleteObjUse: null,
 };
 
 const slice = createSlice({
@@ -31,13 +32,17 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
     createObjUseSuccess(state, action) {
       state.isLoading = false;
       state.newObj = action.payload;
+    },
+    // DELETE ADMIN
+    deleteObjUseSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteObjUse = action.payload;
     },
     // UPDATE ADMIN
     updatePromotionSuccess(state, action) {
@@ -60,9 +65,10 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
-    resetCate(state) {
+    resetObj(state) {
       state.error = null;
-      state.newBrand = '';
+      state.newObj = '';
+      state.deleteObjUse = '';
     },
   },
 });
@@ -71,7 +77,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, resetCate } = slice.actions;
+export const { openModal, closeModal, selectEvent, resetObj } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -105,6 +111,18 @@ export function getObjects() {
     try {
       const response = await axios.get('/api/v1/objectUses');
       dispatch(slice.actions.getObjectsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteObjUses(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/objectUses/${id}`);
+      dispatch(slice.actions.deleteObjUseSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

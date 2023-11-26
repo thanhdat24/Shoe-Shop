@@ -67,6 +67,7 @@ const slice = createSlice({
     resetCate(state) {
       state.error = null;
       state.newCate = '';
+      state.deleteCate = '';
     },
   },
 });

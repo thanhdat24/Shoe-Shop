@@ -12,7 +12,7 @@ const initialState = {
   error: null,
   success: '',
   sizes: null,
-
+  deleteSize: null,
   newSize: null,
   promotionDetail: null,
 };
@@ -30,7 +30,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
@@ -47,6 +46,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.sizes = action.payload;
     },
+    deleteSizesSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteSize = action.payload;
+    },
 
     // OPEN MODAL
     openModal(state) {
@@ -62,6 +65,7 @@ const slice = createSlice({
     resetSize(state) {
       state.error = null;
       state.newSize = '';
+      state.deleteSize = '';
     },
   },
 });
@@ -104,6 +108,18 @@ export function getSizes() {
     try {
       const response = await axios.get('/api/v1/sizes');
       dispatch(slice.actions.getSizesSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteSizes(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/sizes/${id}`);
+      dispatch(slice.actions.deleteSizesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
