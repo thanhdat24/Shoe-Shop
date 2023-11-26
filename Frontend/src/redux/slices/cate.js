@@ -16,6 +16,7 @@ const initialState = {
   cates: null,
   newCate: null,
   newDiscount: null,
+  deleteCate: null,
 };
 
 const slice = createSlice({
@@ -47,6 +48,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.cates = action.payload;
     },
+    deleteCatesSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteCate = action.payload;
+    },
 
     // OPEN MODAL
     openModal(state) {
@@ -61,7 +66,7 @@ const slice = createSlice({
     },
     resetCate(state) {
       state.error = null;
-      state.newBrand = '';
+      state.newCate = '';
     },
   },
 });
@@ -104,6 +109,17 @@ export function getCates() {
     try {
       const response = await axios.get('/api/v1/categories');
       dispatch(slice.actions.getCatesSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function deleteCates(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/categories/${id}`);
+      dispatch(slice.actions.deleteCatesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

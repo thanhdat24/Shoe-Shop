@@ -298,7 +298,7 @@ export default function OrderListShipper() {
                         className="mr-2 "
                         sx={{ marginRight: '10px' }}
                       >
-                        Đồng ý
+                        Đã giao
                       </Button>
                       <DialogAnimate
                         open={openDialog}

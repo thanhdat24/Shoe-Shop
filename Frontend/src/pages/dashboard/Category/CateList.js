@@ -46,7 +46,7 @@ import {
 } from '../../../components/table';
 // sections
 import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
-import { createCate, getCates, resetCate } from '../../../redux/slices/cate';
+import { createCate, deleteCates, getCates, resetCate } from '../../../redux/slices/cate';
 import { createBrand, getBrands, resetBrand } from '../../../redux/slices/brand';
 import BrandTableToolbar from '../../../sections/@dashboard/brand/list/BrandTableToolbar';
 import { DialogAnimate } from '../../../components/animate';
@@ -107,7 +107,7 @@ export default function CateList() {
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { cates, isLoading, newCate, error } = useSelector((state) => state.cate);
+  const { cates, isLoading, newCate, error, deleteCate } = useSelector((state) => state.cate);
 
   const [tableData, setTableData] = useState([]);
 
@@ -128,6 +128,19 @@ export default function CateList() {
       dispatch(resetCate());
     }, 3000);
   }, [error, newCate]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Xóa loại giày không thành công!', { variant: 'error' });
+    } else if (deleteCate) {
+      enqueueSnackbar('Xóa loại giày  thành công!');
+      dispatch(getCates());
+    }
+    setTimeout(() => {
+      dispatch(resetCate());
+    }, 3000);
+  }, [error, deleteCate]);
+
   useEffect(() => {
     if (cates?.length) {
       setTableData(cates);
@@ -140,9 +153,7 @@ export default function CateList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    dispatch(deleteCates(id));
   };
 
   const handleDeleteRows = (selected) => {

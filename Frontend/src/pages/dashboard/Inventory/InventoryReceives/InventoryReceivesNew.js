@@ -119,7 +119,6 @@ export default function InventoryReceivesNew() {
   const values = watch();
 
   const onSubmit = async (data) => {
-
     const inventoryStatus = openConfirmImport || openConfirmInvalidProduct ? 2 : 1;
 
     const newData = {
@@ -234,7 +233,7 @@ export default function InventoryReceivesNew() {
   };
 
   return (
-    <Container sx={{ paddingRight: '0px !important', paddingLeft: '0px !important' }}>
+    <Container sx={{ paddingRight: '0px !important', paddingLeft: '40px !important' }}>
       <Box sx={{ width: '100%', typography: 'body1', marginTop: 2 }}>
         <FormProvider methods={methods}>
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
