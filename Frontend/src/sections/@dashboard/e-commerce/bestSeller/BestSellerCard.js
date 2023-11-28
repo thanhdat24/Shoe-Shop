@@ -16,7 +16,7 @@ BestSellerCard.propTypes = {
 
 export default function BestSellerCard({ index, product, onSelected }) {
   const [hover, setHover] = useState(false);
-
+  console.log('>>>>>>>>>>>>>', product);
   const initialStyle = {
     backgroundColor: (index === 0 && 'darksalmon') || (index === 1 && 'sienna') || 'darkslategray',
     color: 'white',

@@ -29,10 +29,7 @@ const AvatarWrapperStyle = styled('div')({
 const getDetails = (conversation, currentUserEmail) => {
   const otherParticipants = conversation?.participants?.filter((participant) => participant.email !== currentUserEmail);
   const displayNames = otherParticipants;
-  console
-    .log('otherParticipants', otherParticipants)
-    ?.reduce((names, participant) => [...names, participant.displayName], [])
-    .join(', ');
+
   let displayText = '';
   const lastMessage = conversation?.messages[conversation.messages?.length - 1];
   if (lastMessage) {

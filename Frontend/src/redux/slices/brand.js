@@ -16,6 +16,8 @@ const initialState = {
   brandList: null,
   newBrand: null,
   newDiscount: null,
+  updateBrandSuccess: null,
+  deleteBrandSuccess: null,
 };
 
 const slice = createSlice({
@@ -31,7 +33,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
@@ -43,6 +44,14 @@ const slice = createSlice({
     updatePromotionSuccess(state, action) {
       state.isLoading = false;
       state.success = action.payload;
+    },
+    updateBrandSuccess(state, action) {
+      state.isLoading = false;
+      state.updateBrandSuccess = action.payload;
+    },
+    deleteBrandSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteBrandSuccess = action.payload;
     },
     getBrandsSuccess(state, action) {
       state.isLoading = false;
@@ -63,6 +72,8 @@ const slice = createSlice({
     resetBrand(state) {
       state.error = null;
       state.newBrand = '';
+      state.updateBrandSuccess = null;
+      state.deleteBrandSuccess = null;
     },
   },
 });
@@ -81,6 +92,31 @@ export function createBrand(promotion) {
     try {
       const response = await axios.post('/api/v1/brands', promotion);
       dispatch(slice.actions.createBrandSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateBrand(data, id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/v1/brands/${id}`, data);
+      dispatch(slice.actions.updateBrandSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteBrand(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/brands/${id}`);
+      console.log('response', response);
+      dispatch(slice.actions.deleteBrandSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

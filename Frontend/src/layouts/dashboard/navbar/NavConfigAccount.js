@@ -38,6 +38,7 @@ const navConfig = [
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
+    subheader: 'Quản lý đơn hàng',
     items: [
       {
         title: 'Quản lý đơn hàng',

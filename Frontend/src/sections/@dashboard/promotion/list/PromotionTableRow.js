@@ -79,7 +79,6 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
     setOpenNotify(false);
   };
 
-
   return (
     <TableRow hover selected={selected}>
       <TableCell align="left">
@@ -106,7 +105,6 @@ export default function PromotionTableRow({ row, selected, onEditRow, onSelectRo
         <p>Tất cả sản phẩm</p>
         <p>Cho tất cả đơn hàng</p>
         <p> &gt;= {fCurrency(miniPrice)} ₫ giá trị đơn hàng</p>
-        <p>Không giới hạn số lần sử dụng của mỗi khách hàng</p>
       </TableCell>
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         <p>

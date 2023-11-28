@@ -91,8 +91,7 @@ export default function Router() {
             { element: <Navigate to="/admin/user/profile" replace />, index: true },
 
             { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: ':id/edit', element: <UserCreate /> },
+
             // { path: 'account', element: <UserAccount /> },
           ],
         },
@@ -101,6 +100,8 @@ export default function Router() {
           children: [
             { element: <Navigate to="/admin/staff/list" replace />, index: true },
             { path: 'list', element: <StaffList /> },
+            { path: 'new', element: <UserCreate /> },
+            { path: ':id/edit', element: <UserCreate /> },
             { path: 'account', element: <UserAccount /> },
           ],
         },

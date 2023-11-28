@@ -1,50 +1,84 @@
-import React, { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
 
-import { Grid, Container, Typography, Box, Stack, Card, TextField } from '@mui/material';
 import { DatePicker, LoadingButton } from '@mui/lab';
+import { Box, Card, Container, Grid, Stack, TextField, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
-import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
 import { FormProvider, RHFSelect, RHFTextField } from '../components/hook-form';
-import Page from '../components/Page';
-import useSettings from '../hooks/useSettings';
 import useAuth from '../hooks/useAuth';
+import useSettings from '../hooks/useSettings';
+import { resetUser, updateCurrentUser } from '../redux/slices/user';
+import { useDispatch, useSelector } from '../redux/store';
+import { setUser } from '../utils/jwt';
 
 export default function Account() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
-
+  const { enqueueSnackbar } = useSnackbar();
   const NewUserSchema = Yup.object().shape({});
+  const { updateUserSuccess } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  const defaultValues = {
-    displayName: user?.displayName || '',
-    email: user?.email || '',
-    phoneNumber: user?.phoneNumber || '',
-    address: user?.address || '',
-  };
+  const defaultValues = useMemo(
+    () => ({
+      displayName: user?.displayName || '',
+      email: user?.email || '',
+      phoneNumber: user?.phoneNumber || '',
+      address: user?.address || '',
+      dateOfBirth: user?.dateOfBirth || '',
+      gender: user?.gender || '',
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user]
+  );
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
-
   const {
+    reset,
     watch,
     control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (user) {
+      reset(defaultValues);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   const values = watch();
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
+      dispatch(updateCurrentUser(data));
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (updateUserSuccess) {
+      console.log('updateUserSuccess', updateUserSuccess);
+      enqueueSnackbar('Cập nhật thành công!');
+      setUser(updateUserSuccess.data);
+      dispatch({
+        type: 'INITIALISE',
+        payload: { isAuthenticated: true, user: updateUserSuccess.data },
+      });
+    }
+    return () => dispatch(resetUser());
+  }, [updateUserSuccess]);
+
   return (
     <Box sx={{ paddingBottom: 10 }}>
       <Container maxWidth={themeStretch ? false : 'xl'}>
@@ -52,7 +86,7 @@ export default function Account() {
           <Grid spacing={3}>
             <Card sx={{ padding: '23px' }}>
               <Typography variant="h4" sx={{ mb: 5 }}>
-                Thông tin tài khoản
+                Thông tin tài khoản123
               </Typography>
               <Box
                 sx={{

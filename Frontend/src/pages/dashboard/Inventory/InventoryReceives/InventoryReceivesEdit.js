@@ -1,85 +1,36 @@
-import { DateRangePicker, DateRange, LoadingButton } from '@mui/lab';
-import React, { Fragment, useEffect, useState } from 'react';
+import { LoadingButton } from '@mui/lab';
+import React, { useEffect, useState } from 'react';
 
-import {
-  Container,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Stack,
-  Grid,
-  Card,
-  Button,
-  Switch,
-  Box,
-  TextField,
-  Alert,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Autocomplete,
-  Input,
-  InputAdornment,
-  TableContainer,
-  Table,
-  TableBody,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tab,
-  Tabs,
-} from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import * as Yup from 'yup';
+import { Box, Button, Card, Container, Grid, Menu, MenuItem, Tab, Tabs } from '@mui/material';
 import _ from 'lodash';
 
 // import { LoadingButton } from '@mui/lab';
-import { useFormik, Form, Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { useHistory, useNavigate, Link as RouterLink, useParams } from 'react-router-dom';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { styled, useTheme, alpha } from '@mui/material/styles';
-import { createDiscount, resetDiscount } from '../../../../redux/slices/promotion';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-import { fNumber, fNumberVND, formatPriceInVND } from '../../../../utils/formatNumber';
-import SaveCancelButtons from '../../../../components/SaveCancelButtons/SaveCancelButtons';
-import { province } from '../../../../_mock';
-import { FormProvider, RHFTextField } from '../../../../components/hook-form';
-import { getListProvince, getListWard } from '../../../../redux/slices/address';
-import { createSupplier, getSuppliers, resetSupplier } from '../../../../redux/slices/supplier';
-import useAuth from '../../../../hooks/useAuth';
-import Iconify from '../../../../components/Iconify';
-import Scrollbar from '../../../../components/Scrollbar';
-import { TableHeadCustom, TableSelectedActions, TableSkeleton } from '../../../../components/table';
-import { getProducts } from '../../../../redux/slices/product';
-import useTable, { getComparator } from '../../../../hooks/useTable';
-import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
-import SearchModelProductRow from './SearchModelProductRow';
+import Label from '../../../../components/Label';
+import useTable from '../../../../hooks/useTable';
+import useTabs from '../../../../hooks/useTabs';
 import useToggle from '../../../../hooks/useToggle';
+import { getPayments } from '../../../../redux/slices/payment';
 import {
-  createReceipt,
   getAllTransactionsByReceiptId,
   getDetailReceipts,
   resetReceipt,
   updateReceiptDraft,
 } from '../../../../redux/slices/receipt';
-import { InventoryEditTableRow } from '../../../../sections/@dashboard/Inventory/InventoryReceivesEdit';
-import Label from '../../../../components/Label';
-import SupplierPaymentDialog from './SupplierPaymentDialog';
-import ConfirmImport from './ConfirmImport';
+import { formatPriceInVND } from '../../../../utils/formatNumber';
 import { formatDate } from '../../../../utils/formatTime';
-import { getPayments } from '../../../../redux/slices/payment';
-import InventoryReceivesPrint from './InventoryReceivesPrint';
-import useTabs from '../../../../hooks/useTabs';
-import InventoryReceivesListEdit from './InventoryReceivesListEdit';
+import ConfirmImport from './ConfirmImport';
 import InventoryReceivesHistory from './InventoryReceivesHistory';
+import InventoryReceivesListEdit from './InventoryReceivesListEdit';
+import InventoryReceivesPrint from './InventoryReceivesPrint';
+import SupplierPaymentDialog from './SupplierPaymentDialog';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -194,7 +145,8 @@ export default function InventoryReceivesNew() {
   const totalPrice = () => {
     return inventoryData.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
-
+  console.log('detailReceipt?.receiptDetail', detailReceipt?.receiptDetail);
+  console.log('detailReceipt', detailReceipt);
   const groupByReceiptDetail = _(detailReceipt?.receiptDetail)
     .groupBy((x) => x.idProductDetail.idProduct.name)
     .map((value, key) => {

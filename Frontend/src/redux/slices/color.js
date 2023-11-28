@@ -15,6 +15,8 @@ const initialState = {
   newAccount: null,
   newColor: null,
   promotionDetail: null,
+  updateColorSuccess: null,
+  deleteColorSuccess: null,
 };
 
 const slice = createSlice({
@@ -30,7 +32,6 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
@@ -47,7 +48,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.colors = action.payload;
     },
-
+    updateColorSuccess(state, action) {
+      state.isLoading = false;
+      state.updateColorSuccess = action.payload;
+    },
+    deleteColorSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteColorSuccess = action.payload;
+    },
 
     // OPEN MODAL
     openModal(state) {
@@ -62,7 +70,9 @@ const slice = createSlice({
     },
     resetColor(state) {
       state.error = null;
-      state.newColor = '';
+      state.newColor = null;
+      state.updateColorSuccess = null;
+      state.deleteColorSuccess = null;
     },
   },
 });
@@ -81,6 +91,31 @@ export function createColor(color) {
     try {
       const response = await axios.post('/api/v1/colors', color);
       dispatch(slice.actions.createColorSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateColor(data, id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/v1/colors/${id}`, data);
+      dispatch(slice.actions.updateColorSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteColor(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/colors/${id}`);
+      console.log('response', response);
+      dispatch(slice.actions.deleteColorSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

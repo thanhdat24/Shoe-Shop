@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { paramCase } from 'change-case';
 import _ from 'lodash';
@@ -12,6 +13,7 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import { ColorPreview } from '../../../../components/color-utils';
+import { formatDate, isCurrentDateGreaterThanSevenDays } from '../../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -20,10 +22,19 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, status = 'new', priceSale, productImages, productDetail } = product;
+  const { name, cover, price, priceSale, productImages, productDetail, createdAt } = product;
+  const [status, setStatus] = useState('');
+  console.log('createdAt', createdAt);
+  const day = new Date();
+  console.log('day123', isCurrentDateGreaterThanSevenDays(createdAt));
+  useEffect(() => {
+    setStatus(!createdAt && isCurrentDateGreaterThanSevenDays(createdAt) ? 'old' : 'new');
+  }, [createdAt]);
+
   const linkTo = PATH_HOME.product.view(paramCase(name));
   const colors = [];
   const sizes = [];
+  const today = day.getDay();
   const groupByColor = _(productDetail)
     .groupBy((x) => x.idColor.color)
     .map((value, key) => ({ color: key, productDetail: value }))
@@ -45,7 +56,7 @@ export default function ShopProductCard({ product }) {
   return (
     <Card>
       <Box sx={{ position: 'relative' }}>
-        {status && (
+        {status && status !== 'old' && (
           <Label
             variant="filled"
             color={(status === 'sale' && 'error') || 'info'}
@@ -72,9 +83,8 @@ export default function ShopProductCard({ product }) {
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <ColorPreview colors={colors} />
-
           <Stack direction="row" spacing={0.5}>
-            {priceSale && (
+            {priceSale !== 0 && (
               <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
                 {fCurrency(priceSale)}
               </Typography>

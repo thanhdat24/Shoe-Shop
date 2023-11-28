@@ -145,16 +145,6 @@ export default function UserList() {
             { name: 'Khách hàng', href: PATH_DASHBOARD.user.root },
             { name: 'Danh sách' },
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
-              Thêm khách hàng
-            </Button>
-          }
         />
 
         <Card>

@@ -90,7 +90,6 @@ export const PATH_DASHBOARD = {
   kanban: path(ROOTS_DASHBOARD, '/kanban'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
-    new: path(ROOTS_DASHBOARD, '/user/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     // account: path(ROOTS_DASHBOARD, '/user/account'),
@@ -101,7 +100,7 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/staff/new'),
     list: path(ROOTS_DASHBOARD, '/staff/list'),
     account: path(ROOTS_DASHBOARD, '/staff/account'),
-    edit: (id) => path(ROOTS_DASHBOARD, `/user/${id}/edit`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/staff/${id}/edit`),
   },
   promotion: {
     root: path(ROOTS_DASHBOARD, '/promotion'),

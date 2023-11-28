@@ -1,26 +1,13 @@
+import { initializeApp } from 'firebase/app';
+import { FacebookAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useState } from 'react';
-import { initializeApp } from 'firebase/app';
-import {
-  getAuth,
-  signOut,
-  onAuthStateChanged,
-  signInWithPopup,
-  FacebookAuthProvider,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
-import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 //
-import Hex from 'crypto-js/enc-hex';
-import hmacSHA256 from 'crypto-js/hmac-sha256';
 import { FIREBASE_API } from '../config';
-import { isValidToken, setSession, setUser } from '../utils/jwt';
 import axios from '../utils/axios';
+import { isValidToken, setSession, setUser } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
-
-const ADMIN_EMAILS = ['demo@gmail.com'];
 
 const firebaseApp = initializeApp(FIREBASE_API);
 
@@ -89,7 +76,6 @@ function AuthProvider({ children }) {
           setUser(user);
           const response = await axios.get('/api/v1/admin/getMe');
           const { data } = response.data;
-
           dispatch({
             type: 'INITIALISE',
             payload: {
@@ -123,28 +109,47 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(AUTH, async (user) => {
+      console.log('userOTP', user?.uid);
+
       if (user !== null) {
-        console.log('userOTP', user);
         const accessToken = await user.getIdToken();
-        const data = {
-          user: {
-            googleId: user.email && user?.uid,
-            phoneId: user.phoneNumber && user?.uid,
-            email: user?.email,
-            photoURL:
-              user?.photoURL ||
-              'https://res.cloudinary.com/web-app-shoes/image/upload/v1700406437/qcoepcjavj4ixnhrck9k.png',
-            displayName: user?.displayName,
-            role: user?.role || 'khách hàng',
-            phoneNumber: (user.phoneNumber && user?.phoneNumber.slice(3)) || '',
-          },
-        };
-        setSession(accessToken);
-        setUser(data);
-        dispatch({
-          type: 'INITIALISE',
-          payload: { isAuthenticated: true, user },
-        });
+
+        const response = await axios.get('/api/v1/user/checkUserExist', { params: { uid: user?.uid } });
+        console.log('data123', response);
+        if (response.data.data !== null) {
+          const response = await axios.get('/api/v1/user/getUserUID', { params: { uid: user?.uid } });
+          console.log('response123', response);
+          setSession(accessToken);
+          setUser(response.data.data);
+          dispatch({
+            type: 'INITIALISE',
+            payload: { isAuthenticated: true, user: response.data.data },
+          });
+        } else {
+          const accessToken = await user.getIdToken();
+          const data = {
+            user: {
+              googleId: user.email && user?.uid,
+              phoneId: user.phoneNumber && user?.uid,
+              email: user?.email,
+              photoURL:
+                user?.photoURL ||
+                'https://res.cloudinary.com/web-app-shoes/image/upload/v1700406437/qcoepcjavj4ixnhrck9k.png',
+              displayName: user?.displayName,
+              role: user?.role || 'khách hàng',
+              phoneNumber: (user.phoneNumber && user?.phoneNumber.slice(3)) || '',
+            },
+          };
+
+          console.log('>>>>>>>>>', user);
+
+          setSession(accessToken);
+          setUser(data);
+          dispatch({
+            type: 'INITIALISE',
+            payload: { isAuthenticated: true, user },
+          });
+        }
       }
     });
 
@@ -251,6 +256,7 @@ function AuthProvider({ children }) {
       },
     });
   };
+  console.log('state?.user', state?.user);
 
   return (
     <AuthContext.Provider
@@ -258,9 +264,11 @@ function AuthProvider({ children }) {
         ...state,
         method: 'firebase',
         user: {
-          googleId: state?.user?.email && state?.user?.uid,
+          googleId: state?.user?.email && (state?.user?.uid || state?.user?.googleId),
           phoneId: state?.user?.phoneNumber && state?.user?.uid,
           email: state?.user?.email,
+          dateOfBirth: state?.user?.dateOfBirth,
+          gender: state?.user?.gender,
           photoURL:
             state?.user?.photoURL ||
             profile?.photoURL ||

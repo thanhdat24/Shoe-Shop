@@ -59,10 +59,10 @@ export default function PromotionCreate() {
       .matches(codeRegExp, 'Vui lòng nhập tối thiểu 5 ký tự và tối đa 10 ký tự'),
     price: Yup.number().min(5000, '*Giá trị phải lớn hơn hoặc bằng 5.000').required('*Vui lòng nhập thông tin này'),
     miniPrice: Yup.number().required('*Vui lòng nhập thông tin này'),
-    quantity: Yup.string().required('*Vui lòng nhập thông tin này'),
-    maxUsagePerCustomer: Yup.number()
-      .min(1, 'Giá trị phải lớn hơn hoặc bằng 1')
-      .required('*Vui lòng nhập thông tin này'),
+    // quantity: Yup.string().required('*Vui lòng nhập thông tin này'),
+    // maxUsagePerCustomer: Yup.number()
+    //   .min(1, 'Giá trị phải lớn hơn hoặc bằng 1')
+    //   .required('*Vui lòng nhập thông tin này'),
   });
   const formik = useFormik({
     initialValues: {
@@ -71,8 +71,8 @@ export default function PromotionCreate() {
       price: '',
       percent: '',
       miniPrice: '',
-      maxUsagePerCustomer: null,
-      quantity: '',
+      // maxUsagePerCustomer: null,
+      // quantity: '',
       startDate: '',
       expiryDate: '',
       activeCode: '',
@@ -150,8 +150,8 @@ export default function PromotionCreate() {
       values.code &&
       values.price &&
       values.miniPrice &&
-      values.quantity &&
-      values.maxUsagePerCustomer &&
+      // values.quantity &&
+      // values.maxUsagePerCustomer &&
       values.startDate !== 'Invalid date' &&
       values.expiryDate !== 'Invalid date'
     )
@@ -162,8 +162,8 @@ export default function PromotionCreate() {
     values.code,
     values.price,
     values.miniPrice,
-    values.quantity,
-    values.maxUsagePerCustomer,
+    // values.quantity,
+    // values.maxUsagePerCustomer,
     values.startDate,
     values.expiryDate,
   ]);
@@ -243,7 +243,7 @@ export default function PromotionCreate() {
                     </Box>
 
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'center' }}>
-                      <Box className="mr-16 whitespace-nowrap  font-semibold  flex">Tên mã giảm giá</Box>
+                      <Box className="mr-16 whitespace-nowrap  font-semibold  flex">Mã giảm giá</Box>
                       <Box className="flex flex-col ">
                         <Box className="flex justify-between items-center">
                           <div className={classes.textValidation}>Chỉ bao gồm từ 5 - 10 ký tự thường và chữ số.</div>
@@ -345,7 +345,7 @@ export default function PromotionCreate() {
                         helperText={touched.miniPrice && errors.miniPrice}
                       />
                     </Box>
-                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'center' }}>
+                    {/* <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'center' }}>
                       <Box className="mr-16 whitespace-nowrap  font-semibold  flex">Số lượng mã giảm giá</Box>
                       <TextField
                         fullWidth
@@ -354,50 +354,7 @@ export default function PromotionCreate() {
                         error={Boolean(touched.quantity && errors.quantity)}
                         helperText={touched.quantity && errors.quantity}
                       />
-                    </Box>
-                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'flex-start' }}>
-                      <Box className="mr-16 whitespace-nowrap  font-semibold  flex ">Lượt sử dụng tối đa</Box>
-                      <Box className="grid gap-2 grid-cols-2">
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            color: isLimited ? 'black' : 'primary.main',
-                            borderColor: isLimited ? '#d9d9d9 ' : 'primary.main',
-                            textTransform: 'none !important',
-                            fontWeight: '500 !important',
-
-                            '&:hover': { color: 'primary.main' },
-                          }}
-                          onClick={() => setIsLimited(false)}
-                        >
-                          Không giới hạn
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            color: isLimited ? 'primary.main' : 'black',
-                            borderColor: isLimited ? 'primary.main' : '#d9d9d9 ',
-                            textTransform: 'none !important',
-                            fontWeight: '500 !important',
-                            '&:hover': { color: 'primary.main' },
-                          }}
-                          onClick={() => setIsLimited(true)}
-                        >
-                          Có giới hạn
-                        </Button>
-                        {isLimited && (
-                          <TextField
-                            fullWidth
-                            type="number"
-                            label="Điền số lượng"
-                            {...getFieldProps('maxUsagePerCustomer')}
-                            error={Boolean(touched.maxUsagePerCustomer && errors.maxUsagePerCustomer)}
-                            helperText={touched.maxUsagePerCustomer && errors.maxUsagePerCustomer}
-                            sx={{ gridColumn: '1 / -1' }}
-                          />
-                        )}
-                      </Box>
-                    </Box>
+                    </Box> */}
                   </Stack>
                 </Card>
               </Grid>
@@ -440,11 +397,11 @@ export default function PromotionCreate() {
                             Giá trị đơn hàng tối thiểu:{' '}
                             <b className="text-green-600">{`${formatPriceInVND(values?.miniPrice)}`}</b>
                           </li>
-                          <li className={classes.typographyInfo}>
+                          {/* <li className={classes.typographyInfo}>
                             Tổng số lượng mã giảm giá:{' '}
                             <b className="text-green-600">{`${fNumber(values?.quantity)}`}</b>
-                          </li>
-                          <li className={classes.typographyInfo}>
+                          </li> */}
+                          {/* <li className={classes.typographyInfo}>
                             {values?.maxUsagePerCustomer || isLimited ? (
                               <span>
                                 Giới hạn <b className="text-green-600">{fNumber(values?.maxUsagePerCustomer)}</b> lần sử
@@ -453,11 +410,11 @@ export default function PromotionCreate() {
                             ) : (
                               'Không giới hạn số lần sử dụng mỗi khách hàng'
                             )}
-                          </li>
-                          <li className={classes.typographyInfo}>
+                          </li> */}
+                          {/* <li className={classes.typographyInfo}>
                             Áp dụng cho:
                             <b className="text-green-600"> Tất cả sản phẩm</b>
-                          </li>
+                          </li> */}
                         </ul>
                       </Alert>
                     </div>
@@ -505,7 +462,7 @@ export default function PromotionCreate() {
                                   fontSize: '13px',
                                 }}
                               >
-                                <p>Ví ZaloPay</p>
+                                <p>Voucher</p>
                               </div>
                             </div>
                             <div className="flex flex-col p-3 w-full">
@@ -610,11 +567,11 @@ export default function PromotionCreate() {
                                 </button>
                                 <div className="pr-7">
                                   <h4 className="text-sm font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                                    Giảm&nbsp;{fNumberVND(values?.price)}
+                                    Giảm&nbsp;{`${formatPriceInVND(values?.price)}`}
                                   </h4>
                                   <p className="text-xs font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
                                     Đơn hàng tối thiểu&nbsp;
-                                    {fNumberVND(values.miniPrice)}
+                                    {`${formatPriceInVND(values?.miniPrice)}`}
                                   </p>
                                 </div>
                                 <div className="flex items-end mt-auto">
@@ -677,7 +634,9 @@ export default function PromotionCreate() {
                   <ul className={classes.alertMessage}>
                     <li className={classes.typographyInfo}>
                       <span>
-                        Giảm <b className="text-green-600">{`${fNumberVND(values?.price * 1)}`}</b>
+                        Giảm{' '}
+                       {' '}
+                        <b className="text-green-600">{`${formatPriceInVND(values?.price ? values?.price * 1 : 0)}`}</b>
                       </span>
                     </li>
                     <li className={classes.typographyInfo}>
@@ -688,11 +647,12 @@ export default function PromotionCreate() {
                       <b className="text-green-600"> Tất cả sản phẩm</b>
                     </li>
                     <li className={classes.typographyInfo}>
-                      Giá trị đơn hàng tối thiểu: <b className="text-green-600">{`${fNumberVND(values?.miniPrice)}`}</b>
+                      Giá trị đơn hàng tối thiểu:{' '}
+                      <b className="text-green-600">{`${formatPriceInVND(values?.miniPrice)}`}</b>
                     </li>
-                    <li className={classes.typographyInfo}>
+                    {/* <li className={classes.typographyInfo}>
                       Số lượng mã giảm giá: <b className="text-green-600">{values?.quantity}</b>
-                    </li>
+                    </li> */}
                     {(effectiveTime[0] && effectiveTime[1]) !== null && (
                       <li className={classes.typographyInfo}>
                         Thời gian hiệu lực:{' '}

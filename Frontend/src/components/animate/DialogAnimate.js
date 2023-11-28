@@ -28,7 +28,7 @@ export default function DialogAnimate({
   sx,
   title,
   onClickSubmit,
-  isEdit,
+  isEdit = 'Tạo',
   isCancel = 'Hủy',
   isInvoice,
   ...other

@@ -123,7 +123,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
       setExpandForm(true);
       onCaptchVerify();
       const formatPhone = '+84' + phoneNumber.slice(1);
-      let appVerifier = window.recaptchaVerifier;
+      const appVerifier = window.recaptchaVerifier;
       signInWithPhoneNumber(AUTH, formatPhone, appVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
@@ -406,7 +406,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
                 <div className="text-red-600 mt-2">Đã gửi OTP</div>
               </>
             )}
-            <Box id="recaptcha"></Box>
+            <Box id="recaptcha" />
           </div>
         </div>
       </DialogContent>

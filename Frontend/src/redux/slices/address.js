@@ -111,9 +111,25 @@ export function deleteAddress(id) {
 }
 
 export function getListProvince(idProvince) {
-  return axiosMethod.get(`https://sheltered-anchorage-60344.herokuapp.com/district?idProvince=${idProvince}`);
+  return axiosMethod.get(`https://provinces.open-api.vn/api/p/`);
 }
 
-export function getListWard(idDistrict) {
-  return axiosMethod.get(`https://sheltered-anchorage-60344.herokuapp.com/commune?idDistrict=${idDistrict}`);
+export function getDistricts(provinceCode) {
+  return axiosMethod.get(`https://provinces.open-api.vn/api/p/${provinceCode}`, {
+    params: {
+      depth: 2,
+    },
+  });
+}
+
+export function getWard(provinceCode) {
+  return axiosMethod.get(`https://provinces.open-api.vn/api/d/${provinceCode}`, {
+    params: {
+      depth: 2,
+    },
+  });
+}
+
+export function getListWard(provinceCode) {
+  return axiosMethod.get(`https://provinces.open-api.vn/api/${provinceCode}`);
 }

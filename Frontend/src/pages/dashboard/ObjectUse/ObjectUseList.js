@@ -1,56 +1,51 @@
-import { paramCase } from 'change-case';
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Card,
-  Table,
   Button,
-  Switch,
-  Tooltip,
-  TableBody,
+  Card,
   Container,
+  DialogContent,
   IconButton,
+  Table,
+  TableBody,
   TableContainer,
   TablePagination,
-  FormControlLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
   TextField,
-  DialogActions,
+  Tooltip,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-
+import { useForm } from 'react-hook-form';
+import { FormProvider } from '../../../components/hook-form';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useSettings from '../../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../../hooks/useTable';
+import useTable, { emptyRows, getComparator } from '../../../hooks/useTable';
 // components
-import Page from '../../../components/Page';
-import Iconify from '../../../components/Iconify';
-import Scrollbar from '../../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Iconify from '../../../components/Iconify';
+import Page from '../../../components/Page';
+import Scrollbar from '../../../components/Scrollbar';
 import {
-  TableNoData,
-  TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
+  TableNoData,
   TableSelectedActions,
+  TableSkeleton,
 } from '../../../components/table';
 // sections
-import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
-import { createObjUse, getObjects } from '../../../redux/slices/objectUse';
+import {
+  createObjUse,
+  deleteObjectUse,
+  getObjects,
+  resetObjectUse,
+  updateObjectUse,
+} from '../../../redux/slices/objectUse';
 
-import { createCate, resetCate } from '../../../redux/slices/cate';
-import { createBrand, getBrands, resetBrand } from '../../../redux/slices/brand';
-import BrandTableToolbar from '../../../sections/@dashboard/brand/list/BrandTableToolbar';
 import { DialogAnimate } from '../../../components/animate';
 import CateTableRow from '../../../sections/@dashboard/cate/list/CateTableRow';
 import ObjectUseTableToolBar from '../../../sections/@dashboard/objectUse/list/ObjectUseableToolBar';
@@ -59,9 +54,7 @@ import ObjectUseTableToolBar from '../../../sections/@dashboard/objectUse/list/O
 
 const TABLE_HEAD = [
   { id: 'id', label: 'Id', align: 'left' },
-
   { id: 'name', label: 'Đối tượng sử dụng', align: 'left' },
-
   { id: '' },
 ];
 
@@ -71,8 +64,44 @@ export default function ObjectUseList() {
   const [open, setOpen] = useState(false);
   const valueRef = useRef('');
   const dispatch = useDispatch();
+  const [isEdit, setIsEdit] = useState(false);
+
+  const defaultValues = {
+    name: '',
+  };
+
+  const methods = useForm({ defaultValues });
+
+  const {
+    reset,
+    handleSubmit,
+    register,
+    setValue,
+    // formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async (data) => {
+    if (isEdit) {
+      try {
+        dispatch(updateObjectUse({ name: data.name }, data.id));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        dispatch(createObjUse(data));
+        resetObjectUse();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
   const handleClickOpen = () => {
     setOpen(true);
+    setIsEdit(false);
   };
 
   const handleClose = () => {
@@ -109,7 +138,9 @@ export default function ObjectUseList() {
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { objects, isLoading, error, newObj } = useSelector((state) => state.objectUse);
+  const { objects, isLoading, updateObjectUseSuccess, newObjectUse, deleteObjectUseSuccess } = useSelector(
+    (state) => state.objectUse
+  );
 
   const [tableData, setTableData] = useState([]);
 
@@ -118,18 +149,23 @@ export default function ObjectUseList() {
   useEffect(() => {
     dispatch(getObjects());
   }, [dispatch]);
+
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Thêm đối tượng sử dụng không thành công!', { variant: 'error' });
-    } else if (newObj) {
-      enqueueSnackbar('Thêm đối tượng sử dụng  thành công!');
+    if (updateObjectUseSuccess) {
+      enqueueSnackbar('Cập nhật thành công!');
       dispatch(getObjects());
-      // navigate(PATH_DASHBOARD.user.list);
     }
-    setTimeout(() => {
-      dispatch(resetCate());
-    }, 3000);
-  }, [error, newObj]);
+    if (newObjectUse) {
+      enqueueSnackbar('Thêm đối tượng thành công!');
+      dispatch(getObjects());
+    }
+    if (deleteObjectUseSuccess) {
+      enqueueSnackbar('Xóa đối tượng thành công!');
+      dispatch(getObjects());
+    }
+    return () => dispatch(resetObjectUse());
+  }, [updateObjectUseSuccess, newObjectUse, deleteObjectUseSuccess]);
+
   useEffect(() => {
     if (objects?.length) {
       setTableData(objects);
@@ -142,19 +178,20 @@ export default function ObjectUseList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    dispatch(deleteObjectUse(id));
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (data) => {
+    setOpen(true);
+    setValue('id', data._id);
+    setValue('name', data.name);
+    setIsEdit(true);
   };
 
   const dataFiltered = applySortFilter({
@@ -162,7 +199,6 @@ export default function ObjectUseList() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
-
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -194,24 +230,26 @@ export default function ObjectUseList() {
         />
         <DialogAnimate
           open={open}
+          isEdit={isEdit ? 'Cập nhật' : 'Tạo'}
           onClose={handleClose}
-          title={'Tạo đối tượng sử dụng'}
-          onClickSubmit={handleCreate}
-          isEdit={'Tạo'}
+          title={'Tạo đối tương sử dụng'}
+          onClickSubmit={handleSubmit(onSubmit)}
         >
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Tên đối tượng"
-              type="text"
-              fullWidth
-              name="name"
-              inputRef={valueRef}
-              id="outlined-basic"
-              variant="outlined"
-            />
-          </DialogContent>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <DialogContent>
+              <TextField
+                name="name"
+                type="text"
+                label="Tên đối tượng"
+                {...register('name')}
+                autoFocus
+                margin="dense"
+                fullWidth
+                id="outlined-basic"
+                variant="outlined"
+              />
+            </DialogContent>
+          </FormProvider>
         </DialogAnimate>
 
         <Card>
@@ -227,7 +265,7 @@ export default function ObjectUseList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                   actions={
@@ -251,7 +289,7 @@ export default function ObjectUseList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -262,12 +300,12 @@ export default function ObjectUseList() {
                     .map((row, index) =>
                       row ? (
                         <CateTableRow
-                          key={row.id}
+                          key={row._id}
                           row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          onEditRow={() => handleEditRow(row)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

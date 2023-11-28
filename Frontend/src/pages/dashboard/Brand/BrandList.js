@@ -1,85 +1,59 @@
-import { paramCase } from 'change-case';
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Card,
-  Table,
   Button,
-  Switch,
-  Tooltip,
-  TableBody,
+  Card,
   Container,
+  DialogContent,
   IconButton,
+  Table,
+  TableBody,
   TableContainer,
   TablePagination,
-  FormControlLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
   TextField,
-  DialogActions,
+  Tooltip,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+// import { RHFTextField } from '../../components/hook-form';
+import { DialogAnimate } from '../../../components/animate';
+import { FormProvider } from '../../../components/hook-form';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
+
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useSettings from '../../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../../hooks/useTable';
+import useTable, { emptyRows, getComparator } from '../../../hooks/useTable';
 // components
-import Page from '../../../components/Page';
-import Iconify from '../../../components/Iconify';
-import Scrollbar from '../../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Iconify from '../../../components/Iconify';
+import Page from '../../../components/Page';
+import Scrollbar from '../../../components/Scrollbar';
 import {
-  TableNoData,
-  TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
+  TableNoData,
   TableSelectedActions,
+  TableSkeleton,
 } from '../../../components/table';
 // sections
-import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
 
-import { createBrand, getBrands, resetBrand } from '../../../redux/slices/brand';
+import { createBrand, deleteBrand, getBrands, resetBrand, updateBrand } from '../../../redux/slices/brand';
+import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
 import BrandTableToolbar from '../../../sections/@dashboard/brand/list/BrandTableToolbar';
-import { DialogAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'id', label: 'Id', align: 'left' },
-
-  { id: 'name', label: 'Thương hiệu', align: 'left' },
-
-  { id: '' },
-];
+const TABLE_HEAD = [{ id: 'id', label: 'Id', align: 'left' }, { id: 'name', label: 'Tên', align: 'left' }, { id: '' }];
 
 // ----------------------------------------------------------------------
 
 export default function BrandList() {
-  const [open, setOpen] = useState(false);
-  const valueRef = useRef('');
-  const dispatch = useDispatch();
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleCreate = () => {
-    setOpen(false);
-    dispatch(createBrand({ name: valueRef.current.value }));
-  };
-
   const {
     dense,
     page,
@@ -100,31 +74,80 @@ export default function BrandList() {
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
-
+  const { enqueueSnackbar } = useSnackbar();
+  const { brandList, isLoading, newBrand, error, updateBrandSuccess, deleteBrandSuccess } = useSelector(
+    (state) => state.brand
+  );
   const { themeStretch } = useSettings();
+  const [isEdit, setIsEdit] = useState(false);
 
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-  const { brandList, isLoading, newBrand, error } = useSelector((state) => state.brand);
+  const [open, setOpen] = useState(false);
+
+  const defaultValues = {
+    name: '',
+    id: '',
+  };
+
+  const methods = useForm({ defaultValues });
+
+  const { reset, watch, setValue, handleSubmit, register } = methods;
+
+  const onSubmit = async (data) => {
+    if (isEdit) {
+      try {
+        dispatch(updateBrand({ name: data.name }, data.id));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        dispatch(createBrand(data));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const dispatch = useDispatch();
+  const handleClickOpen = () => {
+    setOpen(true);
+    setIsEdit(false);
+  };
 
   const [tableData, setTableData] = useState([]);
-
+  console.log('deleteBrandSuccess ', deleteBrandSuccess);
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
     dispatch(getBrands());
   }, [dispatch]);
+
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Thêm thương hiệu không thành công!', { variant: 'error' });
-    } else if (newBrand) {
-      enqueueSnackbar('Thêm thương hiệu  thành công!');
-      // navigate(PATH_DASHBOARD.user.list);
+    if (updateBrandSuccess) {
+      enqueueSnackbar('Cập nhật thành công!');
+      dispatch(getBrands());
     }
-    setTimeout(() => {
-      dispatch(resetBrand());
-    }, 3000);
-  }, [error, newBrand]);
+    if (newBrand) {
+      enqueueSnackbar('Thêm thương hiệu thành công!');
+      dispatch(getBrands());
+    }
+    if (deleteBrandSuccess) {
+      enqueueSnackbar('Xóa thương hiệu thành công!');
+      dispatch(getBrands());
+    }
+
+    return () => dispatch(resetBrand());
+  }, [updateBrandSuccess, newBrand, deleteBrandSuccess]);
+
   useEffect(() => {
     if (brandList?.length) {
       setTableData(brandList);
@@ -137,9 +160,7 @@ export default function BrandList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    dispatch(deleteBrand(id));
   };
 
   const handleDeleteRows = (selected) => {
@@ -148,8 +169,11 @@ export default function BrandList() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (data) => {
+    setOpen(true);
+    setValue('name', data.name);
+    setValue('id', data._id);
+    setIsEdit(true);
   };
 
   const dataFiltered = applySortFilter({
@@ -163,7 +187,7 @@ export default function BrandList() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="Danh sách thương hiệu">
+    <Page title="Danh sách Thương hiệu">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Danh sách thương hiệu"
@@ -173,73 +197,38 @@ export default function BrandList() {
               name: 'Thương hiệu',
               href: PATH_DASHBOARD.brand.root,
             },
-            { name: 'Danh sách thương hiệu' },
+            { name: 'Danh sách Thương hiệu' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              // component={RouterLink}
-              // to={PATH_DASHBOARD.brand.new}
-              onClick={handleClickOpen}
-            >
-              Thêm thương hiệu
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
+              Thêm Thương hiệu
             </Button>
           }
         />
         <DialogAnimate
           open={open}
+          isEdit={isEdit ? 'Cập nhật' : 'Tạo'}
           onClose={handleClose}
-          title={'Tạo thương hiệu'}
-          onClickSubmit={handleCreate}
-          isEdit={'Tạo'}
+          title={'Tạo Thương hiệu'}
+          onClickSubmit={handleSubmit(onSubmit)}
         >
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Tên thương hiệu"
-              type="text"
-              fullWidth
-              name="name"
-              inputRef={valueRef}
-              id="outlined-basic"
-              variant="outlined"
-            />
-          </DialogContent>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <DialogContent>
+              {' '}
+              <TextField
+                name="name"
+                type="text"
+                label="Tên Thương hiệu"
+                {...register('name')}
+                autoFocus
+                margin="dense"
+                fullWidth
+                id="outlined-basic"
+                variant="outlined"
+              />
+            </DialogContent>
+          </FormProvider>
         </DialogAnimate>
-        {/* <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title" sx={{ textAlign: 'center', fontSize: '18px', marginBottom: '10px' }}>
-            {'Tạo thương hiệu'}
-          </DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Tên thương hiệu"
-              type="text"
-              fullWidth
-              name="name"
-              inputRef={valueRef}
-              id="outlined-basic"
-              variant="outlined"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="contained" color="error">
-              Hủy{' '}
-            </Button>
-            <Button type="submit" onClick={handleCreate} variant="outlined">
-              Tạo{' '}
-            </Button>
-          </DialogActions>
-        </Dialog> */}
-
         <Card>
           <BrandTableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
@@ -293,7 +282,7 @@ export default function BrandList() {
                           selected={selected.includes(row.id)}
                           onSelectRow={() => onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
+                          onEditRow={() => handleEditRow(row)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -339,7 +328,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((item) => item.name.toString().indexOf(filterName) !== -1);
   }
 
   return tableData;

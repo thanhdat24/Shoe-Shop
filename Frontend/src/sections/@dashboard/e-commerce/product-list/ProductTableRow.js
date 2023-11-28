@@ -39,7 +39,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 export default function ProductTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, inventoryType, productDetail, productImages, price, idCate, idSupplier, priceSale } = row;
+  const { name, inventoryType, productDetail, urlImage, price, idCate, idSupplier, priceSale } = row;
   const color = _(productDetail)
     .groupBy((x) => x.idColor.color)
     .map((value, key) => ({
@@ -72,12 +72,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Image
-          disabledEffect
-          alt={name}
-          src={productImages[0]?.url[0]}
-          sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }}
-        />
+        <Image disabledEffect alt={name} src={urlImage} sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           <Link variant="subtitle2" component={RouterLink} to={PATH_DASHBOARD.eCommerce.view(paramCase(name))}>
             {name}

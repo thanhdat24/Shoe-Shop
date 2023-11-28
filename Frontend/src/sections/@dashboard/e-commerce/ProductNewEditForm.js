@@ -118,6 +118,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const CATEGORY_OPTION = cates;
   // size
 
+  console.log('SUPPLIER_OPTION', SUPPLIER_OPTION);
+
   const nameSize = [];
   sizes.map((item) => {
     return nameSize.push(item.name);
@@ -190,7 +192,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       category: currentProduct?.category || '63a7121263850a28288a0449',
       origin: currentProduct?.origin || '',
       material: currentProduct?.material || '',
-      supplier: currentProduct?.supplier || '63e524118c060f3b14d32fef',
+      supplier: currentProduct?.supplier || '64ec74b486ed026e38826537',
       quantity: Number(currentProduct?.quantity) || 0,
       style: currentProduct?.style || '',
     }),
@@ -372,12 +374,16 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                     <Grid xs={8}>
                       <RHFTextField name="style" label="Kiểu dáng" />
                       <RHFSelect name="supplier" label="Nhà cung cấp" sx={{ margin: '10px 0' }}>
-                        {SUPPLIER_OPTION?.map((supplier) => (
-                          <option key={supplier._id} value={supplier._id}>
-                            {supplier.name}
-                          </option>
-                        ))}
+                        {SUPPLIER_OPTION?.map(
+                          (supplier) =>
+                            supplier.active === true && (
+                              <option key={supplier._id} value={supplier._id}>
+                                {supplier.name}
+                              </option>
+                            )
+                        )}
                       </RHFSelect>
+
                       <RHFTextField
                         name="quantity"
                         label="Số lượng"
@@ -411,7 +417,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 <Card sx={{ p: 3 }}>
                   <Stack spacing={2} mt={1}>
                     <div>
-                      <LabelStyle>Giới tính</LabelStyle>
+                      <LabelStyle>Đối tượng</LabelStyle>
                       <RHFRadioGroup
                         name="gender"
                         options={GENDER_OPTION}
@@ -427,7 +433,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                         </option>
                       ))}
                     </RHFSelect>
-                    <RHFSelect name="brand" label="Loại giày">
+                    <RHFSelect name="brand" label="Thương hiệu">
                       {BRAND_OPTION?.map((category) => (
                         <option key={category._id} value={category._id}>
                           {category.name}

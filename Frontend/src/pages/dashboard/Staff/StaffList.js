@@ -149,7 +149,7 @@ export default function StaffList() {
           <Button
             variant="contained"
             component={RouterLink}
-            to={PATH_DASHBOARD.user.new}
+            to={PATH_DASHBOARD.staff.new}
             startIcon={<Iconify icon={'eva:plus-fill'} />}
           >
             Thêm nhân viên

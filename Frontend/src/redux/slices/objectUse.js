@@ -14,8 +14,10 @@ const initialState = {
   error: null,
   success: '',
   objects: null,
-  newObj: null,
+  newObjectUse: null,
   newDiscount: null,
+  updateObjectUseSuccess: null,
+  deleteObjectUseSuccess: null,
 };
 
 const slice = createSlice({
@@ -31,13 +33,20 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-
     },
 
     // CRREATE ADMIN
     createObjUseSuccess(state, action) {
       state.isLoading = false;
-      state.newObj = action.payload;
+      state.newObjectUse = action.payload;
+    },
+    updateObjectUseSuccess(state, action) {
+      state.isLoading = false;
+      state.updateObjectUseSuccess = action.payload;
+    },
+    deleteObjectUseSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteObjectUseSuccess = action.payload;
     },
     // UPDATE ADMIN
     updatePromotionSuccess(state, action) {
@@ -60,9 +69,11 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
-    resetCate(state) {
+    resetObjectUse(state) {
       state.error = null;
-      state.newBrand = '';
+      state.newObjectUse = '';
+      state.updateObjectUseSuccess = null;
+      state.deleteObjectUseSuccess = null;
     },
   },
 });
@@ -71,16 +82,40 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, resetCate } = slice.actions;
+export const { openModal, closeModal, selectEvent, resetObjectUse } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function createObjUse(promotion) {
+export function createObjUse(data) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/v1/objectUses', promotion);
+      const response = await axios.post('/api/v1/objectUses', data);
       dispatch(slice.actions.createObjUseSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function updateObjectUse(data, id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/v1/objectUses/${id}`, data);
+      dispatch(slice.actions.updateObjectUseSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteObjectUse(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/ObjectUses/${id}`);
+      console.log('response', response);
+      dispatch(slice.actions.deleteObjectUseSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

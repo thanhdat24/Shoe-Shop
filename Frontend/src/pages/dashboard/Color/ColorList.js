@@ -1,60 +1,51 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Card,
-  Table,
   Button,
-  Switch,
-  Tooltip,
-  TableBody,
+  Card,
   Container,
+  DialogContent,
   IconButton,
+  Table,
+  TableBody,
   TableContainer,
   TablePagination,
-  FormControlLabel,
-  DialogContent,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogTitle,
+  Tooltip,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import { LoadingButton } from '@mui/lab';
-import { yupResolver } from '@hookform/resolvers/yup';
 // import { RHFTextField } from '../../components/hook-form';
 import { useSnackbar } from 'notistack';
 import { DialogAnimate } from '../../../components/animate';
 import { FormProvider } from '../../../components/hook-form';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useSettings from '../../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../../hooks/useTable';
+import useTable, { emptyRows, getComparator } from '../../../hooks/useTable';
 // components
-import Page from '../../../components/Page';
-import Iconify from '../../../components/Iconify';
-import Scrollbar from '../../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Iconify from '../../../components/Iconify';
+import Page from '../../../components/Page';
+import Scrollbar from '../../../components/Scrollbar';
 import {
-  TableNoData,
-  TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
+  TableNoData,
   TableSelectedActions,
+  TableSkeleton,
 } from '../../../components/table';
 // sections
 
-import { getBrands } from '../../../redux/slices/brand';
+import { createColor, deleteColor, getColors, resetColor, updateColor } from '../../../redux/slices/color';
 import ColorTableRow from '../../../sections/@dashboard/color/list/ColorTableRow';
-import { createColor, getColors, resetColor } from '../../../redux/slices/color';
 import ColorTableToolBar from '../../../sections/@dashboard/color/list/ColorTableToolBar';
 
 // ----------------------------------------------------------------------
@@ -93,16 +84,11 @@ export default function ColorList() {
   });
 
   const { themeStretch } = useSettings();
-  const { colors, isLoading, newColor, error } = useSelector((state) => state.color);
+  const { colors, isLoading, newColor, updateColorSuccess, deleteColorSuccess } = useSelector((state) => state.color);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
-  const valueRef = useRef('');
-  const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
-    newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
-    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-  });
+  const [isEdit, setIsEdit] = useState(false);
 
   const defaultValues = {
     name: '',
@@ -115,45 +101,54 @@ export default function ColorList() {
     reset,
     handleSubmit,
     register,
+    setValue,
     // formState: { isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
-    try {
-      dispatch(createColor(data));
-      setOpen(false);
-
-      // reset();
-      // enqueueSnackbar('Update success!');
-    } catch (error) {
-      console.error(error);
+    console.log('data', data);
+    if (isEdit) {
+      try {
+        dispatch(updateColor({ name: data.name, color: data.color }, data.id));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        dispatch(createColor(data));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Thêm màu không thành công!', { variant: 'error' });
-    } else if (newColor) {
+    if (updateColorSuccess) {
+      enqueueSnackbar('Cập nhật thành công!');
       dispatch(getColors());
-      enqueueSnackbar('Thêm màu thành công!');
-      // navigate(PATH_DASHBOARD.user.list);
     }
-    setTimeout(() => {
-      dispatch(resetColor());
-    }, 3000);
-  }, [error, newColor]);
+    if (newColor) {
+      enqueueSnackbar('Thêm màu sắc thành công!');
+      dispatch(getColors());
+    }
+    if (deleteColorSuccess) {
+      enqueueSnackbar('Xóa màu sắc thành công!');
+      dispatch(getColors());
+    }
+    return () => dispatch(resetColor());
+  }, [updateColorSuccess, newColor, deleteColorSuccess]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleCreate = () => {
-    setOpen(false);
-    // dispatch(createBrand({ name: valueRef.current.value }));
-  };
-
   const dispatch = useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
+    setIsEdit(false);
   };
 
   const [tableData, setTableData] = useState([]);
@@ -176,19 +171,21 @@ export default function ColorList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    dispatch(deleteColor(id));
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (data) => {
+    setOpen(true);
+    setValue('name', data.name);
+    setValue('id', data._id);
+    setValue('color', data.color);
+    setIsEdit(true);
   };
 
   const dataFiltered = applySortFilter({
@@ -196,7 +193,7 @@ export default function ColorList() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
-
+  console.log('dataFiltered', dataFiltered);
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -215,23 +212,17 @@ export default function ColorList() {
             { name: 'Danh sách màu' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              // component={RouterLink}
-              // to={PATH_DASHBOARD.brand.new}
-              onClick={handleClickOpen}
-            >
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
               Thêm màu sắc
             </Button>
           }
         />
         <DialogAnimate
           open={open}
+          isEdit={isEdit ? 'Cập nhật' : 'Tạo'}
           onClose={handleClose}
           title={'Tạo màu sắc'}
           onClickSubmit={handleSubmit(onSubmit)}
-          isEdit={'Tạo'}
         >
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <DialogContent>
@@ -262,40 +253,6 @@ export default function ColorList() {
           </FormProvider>
         </DialogAnimate>
 
-        {/* <Dialog open={open}> */}
-        {/* <FormProvider
-          methods={methods}
-          onSubmit={handleSubmit(onSubmit)}
-         
-        >
-         
-        
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Tên màu sắc"
-            type="text"
-            fullWidth
-            name="name"
-            id="outlined-basic"
-            variant="outlined"
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Mã màu"
-            type="text"
-            fullWidth
-            name="color"
-            id="outlined-basic"
-            variant="outlined"
-          />
-          
-          <Button type="submit" variant="outlined">
-            Tạo{' '}
-          </Button>
-        </FormProvider> */}
-        {/* </Dialog> */}
         <Card>
           <ColorTableToolBar filterName={filterName} onFilterName={handleFilterName} />
 
@@ -309,7 +266,7 @@ export default function ColorList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                   actions={
@@ -333,7 +290,7 @@ export default function ColorList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -344,12 +301,12 @@ export default function ColorList() {
                     .map((row, index) =>
                       row ? (
                         <ColorTableRow
-                          key={row.id}
+                          key={row._id}
                           row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          onEditRow={() => handleEditRow(row)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

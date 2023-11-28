@@ -23,6 +23,8 @@ import {
   DialogActions,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { FormProvider } from '../../../components/hook-form';
 
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -46,7 +48,7 @@ import {
 } from '../../../components/table';
 // sections
 import BrandTableRow from '../../../sections/@dashboard/brand/list/BrandTableRow';
-import { createCate, getCates, resetCate } from '../../../redux/slices/cate';
+import { createCate, deleteCate, getCates, resetCate, updateCate } from '../../../redux/slices/cate';
 import { createBrand, getBrands, resetBrand } from '../../../redux/slices/brand';
 import BrandTableToolbar from '../../../sections/@dashboard/brand/list/BrandTableToolbar';
 import { DialogAnimate } from '../../../components/animate';
@@ -71,6 +73,7 @@ export default function CateList() {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
+    setIsEdit(false);
   };
 
   const handleClose = () => {
@@ -105,29 +108,71 @@ export default function CateList() {
 
   const { themeStretch } = useSettings();
 
+  const { cates, isLoading, newCate, deleteCateSuccess, updateCateSuccess } = useSelector((state) => state.cate);
+
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { cates, isLoading, newCate, error } = useSelector((state) => state.cate);
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  const defaultValues = {
+    name: '',
+  };
+
+  const methods = useForm({ defaultValues });
+
+  const {
+    reset,
+    handleSubmit,
+    register,
+    setValue,
+    // formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async (data) => {
+    console.log('data', data);
+    if (isEdit) {
+      try {
+        dispatch(updateCate({ name: data.name }, data.id));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        dispatch(createCate(data));
+        reset();
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+  useEffect(() => {
+    dispatch(getCates());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (updateCateSuccess) {
+      enqueueSnackbar('Cập nhật thành công!');
+      dispatch(getCates());
+    }
+    if (newCate) {
+      enqueueSnackbar('Thêm loại giày thành công!');
+      dispatch(getCates());
+    }
+    if (deleteCateSuccess) {
+      enqueueSnackbar('Xóa màu sắc thành công!');
+      dispatch(getCates());
+    }
+    return () => dispatch(resetCate());
+  }, [newCate, updateCateSuccess, deleteCateSuccess]);
 
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
-  useEffect(() => {
-    dispatch(getCates());
-  }, [dispatch]);
-  useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Thêm loại giày không thành công!', { variant: 'error' });
-    } else if (newCate) {
-      enqueueSnackbar('Thêm loại giày  thành công!');
-      dispatch(getCates());
-      // navigate(PATH_DASHBOARD.user.list);
-    }
-    setTimeout(() => {
-      dispatch(resetCate());
-    }, 3000);
-  }, [error, newCate]);
   useEffect(() => {
     if (cates?.length) {
       setTableData(cates);
@@ -140,9 +185,7 @@ export default function CateList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    dispatch(deleteCate(id));
   };
 
   const handleDeleteRows = (selected) => {
@@ -151,8 +194,11 @@ export default function CateList() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (data) => {
+    setOpen(true);
+    setValue('name', data.name);
+    setValue('id', data._id);
+    setIsEdit(true);
   };
 
   const dataFiltered = applySortFilter({
@@ -194,54 +240,25 @@ export default function CateList() {
           open={open}
           onClose={handleClose}
           title={'Tạo loại giày'}
-          onClickSubmit={handleCreate}
-          isEdit={'Tạo'}
+          onClickSubmit={handleSubmit(onSubmit)}
+          isEdit={isEdit ? 'Cập nhật' : 'Tạo'}
         >
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Tên loại"
-              type="text"
-              fullWidth
-              name="name"
-              inputRef={valueRef}
-              id="outlined-basic"
-              variant="outlined"
-            />
-          </DialogContent>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <DialogContent>
+              <TextField
+                name="name"
+                type="text"
+                label="Tên loại"
+                {...register('name')}
+                autoFocus
+                margin="dense"
+                fullWidth
+                id="outlined-basic"
+                variant="outlined"
+              />
+            </DialogContent>
+          </FormProvider>
         </DialogAnimate>
-        {/* <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title" sx={{ textAlign: 'center', fontSize: '18px', marginBottom: '10px' }}>
-            {'Tạo thương hiệu'}
-          </DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Tên thương hiệu"
-              type="text"
-              fullWidth
-              name="name"
-              inputRef={valueRef}
-              id="outlined-basic"
-              variant="outlined"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="contained" color="error">
-              Hủy{' '}
-            </Button>
-            <Button type="submit" onClick={handleCreate} variant="outlined">
-              Tạo{' '}
-            </Button>
-          </DialogActions>
-        </Dialog> */}
 
         <Card>
           <CateTableToolBar filterName={filterName} onFilterName={handleFilterName} />
@@ -296,7 +313,7 @@ export default function CateList() {
                           selected={selected.includes(row.id)}
                           onSelectRow={() => onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
+                          onEditRow={() => handleEditRow(row)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

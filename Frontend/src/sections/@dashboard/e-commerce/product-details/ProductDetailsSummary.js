@@ -89,7 +89,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
           subtotal: data.price * data.quantity,
           available: detailColorSize.quantity,
           idColor: detailColorSize.idColor._id,
-              colorName: detailColorSize.idColor.name,
+          colorName: detailColorSize.idColor.name,
           idSize: detailColorSize.idSize._id,
           productId: detailColorSize.idProduct._id,
         });
@@ -156,7 +156,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
 
         <Typography variant="h4" sx={{ mb: 3 }}>
           <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-            {priceSale && fCurrency(priceSale)}
+            {priceSale !== 0 && fCurrency(priceSale)}
           </Box>
           &nbsp;{fCurrency(price)}
         </Typography>
@@ -199,11 +199,11 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
             FormHelperTextProps={{
               sx: { textAlign: 'right', margin: 0, mt: 1 },
             }}
-            helperText={
-              <Link underline="always" color="text.secondary">
-                Size Chart
-              </Link>
-            }
+            // helperText={
+            //   <Link underline="always" color="text.secondary">
+            //     Size Chart
+            //   </Link>
+            // }
           >
             {sizes.map((size) => (
               <option key={size.size} value={size.size}>

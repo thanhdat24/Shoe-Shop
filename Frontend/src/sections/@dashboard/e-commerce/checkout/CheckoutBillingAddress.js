@@ -139,7 +139,7 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
         </Typography>
         {isDefault && (
           <Label color="info" sx={{ ml: 1 }}>
-            Mặt định
+            Mặc định
           </Label>
         )}
       </Box>

@@ -1,42 +1,38 @@
-import { Box, Button, Card, DialogContent, Grid, ListItemButton, ListItemIcon, Stack, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import PaidIcon from '@mui/icons-material/Paid';
 import PlaceIcon from '@mui/icons-material/Place';
-import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
+import { Box, Button, Card, DialogContent, Grid, ListItemButton, ListItemIcon, Stack, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import React, { useEffect, useState } from 'react';
 // import SearchIcon from "@mui/icons-material/Search";
-import Tabs from '@mui/material/Tabs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 // import PersonIcon from "@mui/icons-material/Person";
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useDispatch, useSelector } from 'react-redux';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { styled, useTheme } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink as RouterLink, useNavigate } from 'react-router-dom';
-import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 // import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 // import EmailIcon from '@mui/icons-material/Email';
 import PropTypes from 'prop-types';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Label from '../../components/Label';
-import { PATH_SHIPPER } from '../../routes/paths';
-import { getShippers, getOrderByShipper } from '../../redux/slices/shipper';
-import { navConfig } from './NavConfig';
-import useAuth from '../../hooks/useAuth';
-import useTabs from '../../hooks/useTabs';
-import { fCurrency } from '../../utils/formatNumber';
-import Iconify from '../../components/Iconify';
 import { DialogAnimate } from '../../components/animate';
-import { updateOrder } from '../../redux/slices/order';
+import Iconify from '../../components/Iconify';
+import Label from '../../components/Label';
 import SvgIconStyle from '../../components/SvgIconStyle';
 import { ICON, NAVBAR } from '../../config';
-import useIsMountedRef from '../../hooks/useIsMountedRef';
+import useAuth from '../../hooks/useAuth';
+import useTabs from '../../hooks/useTabs';
+import { updateOrder } from '../../redux/slices/order';
+import { getOrderByShipper, getShippers } from '../../redux/slices/shipper';
+import { PATH_SHIPPER } from '../../routes/paths';
+import { fCurrency } from '../../utils/formatNumber';
+import { navConfig } from './NavConfig';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -156,7 +152,7 @@ export default function OrderListShipper() {
     tableData,
     filterStatus,
   });
-
+  console.log('dataFiltered', dataFiltered);
   const TABS = [
     {
       value: 'all',
@@ -171,7 +167,6 @@ export default function OrderListShipper() {
       count: getLengthByStatus('Đang vận chuyển'),
     },
     { value: 'Hoàn thành', label: 'Hoàn thành', color: 'success', count: getLengthComplete() },
-    { value: 'Hoàn trả', label: 'Hoàn trả', color: 'error', count: getLengthByStatus('Hoàn trả') },
   ];
   const handleLogout = async () => {
     try {
@@ -199,7 +194,7 @@ export default function OrderListShipper() {
                     style={{ fontSize: '36px !important' }}
                   />
                   <Typography variant="subtitle2">Đã giao </Typography>
-                  <Typography variant="h4">{getLengthByStatus('Đã giao hàng')}</Typography>
+                  <Typography variant="h4">{getLengthComplete()}</Typography>
                 </Box>
               </Grid>
               <Grid item xs={6} sm={6} md={6}>
@@ -218,7 +213,7 @@ export default function OrderListShipper() {
                   <Typography variant="h4">{getLengthByStatus('Đang vận chuyển')}</Typography>
                 </Box>
               </Grid>
-
+              {/* 
               <Grid item xs={6} sm={6} md={6}>
                 <Box
                   style={{ backgroundColor: '#f0f5fb', padding: '15px 10px', borderRadius: '15px', lineHeight: 2.5 }}
@@ -230,7 +225,7 @@ export default function OrderListShipper() {
                   <Typography variant="subtitle2">Hoàn trả</Typography>
                   <Typography variant="h4">26</Typography>
                 </Box>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Card>
           <Typography align="left" variant="h6" sx={{ marginLeft: '16px' }}>
@@ -277,7 +272,7 @@ export default function OrderListShipper() {
                             </Typography>
                           </Box>
                           <Box className="flex">
-                            <QueryBuilderIcon color="primary" sx={{ marginRight: '5px' }} />
+                            <PaidIcon color="primary" sx={{ marginRight: '5px' }} />
                             <Typography align="left" variant="body2">
                               {fCurrency(item.total)} ₫
                             </Typography>
@@ -298,7 +293,7 @@ export default function OrderListShipper() {
                         className="mr-2 "
                         sx={{ marginRight: '10px' }}
                       >
-                        Đồng ý
+                        Đã giao
                       </Button>
                       <DialogAnimate
                         open={openDialog}
@@ -409,15 +404,15 @@ export default function OrderListShipper() {
                               </Typography>
                               <Box className="flex mt-2">
                                 {' '}
-                                <PlaceIcon color="primary" />
+                                <PlaceIcon color="primary"  className="mr-1" />
                                 <Typography align="left" variant="body2">
                                   {item.address.fullAddress}
                                 </Typography>
                               </Box>
                               <Box className="flex py-3">
-                                <QueryBuilderIcon color="primary" />
+                                <AccessTimeFilledIcon color="primary" className="mr-1" />
                                 <Typography align="left" variant="body2">
-                                  time
+                                  {item.createdAt}
                                 </Typography>
                               </Box>
                               <Box className="flex mb-2">
@@ -563,7 +558,6 @@ function applySortFilter({ tableData, filterStatus }) {
       (item) => item.status === 'Đã giao hàng' || item.status === 'Đã nhận' || item.status === 'Đã đánh giá'
     );
   }
-
 
   return tableData;
 }

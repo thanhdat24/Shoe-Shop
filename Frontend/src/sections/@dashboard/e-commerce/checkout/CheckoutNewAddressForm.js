@@ -1,29 +1,28 @@
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 // form
-import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
 // @mui
-import {
-  Box,
-  Stack,
-  Dialog,
-  Button,
-  Divider,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography,
-  Autocomplete,
-  TextField,
-} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 // _mock
-import { province } from '../../../../_mock';
-import { FormProvider, RHFCheckbox, RHFSelect, RHFTextField, RHFRadioGroup } from '../../../../components/hook-form';
-import { createAddress, getListProvince, getListWard } from '../../../../redux/slices/address';
+import { FormProvider, RHFCheckbox, RHFTextField } from '../../../../components/hook-form';
+import { createAddress, getDistricts, getListProvince, getWard } from '../../../../redux/slices/address';
 import { useDispatch } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -43,6 +42,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
   });
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const [province, setProvince] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const defaultValues = {
@@ -78,20 +78,25 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
     }
   };
   useEffect(async () => {
-    const data = await getListProvince(values.city?.idProvince);
-
+    const data = await getListProvince();
     if (data.status === 200) {
-      setDistrictList(data.data);
+      setProvince(data.data);
     }
-  }, [values.city]);
-
+  }, []);
   useEffect(async () => {
-    const data = await getListWard(values.district?.idDistrict);
-
+    const data = await getDistricts(values.city.code);
     if (data.status === 200) {
-      setWardList(data.data);
+      setDistrictList(data.data.districts);
     }
-  }, [values.district]);
+  }, [values.city && values.city.code]);
+  useEffect(async () => {
+    const data = await getWard(values.district?.code);
+    if (data.status === 200) {
+      setWardList(data.data.wards);
+    }
+  }, [values.district && values.district.code]);
+
+  // getDistricts;
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -136,7 +141,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    isOptionEqualToValue={(option, value) => option.idProvince === value.idProvince}
+                    isOptionEqualToValue={(option, value) => option.code === value.code}
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={province.map((options) => options)}
@@ -151,7 +156,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    isOptionEqualToValue={(option, value) => option.idDistrict === value.idDistrict}
+                    isOptionEqualToValue={(option, value) => option.code === value.code}
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={districtList?.map((options) => options)}
@@ -166,7 +171,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    isOptionEqualToValue={(option, value) => option.idCommune === value.idCommune}
+                    isOptionEqualToValue={(option, value) => option.code === value.code}
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={wardList?.map((options) => options)}

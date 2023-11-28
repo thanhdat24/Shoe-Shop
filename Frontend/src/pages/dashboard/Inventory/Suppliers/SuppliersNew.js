@@ -1,48 +1,22 @@
-import { DateRangePicker, DateRange, LoadingButton } from '@mui/lab';
-import React, { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import {
-  Container,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Stack,
-  Grid,
-  Card,
-  Button,
-  Switch,
-  Box,
-  TextField,
-  Alert,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Autocomplete,
-} from '@mui/material';
+import { Autocomplete, Box, Card, Container, Grid, Stack, TextField } from '@mui/material';
 import * as Yup from 'yup';
 
-import moment from 'moment';
 // import { LoadingButton } from '@mui/lab';
-import { useFormik, Form, Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { useHistory, useNavigate, Link as RouterLink } from 'react-router-dom';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { styled } from '@mui/material/styles';
-import { createDiscount, resetDiscount } from '../../../../redux/slices/promotion';
+import { Controller, useForm } from 'react-hook-form';
 
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-import { fNumber, fNumberVND, formatPriceInVND } from '../../../../utils/formatNumber';
-import SaveCancelButtons from '../../../../components/SaveCancelButtons/SaveCancelButtons';
-import { province } from '../../../../_mock';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
-import { getListProvince, getListWard } from '../../../../redux/slices/address';
+import SaveCancelButtons from '../../../../components/SaveCancelButtons/SaveCancelButtons';
+import { getDistricts, getListProvince, getWard } from '../../../../redux/slices/address';
 import { createSupplier, resetSupplier } from '../../../../redux/slices/supplier';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 export default function SuppliersNew() {
   const navigate = useNavigate();
@@ -51,6 +25,8 @@ export default function SuppliersNew() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [districtList, setDistrictList] = useState([]);
+
+  const [province, setProvince] = useState([]);
 
   const [wardList, setWardList] = useState([]);
 
@@ -103,20 +79,25 @@ export default function SuppliersNew() {
   }, [error, newSupplier]);
 
   useEffect(async () => {
-    const data = await getListProvince(values.city?.idProvince);
-
+    const data = await getListProvince();
     if (data.status === 200) {
-      setDistrictList(data.data);
+      setProvince(data.data);
     }
-  }, [values.city]);
+  }, []);
 
   useEffect(async () => {
-    const data = await getListWard(values.district?.idDistrict);
-
+    const data = await getDistricts(values.city.code);
     if (data.status === 200) {
-      setWardList(data.data);
+      setDistrictList(data.data.districts);
     }
-  }, [values.district]);
+  }, [values.city && values.city.code]);
+
+  useEffect(async () => {
+    const data = await getWard(values.district?.code);
+    if (data.status === 200) {
+      setWardList(data.data.wards);
+    }
+  }, [values.district && values.district.code]);
 
   const [isReadyCreateSupplier, setIsReadyCreateSupplier] = useState(false);
   useEffect(() => {
@@ -162,7 +143,7 @@ export default function SuppliersNew() {
                         render={({ field }) => (
                           <Autocomplete
                             {...field}
-                            isOptionEqualToValue={(option, value) => option.idProvince === value.idProvince}
+                            isOptionEqualToValue={(option, value) => option.code === value.code}
                             getOptionLabel={(option) => option.name || ''}
                             onChange={(event, newValue) => field.onChange(newValue)}
                             options={province.map((options) => options)}
@@ -179,7 +160,7 @@ export default function SuppliersNew() {
                         render={({ field }) => (
                           <Autocomplete
                             {...field}
-                            isOptionEqualToValue={(option, value) => option.idDistrict === value.idDistrict}
+                            isOptionEqualToValue={(option, value) => option.code === value.code}
                             getOptionLabel={(option) => option.name || ''}
                             onChange={(event, newValue) => field.onChange(newValue)}
                             options={districtList?.map((options) => options)}
@@ -197,7 +178,7 @@ export default function SuppliersNew() {
                       render={({ field }) => (
                         <Autocomplete
                           {...field}
-                          isOptionEqualToValue={(option, value) => option.idCommune === value.idCommune}
+                          isOptionEqualToValue={(option, value) => option.code === value.code}
                           getOptionLabel={(option) => option.name || ''}
                           onChange={(event, newValue) => field.onChange(newValue)}
                           options={wardList?.map((options) => options)}

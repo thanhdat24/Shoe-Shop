@@ -39,11 +39,11 @@ export default function UserCreate() {
     <Page title="User: Create a new user">
       <Box sx={{ padding: '0px 10px' }}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Tạo người dùng mới' : 'Chỉnh sửa người dùng'}
+          heading={!isEdit ? 'Tạo nhân viên mới' : 'Chỉnh sửa nhân viên'}
           links={[
             { name: 'Trang chủ', href: PATH_DASHBOARD.root },
-            { name: 'Người dùng', href: PATH_DASHBOARD.user.list },
-            { name: !isEdit ? 'Người dùng mới' : id },
+            { name: 'Nhân viên', href: PATH_DASHBOARD.user.list },
+            { name: !isEdit ? 'Nhân viên mới' : id },
           ]}
         />
 

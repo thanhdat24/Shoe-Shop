@@ -63,3 +63,16 @@ export function formatDateReceipt(d) {
 function isValidDate(d) {
   return d instanceof Date && !Number.isNaN(d.getTime());
 }
+
+export function isCurrentDateGreaterThanSevenDays(date) {
+  if (date === undefined) return true;
+  const currentDate = new Date();
+  console.log('currentDate', currentDate);
+  const comparedDate = new Date(date);
+  console.log('comparedDate', comparedDate);
+
+  const diffInMilliseconds = currentDate.getTime() - comparedDate.getTime();
+  const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+
+  return diffInDays > 7;
+}

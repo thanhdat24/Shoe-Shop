@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useMemo, useState } from 'react';
 
 // @mui
-import { Box, Stack, Dialog, Button, DialogContent, DialogActions, Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, Stack, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
-import { province } from '../../../../_mock';
 
-import { useDispatch, useSelector } from '../../../../redux/store';
+import { getDistricts, getListProvince, getWard } from '../../../../redux/slices/address';
 import { updateSupplier } from '../../../../redux/slices/supplier';
+import { useDispatch, useSelector } from '../../../../redux/store';
 
 SupplierEditDialog.propTypes = {
   open: PropTypes.bool,
@@ -21,6 +21,8 @@ SupplierEditDialog.propTypes = {
 export default function SupplierEditDialog({ open, onClose, supplierDetail, supplierId }) {
   const dispatch = useDispatch();
   const [districtList, setDistrictList] = useState([]);
+  const [province, setProvince] = useState([]);
+  console.log('supplierDetail', supplierDetail);
   const { updateSupplierSuccess } = useSelector((state) => state.supplier);
   const [wardList, setWardList] = useState([]);
   const defaultValues = useMemo(
@@ -54,33 +56,66 @@ export default function SupplierEditDialog({ open, onClose, supplierDetail, supp
   }, [supplierId, supplierDetail]);
 
   const values = watch();
+  console.log('values', values);
+
+  const getNameFromObject = (dataField) => {
+    if (typeof dataField === 'object' && dataField !== null) {
+      return dataField.name || '';
+    }
+    return dataField || '';
+  };
 
   const onSubmit = async (data) => {
-    const fullAddress = `${data?.address || ''} ${data?.ward || ''} ${data?.district || ''} ${data?.city || ''}`;
+    const updateValueIfObject = (field) => {
+      if (typeof data[field] === 'object' && data[field] !== null) {
+        data[field] = data[field].name || '';
+      }
+    };
+
+    updateValueIfObject('city');
+    updateValueIfObject('ward');
+    updateValueIfObject('district');
+
+    const fullAddress = `${data?.address || ''}, ${getNameFromObject(data.city)}, ${getNameFromObject(
+      data.ward
+    )}, ${getNameFromObject(data.district)}`;
+
     try {
-      console.log('data');
+      console.log('data', data);
       dispatch(updateSupplier({ ...data, fullAddress }, supplierId));
     } catch (error) {
       console.error(error);
     }
   };
-
   const handleCloseModal = () => {
     resetField();
     onClose();
   };
 
-  // useEffect(() => {
-  //   if (updateSupplierSuccess) {
-  //     enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-  //     resetField();
-  //     onClose();
+  useEffect(async () => {
+    const data = await getListProvince();
+    console.log('data123', data);
 
-  //   }
-  // }, [updateSupplierSuccess]);
+    if (data.status === 200) {
+      setProvince(data.data);
+    }
+    const codeCity = data.data.find((item) => item.name === values.city)?.code;
+    const dataDistrict = await getDistricts(codeCity || values.city?.code);
+    if (data.status === 200) {
+      setDistrictList(dataDistrict.data.districts);
+    }
+
+    const codeDistrict = dataDistrict.data.districts.find((item) => item.name === values.district)?.code;
+
+    const dataWard = await getWard(values.district?.code || codeDistrict);
+    if (data.status === 200) {
+      setWardList(dataWard.data.wards);
+    }
+  }, [supplierDetail || values.city, values.district, values.ward]);
+
   return (
     <FormProvider methods={methods}>
-      <Dialog fullWidth maxWidth="md" open={open} sx={{ zIndex: '10000' }} onClose={handleCloseModal}>
+      <Dialog fullWidth maxWidth="sm" open={open} onClose={handleCloseModal}>
         <ModalDialog onClose={handleCloseModal}> Chỉnh sửa thông tin liên hệ</ModalDialog>
         <hr />
         <DialogContent className="!py-4">
@@ -104,8 +139,8 @@ export default function SupplierEditDialog({ open, onClose, supplierDetail, supp
                   render={({ field }) => (
                     <Autocomplete
                       {...field}
-                      isOptionEqualToValue={(option, value) => option.idProvince === value.idProvince}
-                      getOptionLabel={(option) => option.name || ''}
+                      isOptionEqualToValue={(option, value) => option.name === value}
+                      getOptionLabel={(option) => option.name || values.city}
                       onChange={(event, newValue) => field.onChange(newValue)}
                       options={province.map((options) => options)}
                       renderInput={(params) => <TextField label="Tỉnh/Thành phố" {...params} />}
@@ -121,8 +156,8 @@ export default function SupplierEditDialog({ open, onClose, supplierDetail, supp
                   render={({ field }) => (
                     <Autocomplete
                       {...field}
-                      isOptionEqualToValue={(option, value) => option.idDistrict === value.idDistrict}
-                      getOptionLabel={(option) => option.name || ''}
+                      isOptionEqualToValue={(option, value) => option.name === value}
+                      getOptionLabel={(option) => option.name || values.district}
                       onChange={(event, newValue) => field.onChange(newValue)}
                       options={districtList?.map((options) => options)}
                       renderInput={(params) => <TextField label="Quận/Huyện" {...params} />}
@@ -139,8 +174,8 @@ export default function SupplierEditDialog({ open, onClose, supplierDetail, supp
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    isOptionEqualToValue={(option, value) => option.idCommune === value.idCommune}
-                    getOptionLabel={(option) => option.name || ''}
+                    isOptionEqualToValue={(option, value) => option.name === value}
+                    getOptionLabel={(option) => option.name || values.ward}
                     onChange={(event, newValue) => field.onChange(newValue)}
                     options={wardList?.map((options) => options)}
                     renderInput={(params) => <TextField label="Phường/Xã" {...params} />}

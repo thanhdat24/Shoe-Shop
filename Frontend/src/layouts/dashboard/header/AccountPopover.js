@@ -67,6 +67,7 @@ export default function AccountPopover() {
     setOpen(null);
   };
   const handleLogout = async () => {
+    console.log('user567', user);
     if (user.googleId !== undefined) {
       try {
         await logout();

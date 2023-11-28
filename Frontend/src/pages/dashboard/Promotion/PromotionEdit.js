@@ -212,7 +212,7 @@ export default function PromotionEdit() {
       Mã giảm giá
     </Link>,
     <Typography key="3" color="inherit">
-      Tạo mã giảm giá
+      Chỉnh sửa mã giảm giá
     </Typography>,
   ];
   return (
@@ -220,7 +220,7 @@ export default function PromotionEdit() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} mt={7.5}>
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Tạo mã giảm giá mới
+            Chỉnh sửa mã giảm giá
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -403,9 +403,9 @@ export default function PromotionEdit() {
                                 <li className={classes.typographyInfo}>
                                   <span>
                                     Giảm{' '}
-                                    <b className="text-green-600">{`${(fNumberVND(values?.price) * 1).toLocaleString(
-                                      'vi-VI'
-                                    )} đ`}</b>
+                                    <b className="text-green-600">
+                                      {`${(values?.price * 1).toLocaleString('vi-VI')} đ`}
+                                    </b>
                                   </span>
                                 </li>
                                 <li className={classes.typographyInfo}>
@@ -487,7 +487,7 @@ export default function PromotionEdit() {
                                         fontSize: '13px',
                                       }}
                                     >
-                                      <p>Ví ZaloPay</p>
+                                      <p>Voucher</p>
                                     </div>
                                   </div>
                                   <div className="flex flex-col p-3 w-full">

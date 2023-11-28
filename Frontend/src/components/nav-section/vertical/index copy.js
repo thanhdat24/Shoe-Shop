@@ -39,44 +39,20 @@ export default function NavSectionVertical({ isNavUser, navConfig, isCollapse = 
 
   return (
     <Box {...other} sx={isNavUser === 'yes' && { marginTop: 2 }}>
-      {navConfig.map((group) => {
-        console.log('group.subheader', group.subheader);
-        if (
-          user.email === 'admin@gmail.com' ||
-          (user.role === 'nhân viên bán hàng'
-            ? group.subheader === 'Quản lý danh mục hệ thống'
-            : user.role === 'nhân viên kho'
-            ? group.subheader === 'Quản lý danh mục hệ thống'
-            : user.role === 'khách hàng' &&
-              (group.subheader === 'Thông tin tài khoản' || group.subheader === 'Quản lý đơn hàng'))
-        ) {
-          return (
-            <List key={group.subheader} disablePadding sx={{ px: 2 }}>
+      {navConfig.map(
+        (group) => (
+          console.log('group.subheader', group.subheader),
+          (
+            <List key={group.subheader} disablePadding sx={isNavUser !== 'yes' && { px: 2 }}>
               {isNavUser !== 'yes' && <ListSubheaderStyle subheader={group.subheader} />}
-              {group.items
-                .filter((item) => {
-                  const isNhanVienBanHang = user.role === 'nhân viên bán hàng';
-                  const isNhanVienKho = user.role === 'nhân viên kho';
 
-                  if (isNhanVienBanHang) {
-                    return item.title === 'Đơn hàng';
-                  }
-
-                  if (isNhanVienKho) {
-                    return item.title === 'Quản lý tồn kho' || item.title === 'Sản phẩm';
-                  }
-
-                  return true;
-                })
-                .map((list) => (
-                  <NavListRoot key={list.title} list={list} />
-                ))}
+              {group.items.map((list) => (
+                <NavListRoot key={list.title} list={list} isCollapse={isCollapse} />
+              ))}
             </List>
-          );
-        } else {
-          return null; // Skip rendering for other cases
-        }
-      })}
+          )
+        )
+      )}
     </Box>
   );
 }

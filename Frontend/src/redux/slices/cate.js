@@ -16,6 +16,8 @@ const initialState = {
   cates: null,
   newCate: null,
   newDiscount: null,
+  updateCateSuccess: null,
+  deleteCateSuccess: null,
 };
 
 const slice = createSlice({
@@ -48,6 +50,15 @@ const slice = createSlice({
       state.cates = action.payload;
     },
 
+    updateCateSuccess(state, action) {
+      state.isLoading = false;
+      state.updateCateSuccess = action.payload;
+    },
+    deleteCateSuccess(state, action) {
+      state.isLoading = false;
+      state.deleteCateSuccess = action.payload;
+    },
+
     // OPEN MODAL
     openModal(state) {
       state.isOpenModal = true;
@@ -61,7 +72,9 @@ const slice = createSlice({
     },
     resetCate(state) {
       state.error = null;
-      state.newBrand = '';
+      state.newCate = '';
+      state.updateCateSuccess = '';
+      state.deleteCateSuccess = '';
     },
   },
 });
@@ -86,12 +99,25 @@ export function createCate(promotion) {
   };
 }
 
-export function updatePromotion(updateDiscount, id) {
+export function updateCate(data, id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/v1/categories/${id}`, updateDiscount);
-      dispatch(slice.actions.updatePromotionSuccess(response.data.data));
+      const response = await axios.put(`/api/v1/categories/${id}`, data);
+      dispatch(slice.actions.updateCateSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteCate(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/v1/categories/${id}`);
+      console.log('response', response);
+      dispatch(slice.actions.deleteCateSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

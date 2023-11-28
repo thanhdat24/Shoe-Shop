@@ -80,11 +80,11 @@ export const { openModal, closeModal, selectEvent, resetShipper } = slice.action
 
 // ----------------------------------------------------------------------
 
-export function createShipper(color) {
+export function createShipper(account) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/v1/shippers', color);
+      const response = await axios.post('/api/v1/shippers', account);
       dispatch(slice.actions.createShipperSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
