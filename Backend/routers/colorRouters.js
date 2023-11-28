@@ -9,7 +9,7 @@ router
   .get(colorController.getAllColor);
 
 router
-  .route('/:colorId')
+  .route('/:id')
   .delete(colorController.deleteColor)
   .get(colorController.getDetailColor)
   .put(colorController.updateColor);

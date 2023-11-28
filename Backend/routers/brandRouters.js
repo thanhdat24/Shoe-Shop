@@ -9,9 +9,9 @@ router
   .get(brandController.getAllBrand);
 
 router
-  .route('/:brandId')
+  .route('/:id')
   .delete(brandController.deleteBrand)
   .get(brandController.getDetailBrand)
   .put(brandController.updateBrand);
-  
+
 module.exports = router;

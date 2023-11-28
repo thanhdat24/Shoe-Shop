@@ -62,6 +62,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
       quantity: item.quantity,
       sku: item.sku,
       idProduct: '',
+      urlImage: '',
     });
   });
 
@@ -78,6 +79,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         if (doc) {
           productItems.map((item, index) => {
             item.idProduct = doc.id;
+            item.urlImage = arrayImages[index];
           });
           newImages = {
             ...newImages,
@@ -85,6 +87,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
             idProduct: doc.id,
           };
 
+          await Product.findByIdAndUpdate(doc.id, { urlImage: arrayImages[0] });
           await ProductDetail.insertMany(productItems);
           await ProductImages.create(newImages);
 

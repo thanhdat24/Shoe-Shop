@@ -8,7 +8,7 @@ exports.deleteAddress = factory.deleteOne(Address);
 exports.getAllAddress = factory.getAll(Address);
 
 exports.createAddress = catchAsync(async (req, res, next) => {
-  const fullAddress = `{{$trigger.address}}, {{$trigger.ward.name}}, {{$trigger.district.name}}, {{$trigger.city.name}}`;
+  const fullAddress = `${req.body.address}, ${req.body.ward.name}, ${req.body.district.name}, ${req.body.city.name}`;
   const newAddress = new Address({
     fullName: req.body.fullName,
     phoneNumber: req.body.phoneNumber,

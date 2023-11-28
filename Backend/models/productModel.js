@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema(
     },
     priceSale: {
       type: Number,
-      required: [true, 'Please tell us your priceSale'],
+      // required: [true, 'Please tell us your priceSale'],
       trim: true,
     },
     sku: {
@@ -34,17 +34,17 @@ const productSchema = new mongoose.Schema(
     },
     origin: {
       type: String,
-      required: [true, 'Please tell us your origin'],
+      // required: [true, 'Please tell us your origin'],
       trim: true,
     },
     style: {
       type: String,
-      required: [true, 'Please tell us your style'],
+      // required: [true, 'Please tell us your style'],
       trim: true,
     },
     material: {
       type: String,
-      required: [true, 'Please tell us your material'],
+      // required: [true, 'Please tell us your material'],
       trim: true,
     },
     idSupplier: {
@@ -71,7 +71,7 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'ObjectUse',
     },
-    urlImage :{
+    urlImage: {
       type: String,
     },
     // idProductImages: [
@@ -80,9 +80,11 @@ const productSchema = new mongoose.Schema(
     //   'https://cdn.tgdd.vn/Products/Images/9980/295241/giay-lifestyle-nam-nike-air-max-97-dm0027-001-3.jpg',
     // ],
   },
+
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   }
 );
 

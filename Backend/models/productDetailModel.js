@@ -22,6 +22,9 @@ const productDetailSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Color',
     },
+    urlImage: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },

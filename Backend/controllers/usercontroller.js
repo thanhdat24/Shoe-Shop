@@ -107,13 +107,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'photoURL'
   );
 
-  const uploadedResponse = await cloudinary.uploader.upload(
-    filteredBody.photoURL,
-    {
-      upload_preset: 'profile',
-    }
-  );
-  filteredBody.photoURL = uploadedResponse.secure_url;
+  if (req.body.photoURL) {
+    const uploadedResponse = await cloudinary.uploader.upload(
+      filteredBody.photoURL,
+      {
+        upload_preset: 'profile',
+      }
+    );
+    filteredBody.photoURL = uploadedResponse.secure_url;
+  }
 
   const user = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -134,4 +136,38 @@ exports.getUserLoginGoogle = catchAsync(async (req, res, next) => {
   } else {
     createSendToken(user, 200, res);
   }
+});
+
+exports.checkUserExist = catchAsync(async (req, res, next) => {
+  const { uid } = req.query;
+  try {
+    const checkUserExist = await User.findOne({ googleId: uid });
+
+    if (!checkUserExist) {
+      return next(new AppError('Người dùng không tồn tại!', 401));
+    } else {
+      // Chúng ta cần chuyển checkUserExist thành dữ liệu có thể được chuyển đổi thành JSON
+      const userData = checkUserExist.toObject(); // hoặc chuyển đổi checkUserExist thành dữ liệu có thể JSON thông qua phương thức toObject()
+
+      res.status(200).json({
+        status: 'success',
+        data: userData, // Gửi dữ liệu đã được chuyển đổi thành JSON về client
+      });
+    }
+  } catch (error) {
+    return next(new AppError('Đã có lỗi xảy ra khi kiểm tra người dùng!', 500));
+  }
+});
+
+exports.getUserUID = catchAsync(async (req, res, next) => {
+  let query = User.findOne({ googleId: req.query.uid });
+  const doc = await query;
+  if (!doc) {
+    return next(new AppError('Không tồn tại người dùng có uid', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    length: 1,
+    data: doc,
+  });
 });

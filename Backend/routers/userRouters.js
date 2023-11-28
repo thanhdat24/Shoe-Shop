@@ -11,7 +11,12 @@ router.patch(
 );
 
 router.route('/').get(userController.getAllUser);
-router.route('/:id').put(userController.updateUser);
+router.get('/checkUserExist', userController.checkUserExist);
+router.get('/getUserUID', userController.getUserUID);
+router
+  .route('/:id')
+  .put(userController.updateUser)
+  .get(userController.getDetailUser);
 
 router.post('/createUser', userController.createUser);
 router.post('/getUserLoginGoogle', userController.getUserLoginGoogle);

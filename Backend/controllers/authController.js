@@ -38,7 +38,14 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  // create avatar default
+  let { password, passwordConfirm } = req.body;
+
+  if (!password) {
+    // Nếu không có mật khẩu được cung cấp, gán mật khẩu mặc định
+    password = '123456';
+    passwordConfirm = '123456'; // Cần cập nhật cả mật khẩu xác nhận
+  }
+
   const avatarUrl = gravatarUrl.url(req.body.email, {
     protocol: 'http',
     s: '100',
@@ -51,8 +58,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     idRole: req.body.idRole,
     email: req.body.email,
     dateOfBirth: req.body.dateOfBirth,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+    password,
+    passwordConfirm,
     passwordChangeAt: req.body.passwordChangeAt,
     photoURL: avatarUrl,
     address: req.body.address,

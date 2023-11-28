@@ -14,7 +14,7 @@ const adminSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       unique: true,
-      required: [true, 'Please provide your phoneNumber'],
+      // required: [true, 'Please provide your phoneNumber'],
       validate: {
         validator: function (number) {
           return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
@@ -27,7 +27,7 @@ const adminSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      required: [true, 'Please tell us your gender'],
+      // required: [true, 'Please tell us your gender'],
       enum: ['Nam', 'Nữ'],
       allowNull: true,
     },
@@ -42,7 +42,7 @@ const adminSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      required: [true, 'Please provide your date of birth'],
+      // required: [true, 'Please provide your date of birth'],
       allowNull: true,
     },
     photoURL: {
@@ -50,12 +50,12 @@ const adminSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'nhân viên', 'khách hàng'],
+      enum: ['admin', 'nhân viên kho', 'nhân viên bán hàng', 'khách hàng'],
       default: 'khách hàng',
     },
     password: {
       type: String,
-      required: [true, 'Please provide a password'],
+      // required: [true, 'Please provide a password'],
       minlength: 8,
       // Không tự hiện thị
       select: false,

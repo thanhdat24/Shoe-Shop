@@ -99,7 +99,6 @@ exports.getDetailConversation = catchAsync(async (req, res, next) => {
   if (conversationKey !== '') {
     filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
   }
-
   const chat = await Chat.find();
 
   const conversation = chat.find((obj) => {
@@ -110,8 +109,8 @@ exports.getDetailConversation = catchAsync(async (req, res, next) => {
       } else {
         // Nếu conversationKey không phải là số, thực hiện chuyển đổi lowercase
         return (
-          participant.displayName.toLowerCase() ===
-          formatName(conversationKey).toLowerCase()
+          participant.displayName?.toLowerCase() ===
+          formatName(conversationKey)?.toLowerCase()
         );
       }
     });
@@ -134,12 +133,12 @@ exports.getDetailConversation = catchAsync(async (req, res, next) => {
 
 exports.getParticipants = catchAsync(async (req, res, next) => {
   const { conversationKey } = req.query;
+
   var filter = {};
   if (conversationKey !== '') {
     filter.displayName = new RegExp(fullTextSearchVi(conversationKey), 'i');
   }
   const chat = await Chat.find();
-
   const conversation = chat.find((obj) => {
     return obj.participants.some((participant) => {
       if (!isNaN(conversationKey)) {
@@ -148,7 +147,7 @@ exports.getParticipants = catchAsync(async (req, res, next) => {
       } else {
         // Nếu conversationKey không phải là số, thực hiện chuyển đổi lowercase
         return (
-          participant.displayName.toLowerCase() ===
+          participant.displayName?.toLowerCase() ===
           formatName(conversationKey).toLowerCase()
         );
       }
@@ -177,7 +176,6 @@ exports.searchParticipants = catchAsync(async (req, res, next) => {
   const { query } = req.query;
 
   const chat = await Chat.find();
-
   const filteredChat = chat.flatMap((obj) =>
     obj.participants.filter(
       (participant) =>

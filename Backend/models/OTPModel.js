@@ -21,16 +21,16 @@ const OTPSchema = new mongoose.Schema(
 
 const OTP = mongoose.model('OTP', OTPSchema);
 
-// Hàm xóa bản ghi hết hạn
-const deleteExpiredOTP = async () => {
-  const now = new Date();
-  const tenSecondsAgo = new Date(now.getTime() - 30 * 1000); // 10 giây trước
-  await OTP.deleteMany({ expiresAt: { $lt: tenSecondsAgo } });
-};
+// // Hàm xóa bản ghi hết hạn
+// const deleteExpiredOTP = async () => {
+//   const now = new Date();
+//   const tenSecondsAgo = new Date(now.getTime() - 30 * 1000); // 10 giây trước
+//   await OTP.deleteMany({ expiresAt: { $lt: tenSecondsAgo } });
+// };
 
-// Lập lịch chạy hàm xóa vào mỗi giây
-schedule.scheduleJob('* * * * * *', async () => {
-  await deleteExpiredOTP();
-});
+// // Lập lịch chạy hàm xóa vào mỗi giây
+// schedule.scheduleJob('* * * * * *', async () => {
+//   await deleteExpiredOTP();
+// });
 
 module.exports = OTP;

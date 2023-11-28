@@ -270,7 +270,6 @@ exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllTransactionsByReceiptId = catchAsync(async (req, res, next) => {
-  console.log('req.params.id', req.params.id);
   const transactions = await Transactions.find({ receiptId: req.params.id });
 
   if (transactions.length === 0) {

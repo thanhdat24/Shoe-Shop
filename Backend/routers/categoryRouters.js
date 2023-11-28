@@ -9,9 +9,9 @@ router
   .get(categoryController.getAllCategory);
 
 router
-  .route('/:categoryId')
+  .route('/:id')
   .delete(categoryController.deleteCategory)
   .get(categoryController.getDetailCategory)
   .put(categoryController.updateCategory);
-  
+
 module.exports = router;
