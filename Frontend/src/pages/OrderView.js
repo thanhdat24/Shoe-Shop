@@ -159,7 +159,9 @@ export default function OrderView() {
                             </div>
                           </TableCell>
                           <TableCell align="flex">
-                            <span className="line-through text-gray-400">{fCurrency(idProduct?.priceSale)} đ</span>
+                            {idProduct.priceSale !== 0 && (
+                              <span className="line-through text-gray-400">{fCurrency(idProduct.priceSale)} ₫</span>
+                            )}
                             <span className="text-red-500"> {fCurrency(idProduct?.price)} ₫</span>
                           </TableCell>
                           <TableCell align="flex">{quantity}</TableCell>

@@ -1,11 +1,11 @@
+import { paramCase } from 'change-case';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase, paramCase } from 'change-case';
-import _ from 'lodash';
 // @mui
 
-import { useTheme, alpha, styled } from '@mui/material/styles';
-import { TableRow, Checkbox, TableCell, Typography, MenuItem, Link } from '@mui/material';
+import { Checkbox, Link, MenuItem, TableCell, TableRow, Typography } from '@mui/material';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 // utils
 
 import { Link as RouterLink } from 'react-router-dom';
@@ -13,9 +13,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/Label';
-import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
+import Image from '../../../../components/Image';
+import Label from '../../../../components/Label';
 import { TableMoreMenu } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
@@ -121,7 +121,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Delete
+                Xóa
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -130,7 +130,7 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
-                Edit
+                Chỉnh sửa
               </MenuItem>
             </>
           }

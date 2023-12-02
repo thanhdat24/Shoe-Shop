@@ -359,7 +359,19 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
             <Grid item xs={12} md={8}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <RHFTextField name="name" label="Tên sản phẩm" />
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <RHFTextField name="name" label="Tên sản phẩm" sx={{ marginRight: '40px' }} />
+                    <RHFSelect name="supplier" label="Nhà cung cấp" sx={{ margin: '10px 0' }}>
+                      {SUPPLIER_OPTION?.map(
+                        (supplier) =>
+                          supplier.active === true && (
+                            <option key={supplier._id} value={supplier._id}>
+                              {supplier.name}
+                            </option>
+                          )
+                      )}
+                    </RHFSelect>
+                  </Box>
 
                   <div>
                     <LabelStyle>Mô tả</LabelStyle>
@@ -369,22 +381,11 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                     <Grid xs={8} mr={5}>
                       <RHFTextField disabled={isEdit && true} name="sku" label="SKU" />
                       <RHFTextField name="origin" label="Xuất sứ" sx={{ margin: '10px 0' }} />
-                      <RHFTextField name="material" label="Chất liệu" />
                     </Grid>
                     <Grid xs={8}>
                       <RHFTextField name="style" label="Kiểu dáng" />
-                      <RHFSelect name="supplier" label="Nhà cung cấp" sx={{ margin: '10px 0' }}>
-                        {SUPPLIER_OPTION?.map(
-                          (supplier) =>
-                            supplier.active === true && (
-                              <option key={supplier._id} value={supplier._id}>
-                                {supplier.name}
-                              </option>
-                            )
-                        )}
-                      </RHFSelect>
-
-                      <RHFTextField
+                      <RHFTextField name="material" label="Chất liệu" sx={{ margin: '10px 0' }} />
+                      {/* <RHFTextField
                         name="quantity"
                         label="Số lượng"
                         onChange={(event) => setValue('quantity', Number(event.target.value))}
@@ -392,7 +393,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                         InputProps={{
                           type: 'number',
                         }}
-                      />
+                      /> */}
                     </Grid>
                   </Grid>
 

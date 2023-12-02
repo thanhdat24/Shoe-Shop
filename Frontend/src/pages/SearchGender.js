@@ -1,20 +1,17 @@
-import _ from 'lodash';
-import orderBy from 'lodash/orderBy';
 // form
-import { useForm } from 'react-hook-form';
-import { Box, Container, Typography, Stack } from '@mui/material';
-import React, { useEffect, useState } from 'react';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import { Box, Container, Pagination, Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { FormProvider } from '../components/hook-form';
+import useSettings from '../hooks/useSettings';
+import { getBrands } from '../redux/slices/brand';
+import { getObjects } from '../redux/slices/objectUse';
 import { filterProducts, getAllCate, getAllColor, getAllSize, searchGender } from '../redux/slices/product';
 import { useDispatch, useSelector } from '../redux/store';
 import { ShopFilterSidebar, ShopProductList, ShopTagFiltered } from '../sections/@dashboard/e-commerce/shop';
-import { PATH_HOME } from '../routes/paths';
-import useSettings from '../hooks/useSettings';
-import { FormProvider } from '../components/hook-form';
-import { getObjects } from '../redux/slices/objectUse';
-import { getBrands } from '../redux/slices/brand';
 
 // ---------------------------------------------------
 
@@ -27,12 +24,14 @@ export default function SearchGender() {
 
   const dispatch = useDispatch();
 
-  const gender = searchParams.get('q');
+  const gender = searchParams.get('gender');
 
   const priceGte = searchParams.get('price_gte');
 
   const priceLte = searchParams.get('price_lte');
 
+  console.log('priceLte', priceLte);
+  console.log('gender', gender);
   useEffect(() => {
     dispatch(getAllCate());
     dispatch(getAllSize());
@@ -40,6 +39,12 @@ export default function SearchGender() {
     dispatch(getObjects());
     dispatch(getBrands());
   }, [dispatch]);
+
+  const [page, setPage] = useState(1);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const { themeStretch } = useSettings();
 
@@ -64,7 +69,7 @@ export default function SearchGender() {
   });
   const FILTER_COLOR_OPTIONS = colors;
 
-  const filteredProducts = applyFilter(searchList, filters, priceGte, priceLte);
+  const filteredProducts = applyFilter(searchList, filters, priceGte, priceLte, page, 6);
 
   const defaultValues = {
     gender: filters.gender,
@@ -179,8 +184,8 @@ export default function SearchGender() {
             </Box>
 
             <Typography component="div" variant="subtitle3" sx={{ color: 'white' }}>
-              Có <strong>{filteredProducts?.length ? filteredProducts?.length : 0}</strong> sản phẩm phù hợp với tiêu
-              chí của bạn
+              Có <strong>{filteredProducts?.totalCount ? filteredProducts?.totalCount : 0}</strong> sản phẩm phù hợp với
+              tiêu chí của bạn
             </Typography>
           </Box>
 
@@ -200,9 +205,21 @@ export default function SearchGender() {
           </Stack>
 
           {productPrice ? (
-            <ShopProductList isSearch products={productPrice} />
+            <Box>
+              {' '}
+              <ShopProductList isSearch products={productPrice} />
+              <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+                {' '}
+                <Pagination count={filteredProducts?.totalPages} page={page} onChange={handleChange} color="primary" />
+              </Stack>
+            </Box>
           ) : (
-            <ShopProductList isSearch products={filteredProducts} />
+            <Box>
+              <ShopProductList isSearch products={filteredProducts?.data} />
+              <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+                <Pagination count={filteredProducts?.totalPages} page={page} onChange={handleChange} color="primary" />
+              </Stack>
+            </Box>
           )}
 
           {(productPrice?.length === 0 || filteredProducts?.length === 0) && (
@@ -218,10 +235,10 @@ export default function SearchGender() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter(products, filters, priceGte, priceLte) {
+function applyFilter(products, filters, priceGte, priceLte, page, pageSize) {
   const stabilizedThis = products?.map((el, index) => [el, index]);
   products = stabilizedThis?.map((el) => el[0]);
-
+  console.log('filters.gender', filters.gender);
   // FILTER PRODUCTS
   if (filters.gender.length > 0) {
     products = products.filter((product) => filters.gender.includes(product.idObjectUse.name));
@@ -238,27 +255,15 @@ function applyFilter(products, filters, priceGte, priceLte) {
     products = products?.filter((item) => priceGte <= item.price && item.price <= priceLte);
   }
 
-  //   if (filters.priceRange) {
-  //     products = products.filter((product) => {
-  //       if (filters.priceRange === 'below') {
-  //         return product.price < 25;
-  //       }
-  //       if (filters.priceRange === 'between') {
-  //         return product.price >= 25 && product.price <= 75;
-  //       }
-  //       return product.price > 75;
-  //     });
-  //   }
-  //   if (filters.rating) {
-  //     products = products.filter((product) => {
-  //       const convertRating = (value) => {
-  //         if (value === 'up4Star') return 4;
-  //         if (value === 'up3Star') return 3;
-  //         if (value === 'up2Star') return 2;
-  //         return 1;
-  //       };
-  //       return product.totalRating > convertRating(filters.rating);
-  //     });
-  //   }
-  return products;
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedProducts = products?.slice(startIndex, endIndex);
+
+  return {
+    totalCount: products?.length,
+    totalPages: Math.ceil(products?.length / pageSize),
+    currentPage: page,
+    pageSize: pageSize,
+    data: paginatedProducts,
+  };
 }

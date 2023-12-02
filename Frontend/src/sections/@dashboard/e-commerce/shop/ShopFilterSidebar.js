@@ -1,38 +1,27 @@
-import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { useNavigate } from 'react-router';
-import { paramCase } from 'change-case';
 import { useSearchParams } from 'react-router-dom';
 // form
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
 import {
   Box,
-  Radio,
-  Stack,
-  Button,
-  Drawer,
-  Rating,
   Divider,
-  IconButton,
-  Typography,
-  RadioGroup,
-  FormControlLabel,
-  Slider as MuiSlider,
   FormControl,
-  InputLabel,
   InputBase,
-  FormHelperText,
+  InputLabel,
+  Slider as MuiSlider,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 // lodash;
-import _ from 'lodash';
 // @types
-import { NAVBAR } from '../../../../config';
 // components
-import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
 import { RHFMultiCheckbox, RHFRadioGroupName } from '../../../../components/hook-form';
+import Scrollbar from '../../../../components/Scrollbar';
 import { PATH_HOME } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
@@ -115,17 +104,33 @@ export default function ShopFilterSidebar({
     return `${value}`;
   };
   const [searchParams] = useSearchParams();
-  const search = searchParams.get('q');
+  const search = searchParams.get('q') || 'tất cả sản phẩm';
+
+  const searchGender = searchParams.get('gender');
+  console.log('searchGender123', searchGender);
+  console.log('search123', search);
   const handleChange = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
       return;
     }
     if (activeThumb === 0) {
       setValue1([Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]]);
-      navigate(PATH_HOME.search.viewPrice(search, Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]));
+      if (search) {
+        navigate(PATH_HOME.search.viewPrice(search, Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1]));
+      } else {
+        navigate(
+          PATH_HOME.search.viewPriceGender(searchGender, Math.min(newValue[0], value1[1] - MIN_AMOUNT), value1[1])
+        );
+      }
     } else {
       setValue1([value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)]);
-      navigate(PATH_HOME.search.viewPrice(search, value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)));
+      if (search) {
+        navigate(PATH_HOME.search.viewPrice(search, value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT)));
+      } else {
+        navigate(
+          PATH_HOME.search.viewPriceGender(searchGender, value1[0], Math.max(newValue[1], value1[0] + MIN_AMOUNT))
+        );
+      }
     }
   };
 

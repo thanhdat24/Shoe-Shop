@@ -1,33 +1,33 @@
 import { LoadingButton } from '@mui/lab';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Container, Grid, Card, Box, TextField, Autocomplete, TableContainer, Table, TableBody } from '@mui/material';
-import * as Yup from 'yup';
+import { Autocomplete, Box, Card, Container, Grid, Table, TableBody, TableContainer, TextField } from '@mui/material';
 import _ from 'lodash';
+import * as Yup from 'yup';
 
 // import { LoadingButton } from '@mui/lab';
-import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
 
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-import { formatPriceInVND } from '../../../../utils/formatNumber';
-import SaveCancelButtons from '../../../../components/SaveCancelButtons/SaveCancelButtons';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
-import { getSuppliers } from '../../../../redux/slices/supplier';
-import useAuth from '../../../../hooks/useAuth';
+import SaveCancelButtons from '../../../../components/SaveCancelButtons/SaveCancelButtons';
 import { TableHeadCustom, TableSkeleton } from '../../../../components/table';
-import { getProducts } from '../../../../redux/slices/product';
+import useAuth from '../../../../hooks/useAuth';
 import useTable from '../../../../hooks/useTable';
-import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
-import SearchModelProductRow from './SearchModelProductRow';
 import useToggle from '../../../../hooks/useToggle';
+import { getProducts } from '../../../../redux/slices/product';
 import { createReceipt, resetReceipt } from '../../../../redux/slices/receipt';
+import { getSuppliers } from '../../../../redux/slices/supplier';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { InventoryTableRow, InventoryTableToolbar } from '../../../../sections/@dashboard/Inventory/InventoryReceives';
+import { formatPriceInVND } from '../../../../utils/formatNumber';
 import ConfirmImport from './ConfirmImport';
+import SearchModelProductRow from './SearchModelProductRow';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Tên sản phẩm', align: 'left', minWidth: 150 },
@@ -119,7 +119,6 @@ export default function InventoryReceivesNew() {
   const values = watch();
 
   const onSubmit = async (data) => {
-
     const inventoryStatus = openConfirmImport || openConfirmInvalidProduct ? 2 : 1;
 
     const newData = {
@@ -217,10 +216,10 @@ export default function InventoryReceivesNew() {
     if (values.supplier && selectedInventory.length > 0) setIsReadyCreateSupplier(true);
     else setIsReadyCreateSupplier(false);
   }, [values.supplier, selectedInventory]);
-
   const dataFiltered = applySortFilter({
     tableData,
     filterName,
+    filterSupplier: values.supplier,
   });
 
   const denseHeight = dense ? 60 : 80;
@@ -450,13 +449,16 @@ export default function InventoryReceivesNew() {
   );
 }
 
-function applySortFilter({ tableData, filterName }) {
+function applySortFilter({ tableData, filterName, filterSupplier }) {
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
     tableData = tableData.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+  }
+  if (filterSupplier) {
+    tableData = tableData.filter((item) => item.idSupplier._id === filterSupplier._id);
   }
 
   return tableData;

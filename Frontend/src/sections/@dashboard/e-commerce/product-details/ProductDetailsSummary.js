@@ -1,23 +1,20 @@
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // form
 import { Controller, useForm } from 'react-hook-form';
 // @mui
-import { useTheme, styled } from '@mui/material/styles';
-import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { Box, Button, Divider, IconButton, Rating, Stack, Typography } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 // utils
-import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
+import { fCurrency, fShortenNumber } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/Label';
-import Iconify from '../../../../components/Iconify';
-import SocialsButton from '../../../../components/SocialsButton';
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
-import { useSelector } from '../../../../redux/store';
+import Iconify from '../../../../components/Iconify';
+import Label from '../../../../components/Label';
+import SocialsButton from '../../../../components/SocialsButton';
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +47,7 @@ ProductDetailsSummary.propTypes = {
 
 export default function ProductDetailsSummary({ cart, product, ratingList, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [detailColorSize, setDetailColorSize] = useState({});
 
@@ -112,6 +110,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
         idSize: detailColorSize.idSize._id,
         productId: detailColorSize.idProduct._id,
       });
+      enqueueSnackbar('Thêm vào giỏ hàng thành công!');
     } catch (error) {
       console.error(error);
     }

@@ -133,7 +133,7 @@ export default function CheckoutPayment() {
         setLinkMoMo(data.data.payUrl);
         checkoutLinkRef.current.click();
       } else {
-        dispatch(createOrder(cartCheckout));
+        await dispatch(createOrder(cartCheckout));
         handleNextStep();
       }
     } catch (error) {

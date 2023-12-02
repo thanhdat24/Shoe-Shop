@@ -1,20 +1,17 @@
-import _ from 'lodash';
-import orderBy from 'lodash/orderBy';
 // form
-import { useForm } from 'react-hook-form';
-import { Box, Container, Typography, Stack } from '@mui/material';
-import React, { useEffect, useState } from 'react';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import { Box, Container, Pagination, Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { FormProvider } from '../components/hook-form';
+import useSettings from '../hooks/useSettings';
+import { getBrands } from '../redux/slices/brand';
+import { getObjects } from '../redux/slices/objectUse';
 import { filterProducts, getAllCate, getAllColor, getAllSize, searchProduct } from '../redux/slices/product';
 import { useDispatch, useSelector } from '../redux/store';
 import { ShopFilterSidebar, ShopProductList, ShopTagFiltered } from '../sections/@dashboard/e-commerce/shop';
-import { PATH_HOME } from '../routes/paths';
-import useSettings from '../hooks/useSettings';
-import { FormProvider } from '../components/hook-form';
-import { getObjects } from '../redux/slices/objectUse';
-import { getBrands } from '../redux/slices/brand';
 
 // ---------------------------------------------------
 
@@ -23,11 +20,16 @@ export default function Search() {
 
   const dispatch = useDispatch();
 
-  const search = searchParams.get('q');
+  const search = searchParams.get('q') || 'tất cả sản phẩm';
+
+  const searchGender = searchParams.get('gender');
 
   const priceGte = searchParams.get('price_gte');
 
   const priceLte = searchParams.get('price_lte');
+
+  console.log('search', search);
+  console.log('priceGte', priceGte);
 
   useEffect(() => {
     dispatch(getAllCate());
@@ -36,6 +38,11 @@ export default function Search() {
     dispatch(getObjects());
     dispatch(getBrands());
   }, [dispatch]);
+
+  const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const { themeStretch } = useSettings();
 
@@ -59,8 +66,9 @@ export default function Search() {
     return colorName.push(item.name);
   });
   const FILTER_COLOR_OPTIONS = colors;
-
-  const filteredProducts = applyFilter(searchList, filters, priceGte, priceLte);
+  console.log('searchList', searchList);
+  const filteredProducts = applyFilter(searchList, filters, priceGte, priceLte, page, 6);
+  console.log('filteredProducts', filteredProducts);
 
   const defaultValues = {
     gender: filters.gender,
@@ -118,7 +126,8 @@ export default function Search() {
   const [productPrice, setProductPrice] = useState();
 
   useEffect(() => {
-    dispatch(searchProduct(search));
+    if (search !== 'tất cả sản phẩm') dispatch(searchProduct(search, page));
+    else dispatch(searchProduct('', page));
   }, [dispatch, search]);
 
   return (
@@ -170,13 +179,13 @@ export default function Search() {
             <Box className="flex">
               <ManageSearchIcon sx={{ color: 'white', marginRight: '10px' }} />
               <Typography sx={{ color: 'white' }} variant="subtitle1">
-                Kết quả tìm kiếm cho <strong className="text-md">'{search}'</strong>
+                Kết quả tìm kiếm cho <strong className="text-md">'{search || searchGender}'</strong>
               </Typography>
             </Box>
 
             <Typography component="div" variant="subtitle3" sx={{ color: 'white' }}>
-              Có <strong>{filteredProducts?.length ? filteredProducts?.length : 0}</strong> sản phẩm phù hợp với tiêu
-              chí của bạn
+              Có <strong>{filteredProducts?.totalCount ? filteredProducts?.totalCount : 0}</strong> sản phẩm phù hợp với
+              tiêu chí của bạn
             </Typography>
           </Box>
 
@@ -196,12 +205,24 @@ export default function Search() {
           </Stack>
 
           {productPrice ? (
-            <ShopProductList isSearch products={productPrice} />
+            <Box>
+              {' '}
+              <ShopProductList isSearch products={productPrice} />
+              <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+                {' '}
+                <Pagination count={filteredProducts?.totalPages} page={page} onChange={handleChange} color="primary" />
+              </Stack>
+            </Box>
           ) : (
-            <ShopProductList isSearch products={filteredProducts} />
+            <Box>
+              <ShopProductList isSearch products={filteredProducts?.data} />
+              <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+                <Pagination count={filteredProducts?.totalPages} page={page} onChange={handleChange} color="primary" />
+              </Stack>
+            </Box>
           )}
 
-          {(productPrice?.length === 0 || filteredProducts?.length === 0) && (
+          {(productPrice?.data?.length === 0 || filteredProducts?.data?.length === 0) && (
             <Box className="flex flex-col w-full mt-3">
               <p className="text-center text-2xl ">Không tìm thấy sản phẩm nào</p>
             </Box>
@@ -214,9 +235,11 @@ export default function Search() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter(products, filters, priceGte, priceLte) {
+function applyFilter(products, filters, priceGte, priceLte, page, pageSize) {
   const stabilizedThis = products?.map((el, index) => [el, index]);
   products = stabilizedThis?.map((el) => el[0]);
+  console.log('filters.gender', filters.gender);
+  // console.log('searchGender', searchGender);
 
   // FILTER PRODUCTS
   if (filters.gender.length > 0) {
@@ -233,28 +256,15 @@ function applyFilter(products, filters, priceGte, priceLte) {
   if (priceGte || priceLte) {
     products = products?.filter((item) => priceGte <= item.price && item.price <= priceLte);
   }
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedProducts = products?.slice(startIndex, endIndex);
 
-  //   if (filters.priceRange) {
-  //     products = products.filter((product) => {
-  //       if (filters.priceRange === 'below') {
-  //         return product.price < 25;
-  //       }
-  //       if (filters.priceRange === 'between') {
-  //         return product.price >= 25 && product.price <= 75;
-  //       }
-  //       return product.price > 75;
-  //     });
-  //   }
-  //   if (filters.rating) {
-  //     products = products.filter((product) => {
-  //       const convertRating = (value) => {
-  //         if (value === 'up4Star') return 4;
-  //         if (value === 'up3Star') return 3;
-  //         if (value === 'up2Star') return 2;
-  //         return 1;
-  //       };
-  //       return product.totalRating > convertRating(filters.rating);
-  //     });
-  //   }
-  return products;
+  return {
+    totalCount: products?.length,
+    totalPages: Math.ceil(products?.length / pageSize),
+    currentPage: page,
+    pageSize: pageSize,
+    data: paginatedProducts,
+  };
 }

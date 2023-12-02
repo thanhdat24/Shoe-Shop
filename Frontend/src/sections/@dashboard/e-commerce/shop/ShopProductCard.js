@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { paramCase } from 'change-case';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { Box, Card, IconButton, Link, Stack, Typography } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_HOME } from '../../../../routes/paths';
+import { PATH_HOME } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/Label';
-import Image from '../../../../components/Image';
 import { ColorPreview } from '../../../../components/color-utils';
-import { formatDate, isCurrentDateGreaterThanSevenDays } from '../../../../utils/formatTime';
+import Image from '../../../../components/Image';
+import Label from '../../../../components/Label';
+import { isCurrentDateGreaterThanSevenDays } from '../../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -24,9 +25,7 @@ ShopProductCard.propTypes = {
 export default function ShopProductCard({ product }) {
   const { name, cover, price, priceSale, productImages, productDetail, createdAt } = product;
   const [status, setStatus] = useState('');
-  console.log('createdAt', createdAt);
   const day = new Date();
-  console.log('day123', isCurrentDateGreaterThanSevenDays(createdAt));
   useEffect(() => {
     setStatus(!createdAt && isCurrentDateGreaterThanSevenDays(createdAt) ? 'old' : 'new');
   }, [createdAt]);
@@ -55,25 +54,47 @@ export default function ShopProductCard({ product }) {
 
   return (
     <Card>
-      <Box sx={{ position: 'relative' }}>
-        {status && status !== 'old' && (
-          <Label
-            variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
-            sx={{
-              top: 16,
-              right: 16,
-              zIndex: 9,
-              position: 'absolute',
-              textTransform: 'uppercase',
-            }}
-          >
-            {status}
-          </Label>
-        )}
-        <Image alt={name} src={productImages[0].url[0]} ratio="1/1" />
-      </Box>
-
+      <Link to={linkTo} color="inherit" component={RouterLink}>
+        <Box sx={{ position: 'relative' }}>
+          {status && status !== 'old' && (
+            <Label
+              variant="filled"
+              color={(status === 'sale' && 'error') || 'info'}
+              sx={{
+                top: 16,
+                right: 16,
+                zIndex: 9,
+                position: 'absolute',
+                textTransform: 'uppercase',
+              }}
+            >
+              {status}
+            </Label>
+          )}
+          <Image alt={name} src={productImages[0].url[0]} ratio="1/1" />
+          {/* <IconButton
+          aria-label="delete"
+          size="large"
+          sx={{
+            bottom: 16,
+            right: 16,
+            zIndex: 9,
+            position: 'absolute',
+            textTransform: 'uppercase',
+            backgroundColor: 'rgb(255, 171, 0)',
+            color: 'rgb(33, 43, 54)',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            '&:hover': {
+              backgroundColor: 'rgb(183, 110, 0)',
+            },
+          }}
+        >
+          <AddShoppingCartIcon fontSize="inherit" sx={{ width: '24px', height: '24px' }} />
+        </IconButton> */}
+        </Box>
+      </Link>
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link to={linkTo} color="inherit" component={RouterLink}>
           <Typography variant="subtitle2" noWrap>

@@ -1,25 +1,16 @@
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 // @mui
 import {
-  Box,
-  Card,
-  Stack,
-  Button,
-  Divider,
-  TextField,
-  CardHeader,
-  Typography,
-  CardContent,
-  InputAdornment,
+  Box, Button, Card, CardContent, CardHeader, Divider, Stack, Typography
 } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
-import Discount from './Discount';
-import { useDispatch, useSelector } from '../../../../redux/store';
 import { getPromotions } from '../../../../redux/slices/promotion';
+import { useDispatch, useSelector } from '../../../../redux/store';
+import Discount from './Discount';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +37,7 @@ export default function CheckoutSummary({
 
   const { checkout } = useSelector((state) => state.product);
 
-  const displayShipping = shipping !== null ? 'Free' : '-';
+  const displayShipping = shipping !== null ? 'Miễn phí' : '-';
 
   const { promotions } = useSelector((state) => state.promotion);
 
@@ -74,7 +65,7 @@ export default function CheckoutSummary({
             action={
               enableEdit && (
                 <Button size="small" onClick={onEdit} startIcon={<Iconify icon={'eva:edit-fill'} />}>
-                  Edit
+                  Chỉnh sửa
                 </Button>
               )
             }
@@ -102,7 +93,7 @@ export default function CheckoutSummary({
           action={
             enableEdit && (
               <Button size="small" onClick={onEdit} startIcon={<Iconify icon={'eva:edit-fill'} />}>
-                Edit
+                Chỉnh sửa
               </Button>
             )
           }

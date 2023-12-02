@@ -1,11 +1,9 @@
-import React from 'react';
 // @mui
-import { Box, Table, TableBody, TableContainer, TablePagination } from '@mui/material';
+import { Table, TableBody, TableContainer } from '@mui/material';
 
 import { TableHeadCustom } from '../../../../components/table';
 import useTable from '../../../../hooks/useTable';
 import { InventoryEditTableRow } from '../../../../sections/@dashboard/Inventory/InventoryReceivesEdit';
-import { useSelector } from '../../../../redux/store';
 
 const TABLE_HEAD = [
   { id: 'receiptCode', label: 'Mã phiếu', align: 'left' },

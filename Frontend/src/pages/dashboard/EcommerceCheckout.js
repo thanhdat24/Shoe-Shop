@@ -82,6 +82,7 @@ export default function EcommerceCheckout() {
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.product);
   const { cart, address, activeStep } = checkout;
+  console.log('activeStep', activeStep);
   const isComplete = activeStep === STEPS.length;
 
   useEffect(() => {

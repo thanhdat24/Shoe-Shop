@@ -149,7 +149,7 @@ export default function Order() {
     tableData,
     filterStatus,
   });
-
+  console.log('dataFiltered', dataFiltered);
   const TABS = [
     { value: 'all', label: 'Tất cả', color: 'primary', count: tableData.length },
     { value: 'Đang xử lý', label: 'Đang xử lý', color: 'warning', count: getLengthByStatus('Đang xử lý') },
@@ -250,9 +250,12 @@ export default function Order() {
                               </div>
                             </div>
                             <div>
-                              <span className="line-through text-gray-400">
-                                {fCurrency(item.idProduct.priceSale)} ₫
-                              </span>
+                              {item.idProduct.priceSale !== 0 && (
+                                <span className="line-through text-gray-400">
+                                  {fCurrency(item.idProduct.priceSale)} ₫
+                                </span>
+                              )}
+
                               <span className="text-red-500"> {item.idProduct.price.toLocaleString()} ₫</span>
                             </div>
                           </div>
@@ -398,9 +401,10 @@ function applySortFilter({ tableData, filterStatus }) {
 
   if (filterStatus !== 'all' && filterStatus !== 'Hoàn thành') {
     tableData = tableData.filter((item) => item.status === filterStatus);
-  } else {
-    tableData = tableData.filter((item) => item.status === 'Đã nhận' || item.status === 'Đã đánh giá');
+  } else if (filterStatus === 'Hoàn thành') {
+    tableData = tableData.filter((item) => item.status === 'Hoàn thành' || item.status === 'Đã đánh giá');
   }
+  // Nếu filterStatus là 'all' thì không cần áp dụng bất kỳ bộ lọc nào, trả về tất cả dữ liệu
 
   return tableData;
 }

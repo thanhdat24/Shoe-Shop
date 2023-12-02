@@ -206,7 +206,11 @@ export default function OrderDetail() {
                           <Item>
                             <Grid item xs={4} md={4} sx={{ padding: '10px', whiteSpace: 'nowrap' }}>
                               <Box className="text-red-500 text-base">{fCurrency(item.idProduct.price)} ₫</Box>
-                              <Box className="line-through text-gray-400">{fCurrency(item.idProduct.priceSale)} ₫</Box>
+                              {item.idProduct.priceSale !== 0 && (
+                                <Box className="line-through text-gray-400">
+                                  {fCurrency(item.idProduct.priceSale)} ₫
+                                </Box>
+                              )}
                             </Grid>
                           </Item>
                         </Grid>

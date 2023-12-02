@@ -17,17 +17,17 @@ const menuConfig = [
 
   {
     title: 'Nam',
-    path: '/gender?q=Nam',
+    path: '/gender?gender=Nam',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
   {
     title: 'Nữ',
-    path: '/gender?q=Nữ',
+    path: '/gender?gender=Nữ',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
   {
     title: 'Trẻ em',
-    path: '/gender?q=Trẻ em',
+    path: '/gender?gender=Trẻ em',
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
   },
 ];

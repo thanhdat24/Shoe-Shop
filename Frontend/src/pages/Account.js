@@ -86,7 +86,7 @@ export default function Account() {
           <Grid spacing={3}>
             <Card sx={{ padding: '23px' }}>
               <Typography variant="h4" sx={{ mb: 5 }}>
-                Thông tin tài khoản123
+                Thông tin tài khoản
               </Typography>
               <Box
                 sx={{

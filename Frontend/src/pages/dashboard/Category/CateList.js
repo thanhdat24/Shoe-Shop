@@ -163,7 +163,7 @@ export default function CateList() {
       dispatch(getCates());
     }
     if (deleteCateSuccess) {
-      enqueueSnackbar('Xóa màu sắc thành công!');
+      enqueueSnackbar('Xóa loại giày thành công!');
       dispatch(getCates());
     }
     return () => dispatch(resetCate());

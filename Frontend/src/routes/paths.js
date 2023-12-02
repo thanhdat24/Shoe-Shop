@@ -25,8 +25,11 @@ export const PATH_HOME = {
   search: {
     root: path(ROOTS, '/search'),
     view: (name) => path(ROOTS, `search?q=${name}`),
+    viewAll: path(ROOTS, `search?q=`),
     viewPrice: (name, priceGte, priceLte) =>
       path(ROOTS, `search?q=${name}&price_gte=${priceGte}&price_lte=${priceLte}`),
+    viewPriceGender: (name, priceGte, priceLte) =>
+      path(ROOTS, `search?gender=${name}&price_gte=${priceGte}&price_lte=${priceLte}`),
   },
   gender: {
     root: path(ROOTS, '/gender'),

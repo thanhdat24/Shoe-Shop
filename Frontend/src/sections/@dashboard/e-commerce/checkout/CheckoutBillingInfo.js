@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Card, Button, Typography, CardHeader, CardContent } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Typography } from '@mui/material';
 // redux
 import { useSelector } from '../../../../redux/store';
 // components
@@ -23,7 +23,7 @@ export default function CheckoutBillingInfo({ onBackStep }) {
         title="Địa chỉ giao hàng"
         action={
           <Button size="small" startIcon={<Iconify icon={'eva:edit-fill'} />} onClick={onBackStep}>
-            Edit
+            Chỉnh sửa
           </Button>
         }
       />

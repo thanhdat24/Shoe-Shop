@@ -59,7 +59,6 @@ export default function Product() {
   const { product, error, checkout } = useSelector((state) => state.product);
   const { productRatingList } = useSelector((state) => state.rating);
   const { name = '' } = useParams();
-
   useEffect(() => {
     dispatch(getProduct(name));
     return dispatch(resetProduct());

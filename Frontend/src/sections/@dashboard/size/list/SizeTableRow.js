@@ -1,17 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
-import _ from 'lodash';
 // @mui
 
-import { useTheme, alpha, styled } from '@mui/material/styles';
-import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
+import { Checkbox, MenuItem, TableCell, TableRow, Typography } from '@mui/material';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 // utils
-
-import { fCurrency } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/Label';
-import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 //
@@ -61,7 +55,6 @@ export default function SizeTableRow({ row, selected, onEditRow, onSelectRow, on
         </Typography>
       </TableCell>
 
-    
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}
@@ -77,7 +70,7 @@ export default function SizeTableRow({ row, selected, onEditRow, onSelectRow, on
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Delete
+                Xóa
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -86,7 +79,7 @@ export default function SizeTableRow({ row, selected, onEditRow, onSelectRow, on
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
-                Edit
+                Chỉnh sửa
               </MenuItem>
             </>
           }

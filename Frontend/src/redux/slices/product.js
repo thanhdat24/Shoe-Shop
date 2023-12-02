@@ -391,11 +391,11 @@ export function updateProduct(product, id) {
   };
 }
 
-export function searchProduct(search) {
+export function searchProduct(search, page) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/v1/products/search', { params: { search } });
+      const response = await axios.get('/api/v1/products/search', { params: { search, page } });
       dispatch(slice.actions.searchProductSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

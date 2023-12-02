@@ -2,24 +2,24 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import {
   Avatar,
   Checkbox,
-  TableRow,
-  TableCell,
-  Typography,
-  MenuItem,
   DialogContent,
-  Switch,
   FormControlLabel,
+  MenuItem,
+  Switch,
+  TableCell,
+  TableRow,
+  Typography,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 // components
-import Label from '../../../../components/Label';
-import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
 import { DialogAnimate } from '../../../../components/animate';
+import Iconify from '../../../../components/Iconify';
+import Label from '../../../../components/Label';
+import { TableMoreMenu } from '../../../../components/table';
 import { getUsers, resetAdmin, updateAdmin } from '../../../../redux/slices/admin';
 
 // ----------------------------------------------------------------------

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 // @mui
-import { Card, Stack, Divider, Checkbox, MenuItem, IconButton, CardHeader, FormControlLabel } from '@mui/material';
+import { Card, CardHeader, Checkbox, Divider, FormControlLabel, IconButton, MenuItem, Stack } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 import MenuPopover from '../../../../components/MenuPopover';
@@ -132,7 +132,7 @@ function MoreMenuButton() {
 
         <MenuItem>
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          Edit
+          Chỉnh sửa
         </MenuItem>
 
         <MenuItem>
@@ -144,7 +144,7 @@ function MoreMenuButton() {
 
         <MenuItem sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
+          Xóa
         </MenuItem>
       </MenuPopover>
     </>

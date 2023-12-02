@@ -103,21 +103,53 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.searchProduct = catchAsync(async (req, res, next) => {
+  const page = Number(req.query.page);
+  const limit = 6;
+  const skip = (page - 1) * limit;
+
+  const count = await Product.countDocuments();
+  const totalPages = Math.ceil(count / limit);
   const { search } = req.query;
+  console.log('req.query.page', req.query.page);
   var filter = {};
   if (search != '') {
     filter.name = new RegExp(fullTextSearchVi(search), 'i');
   }
-
-  await Product.find(filter)
-    .populate('productImages productDetail')
-    .then((records) => {
-      res.status(200).json({
-        status: 'success',
-        result: records.length,
-        data: records,
-      });
-    });
+  // if (req.query.page) {
+  //   await Product.find(filter)
+  //     .populate('productImages productDetail')
+  //     .skip(skip)
+  //     .limit(6)
+  //     .then((records) => {
+  //       res.status(200).json({
+  //         status: 'success',
+  //         result: records.length,
+  //         data: records,
+  //         page,
+  //         totalPages,
+  //         count,
+  //       });
+  //     });
+  // } else {
+  //   await Product.find(filter)
+  //     .populate('productImages productDetail')
+  //     .then((records) => {
+  //       res.status(200).json({
+  //         status: 'success',
+  //         result: records.length,
+  //         data: records,
+  //       });
+  //     });
+  // }
+      await Product.find(filter)
+        .populate('productImages productDetail')
+        .then((records) => {
+          res.status(200).json({
+            status: 'success',
+            result: records.length,
+            data: records,
+          });
+        });
 });
 
 exports.searchGender = catchAsync(async (req, res, next) => {

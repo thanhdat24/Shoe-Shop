@@ -58,15 +58,11 @@ export default function NavSectionVertical({ isNavUser, navConfig, isCollapse = 
                   const isNhanVienBanHang = user.role === 'nhân viên bán hàng';
                   const isNhanVienKho = user.role === 'nhân viên kho';
 
-                  if (isNhanVienBanHang) {
-                    return item.title === 'Đơn hàng';
-                  }
-
-                  if (isNhanVienKho) {
-                    return item.title === 'Quản lý tồn kho' || item.title === 'Sản phẩm';
-                  }
-
-                  return true;
+                  return (
+                    (isNhanVienBanHang && item.title === 'Đơn hàng') ||
+                    (isNhanVienKho && (item.title === 'Quản lý tồn kho' || item.title === 'Sản phẩm')) ||
+                    (!isNhanVienBanHang && !isNhanVienKho)
+                  );
                 })
                 .map((list) => (
                   <NavListRoot key={list.title} list={list} />

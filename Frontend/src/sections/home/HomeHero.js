@@ -193,7 +193,7 @@ export default function HomeHero() {
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.root}
+                to="/"
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
                 Mua ngay

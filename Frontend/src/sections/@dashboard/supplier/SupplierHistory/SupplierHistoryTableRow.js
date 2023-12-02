@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 // @mui
 
+import { Link, TableCell, TableRow, Typography } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-import { TableRow, TableCell, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
-import { formatDate } from '../../../../utils/formatTime';
 import { formatPriceInVND } from '../../../../utils/formatNumber';
+import { formatDate } from '../../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 

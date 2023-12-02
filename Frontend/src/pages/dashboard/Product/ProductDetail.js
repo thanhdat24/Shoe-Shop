@@ -1,35 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { Box, Card, Container, Table, TableBody, TableContainer, Typography } from '@mui/material';
+import { paramCase } from 'change-case';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link as RouterLink, useParams } from 'react-router-dom';
-import {
-  Card,
-  Chip,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-  Autocomplete,
-  InputAdornment,
-  Box,
-  Button,
-  Stepper,
-  Step,
-  StepLabel,
-  TableContainer,
-  TableBody,
-  Table,
-  Paper,
-  Container,
-} from '@mui/material';
+import { useParams } from 'react-router-dom';
 
-import _ from 'lodash';
-
-import { TableHeadCustom } from '../../../components/table';
-import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Page from '../../../components/Page';
+import { TableHeadCustom } from '../../../components/table';
+import { getProducts } from '../../../redux/slices/product';
 import { PATH_DASHBOARD } from '../../../routes/paths';
-import Iconify from '../../../components/Iconify';
-import { getProduct } from '../../../redux/slices/product';
 import ProductDetailTableRow from '../../../sections/@dashboard/e-commerce/ProductDetailTableRow';
 
 const TABLE_HEAD = [
@@ -41,13 +20,13 @@ const TABLE_HEAD = [
   { id: 'priceSale', label: 'Giá so sánh', align: 'left' },
 ];
 export default function ProductDetail() {
-  const [arrayNewProduct, setArrayNewProduct] = useState();
   const dispatch = useDispatch();
-  const { cates, sizes, colors, productSave, product } = useSelector((state) => state.product);
-  // const { product } = useSelector((state) => state.product);
+  const { products } = useSelector((state) => state.product);
   const { name } = useParams();
+  const currentProduct = products?.data?.find((product) => paramCase(product.name) === name);
+
   useEffect(() => {
-    if (product === null) dispatch(getProduct(name));
+    dispatch(getProducts());
   }, [dispatch]);
 
   return (
@@ -61,7 +40,7 @@ export default function ProductDetail() {
               name: 'Sản phẩm',
               href: PATH_DASHBOARD.eCommerce.list,
             },
-            { name: product?.name },
+            { name: currentProduct?.name },
           ]}
         />
         <Box>
@@ -69,7 +48,7 @@ export default function ProductDetail() {
             <TableContainer sx={{ minWidth: 800 }}>
               {' '}
               <Typography variant="h4" className="text-green-500 uppercase " ml={2} mt={2} mb={2}>
-                Chi tiết {product?.name}
+                Chi tiết {currentProduct?.name}
               </Typography>
               {/* {productUpdate.name} */}
               {/* <div style={{ height: 400, width: '100%' }}>
@@ -92,19 +71,16 @@ export default function ProductDetail() {
                 />
 
                 <TableBody>
-                  {product?.productDetail?.map((row, index) => (
+                  {currentProduct?.productDetail?.map((row, index) => (
                     <ProductDetailTableRow
                       key={row.id}
                       row={{
                         ...row,
-                        objectUseName: product?.idObjectUse,
-                        price: product.price,
-                        priceSale: product.priceSale,
+                        objectUseName: currentProduct?.idObjectUse,
+                        price: currentProduct.price,
+                        priceSale: currentProduct.priceSale,
                       }}
                       selected={false}
-                      // onSelectRow={() => onSelectRow(row.id)}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      // onEditRow={() => handleEditRow(row.name)}
                     />
                   ))}
                 </TableBody>

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import Check from '@mui/icons-material/Check';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import DomainVerificationIcon from '@mui/icons-material/DomainVerification';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import Stack from '@mui/material/Stack';
+import Step from '@mui/material/Step';
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',

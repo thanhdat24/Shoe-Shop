@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
+import { Box, Button, Divider, Link, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Divider, Typography, Stack } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/product';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import { PATH_AUTH } from '../../../../routes/paths';
 // components
-import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
+import Iconify from '../../../../components/Iconify';
 // assets
 import { OrderCompleteIllustration } from '../../../../assets';
 import { createOrder } from '../../../../redux/slices/order';
@@ -49,7 +49,7 @@ export default function CheckoutOrderComplete({ ...other }) {
     navigate(PATH_AUTH.home);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     let cartCheckout = {};
     if (resultCode && checkout) {
       const paymentMethod = {
@@ -65,7 +65,7 @@ export default function CheckoutOrderComplete({ ...other }) {
         paymentMethod,
       };
 
-      dispatch(createOrder(cartCheckout));
+      await dispatch(createOrder(cartCheckout));
     }
   }, [checkout]);
 
