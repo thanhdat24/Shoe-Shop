@@ -62,7 +62,6 @@ InvoiceDetails.propTypes = {
 };
 
 export default function InvoiceDetails({ invoice, shippers }) {
-
   const theme = useTheme();
   const [shipper, setShipper] = useState();
   const [shipperInfo, setShipperInfo] = useState('');
@@ -124,7 +123,6 @@ export default function InvoiceDetails({ invoice, shippers }) {
   const handleSubmit = async () => {
     setOpeDialog(false);
     if (invoice?.paymentMethod.name === 'Thanh toán qua ví Momo') {
-   
       const data = await refundMoMoPayment({
         amount: invoice.total,
         transId: Number(invoice.paymentMethod.transId),
@@ -330,7 +328,7 @@ export default function InvoiceDetails({ invoice, shippers }) {
                         <Typography sx={{ fontWeight: 'bold' }}>Tổng cộng</Typography>
                       </TableCell>
                       <TableCell align="right" width={140}>
-                        <Typography sx={{ fontWeight: 'bold' }}>
+                        <Typography sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>
                           {fCurrency(subtotal - (invoice.idPromotion?.price ? invoice.idPromotion?.price : 0))} ₫
                         </Typography>
                       </TableCell>

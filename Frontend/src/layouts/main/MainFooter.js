@@ -12,22 +12,22 @@ import SocialsButton from '../../components/SocialsButton';
 
 const LINKS = [
   {
-    headline: 'Get Help',
+    headline: 'Nhận giúp đỡ',
     children: [
-      { name: 'Order Status', href: PATH_PAGE.about },
-      { name: 'Delivery', href: PATH_PAGE.contact },
-      { name: 'Returns', href: PATH_PAGE.faqs },
+      { name: 'Tình trạng đơn hàng', href: PATH_PAGE.about },
+      { name: 'Giao hàng', href: PATH_PAGE.contact },
+      { name: 'Tra hàng', href: PATH_PAGE.faqs },
     ],
   },
   {
-    headline: 'About Nike',
+    headline: 'Chi tiết Nike',
     children: [
-      { name: 'News', href: '#' },
-      { name: 'Investors', href: '#' },
+      { name: 'Tin tức', href: '#' },
+      { name: 'Tồn kho', href: '#' },
     ],
   },
   {
-    headline: 'Contact',
+    headline: 'Liên hệ',
     children: [
       { name: 'admin@gmail.com', href: '#' },
       { name: 'Can Tho University', href: '#' },

@@ -6,36 +6,38 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Grid,
+  Pagination,
   Paper,
   Stack,
   Tab,
   Tabs,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { Link as RouterLink } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { DialogAnimate } from '../components/animate';
-import Iconify from '../components/Iconify';
 import Label from '../components/Label';
 import StatusOrder from '../components/order-status';
-import Scrollbar from '../components/Scrollbar';
-import { TableEmptyRows, TableHeadCustom } from '../components/table';
 import useSettings from '../hooks/useSettings';
-import useTable from '../hooks/useTable';
 import useTabs from '../hooks/useTabs';
-import { getMeOrder, getOrders, updateOrder } from '../redux/slices/order';
+import { getMeOrder, updateOrder } from '../redux/slices/order';
+import { refundMoMoPayment } from '../redux/slices/payment';
+import { changeRating, createRating } from '../redux/slices/rating';
 import { useDispatch, useSelector } from '../redux/store';
 import { PATH_HOME } from '../routes/paths';
-import { refundMoMoPayment } from '../redux/slices/payment';
 import { fCurrency } from '../utils/formatNumber';
 import RatingItem from './RatingItem';
-import { changeRating, createRating } from '../redux/slices/rating';
 
 export default function Order() {
+  const [page, setPage] = useState(1);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
@@ -149,7 +151,14 @@ export default function Order() {
     tableData,
     filterStatus,
   });
+
+  const startIndex = (page - 1) * 5;
+  const endIndex = startIndex + 5;
+  const paginatedOrder = dataFiltered?.slice(startIndex, endIndex);
+  console.log('paginatedOrder', paginatedOrder);
   console.log('dataFiltered', dataFiltered);
+  const totalPages = Math.ceil(dataFiltered?.length / 5);
+
   const TABS = [
     { value: 'all', label: 'Tất cả', color: 'primary', count: tableData.length },
     { value: 'Đang xử lý', label: 'Đang xử lý', color: 'warning', count: getLengthByStatus('Đang xử lý') },
@@ -200,7 +209,7 @@ export default function Order() {
               ))}
             </Tabs>
 
-            {dataFiltered?.map((order, index) => {
+            {paginatedOrder?.map((order, index) => {
               return (
                 <div
                   style={{
@@ -326,6 +335,10 @@ export default function Order() {
                 </div>
               );
             })}
+            <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+              {' '}
+              <Pagination count={totalPages} page={page} onChange={handleChange} color="primary" />
+            </Stack>
           </Card>
 
           <DialogAnimate
@@ -402,7 +415,7 @@ function applySortFilter({ tableData, filterStatus }) {
   if (filterStatus !== 'all' && filterStatus !== 'Hoàn thành') {
     tableData = tableData.filter((item) => item.status === filterStatus);
   } else if (filterStatus === 'Hoàn thành') {
-    tableData = tableData.filter((item) => item.status === 'Hoàn thành' || item.status === 'Đã đánh giá');
+    tableData = tableData.filter((item) => item.status === 'Đã đánh giá' || item.status === 'Đã nhận');
   }
   // Nếu filterStatus là 'all' thì không cần áp dụng bất kỳ bộ lọc nào, trả về tất cả dữ liệu
 

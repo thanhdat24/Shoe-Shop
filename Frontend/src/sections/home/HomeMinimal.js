@@ -12,8 +12,8 @@ import { MotionViewport, varFade } from '../../components/animate';
 import { getProducts } from '../../redux/slices/product';
 import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_HOME } from '../../routes/paths';
-import { ShopProductList } from '../@dashboard/e-commerce/shop';
 import { isCurrentDateGreaterThanSevenDays } from '../../utils/formatTime';
+import { ShopProductList } from '../@dashboard/e-commerce/shop';
 
 // ----------------------------------------------------------------------
 
@@ -36,11 +36,14 @@ export default function HomeMinimal() {
     setPage(value);
   };
   useEffect(() => {
-    dispatch(getProducts(page));
+    dispatch(getProducts());
   }, [dispatch, page]);
-  console.log('products567', products);
   const newProducts = products.data?.filter((item) => !isCurrentDateGreaterThanSevenDays(item.createdAt));
-  console.log('newProducts', newProducts);
+
+  const startIndex = (page - 1) * 8;
+  const endIndex = startIndex + 8;
+  const paginatedProducts = newProducts?.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(newProducts?.length / 8);
 
   const linkTo = PATH_HOME.search.viewAll;
   return (
@@ -68,10 +71,10 @@ export default function HomeMinimal() {
           </m.div>
         </Box>
 
-        <ShopProductList products={newProducts} loading={!newProducts?.length} />
+        <ShopProductList products={paginatedProducts} loading={!newProducts?.length} />
         <Stack spacing={2} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
           {' '}
-          <Pagination count={1} page={page} onChange={handleChange} color="primary" />
+          <Pagination count={totalPages} page={page} onChange={handleChange} color="primary" />
         </Stack>
       </Container>
     </RootStyle>

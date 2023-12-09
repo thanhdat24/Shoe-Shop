@@ -16,8 +16,8 @@ const initialState = {
   orderDetail: null,
   orderUpdate: null,
   staticProductDetail: null,
-  staticProductDetailMonth:null,
-  bestSellingProducts:null
+  staticProductDetailMonth: null,
+  bestSellingProducts: null,
 };
 
 const slice = createSlice({
@@ -185,7 +185,6 @@ export function getStaticProductDetailMonth(id) {
     }
   };
 }
-
 
 export function bestSellingProductsRevenue() {
   return async () => {

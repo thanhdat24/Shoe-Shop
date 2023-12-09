@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Button, Divider, Link, Stack, Typography } from '@mui/material';
@@ -13,7 +13,7 @@ import { DialogAnimate } from '../../../../components/animate';
 import Iconify from '../../../../components/Iconify';
 // assets
 import { OrderCompleteIllustration } from '../../../../assets';
-import { createOrder } from '../../../../redux/slices/order';
+import { createOrder, getOrderDetail } from '../../../../redux/slices/order';
 
 // ----------------------------------------------------------------------
 
@@ -40,16 +40,15 @@ export default function CheckoutOrderComplete({ ...other }) {
   const message = new URLSearchParams(search).get('message');
   const transId = new URLSearchParams(search).get('transId');
 
-  const { createOrderSuccess } = useSelector((state) => state.order);
-
+  const { createOrderSuccess, error } = useSelector((state) => state.order);
   const { checkout } = useSelector((state) => state.product);
 
   const handleResetStep = () => {
     dispatch(resetCart());
     navigate(PATH_AUTH.home);
   };
-
-  useEffect(async () => {
+  useEffect(() => {
+    if (error) handleResetStep();
     let cartCheckout = {};
     if (resultCode && checkout) {
       const paymentMethod = {
@@ -64,13 +63,12 @@ export default function CheckoutOrderComplete({ ...other }) {
         status: Number(resultCode) === 1006 ? 'Đã hủy' : 'Đang xử lý',
         paymentMethod,
       };
-
-      await dispatch(createOrder(cartCheckout));
+      dispatch(createOrder(cartCheckout));
     }
-  }, [checkout]);
+  }, [error]);
 
   return (
-    <DialogStyle fullScreen {...other} isInvoice={'yes'}>
+    <DialogStyle {...other} isInvoice={'yes'}>
       <Box sx={{ p: 4, maxWidth: 480, margin: 'auto' }}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h4" paragraph>

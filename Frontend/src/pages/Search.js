@@ -264,7 +264,7 @@ function applyFilter(products, filters, priceGte, priceLte, page, pageSize) {
     totalCount: products?.length,
     totalPages: Math.ceil(products?.length / pageSize),
     currentPage: page,
-    pageSize: pageSize,
+    pageSize,
     data: paginatedProducts,
   };
 }

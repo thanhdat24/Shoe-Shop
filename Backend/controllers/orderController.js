@@ -50,7 +50,8 @@ const filterObj = (obj, ...allowedField) => {
 
 exports.createOrder = catchAsync(async (req, res, next) => {
   const { _id } = req.user;
-  console.log('req.user', req.user);
+  // console.log('req.user', req.user);
+  console.log('req.body', req.body);
   try {
     req.body.idUser = _id;
     const objOrder = filterObj(
@@ -63,7 +64,16 @@ exports.createOrder = catchAsync(async (req, res, next) => {
       'idPromotion',
       'status'
     );
+    const checkOrderExit = await Order.find({
+      'paymentMethod.orderId': req.body.paymentMethod.orderId,
+    });
+
+    if (checkOrderExit.length > 0) {
+      return next(new AppError('Order is exist', 400));
+    }
+
     const order = await Order.create(objOrder);
+
     req.order = order;
 
     let arrayItems = [];
@@ -453,29 +463,33 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
   let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('MM-YYYY'))
     .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
+    .orderBy('nameYear') // Thêm hàm orderBy để sắp xếp theo nameYear
     .value();
 
   let array = _(result)
     .groupBy((x) => moment(x.orderRevenueDay[0].createdAt).format('MM-YYYY'))
     .map((value, key) => ({
       // name: moment(new Date(key)).format('MM'),
-      name: key,
+      name: value[0].orderRevenueDay[0].idOrder.id,
       orderRevenueMonth: value,
     }))
     .value();
+  console.log('array', array);
 
   const arrayMonth = [];
   const totalQuality = [];
   const totalPrice = [];
 
-  array.forEach((month) => {
+  array.forEach(async (month) => {
+    // const promotion = await Order.find({ _id: month.name });
+    // console.log('promotion', promotion);
     month.orderRevenueMonth.forEach((order) => {
       arrayMonth.push(order.nameYear);
       let quality = 0;
       let price = 0;
       order.orderRevenueDay.forEach((day) => {
         quality += day.quantity;
-        price += day.idOrder.total;
+        price += day.total;
       });
       totalQuality.push(quality);
       totalPrice.push(price);
@@ -488,6 +502,8 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
     arrayMonth,
     totalQuality,
     totalPrice,
+    dat: result,
+    dat1: array,
   });
 });
 

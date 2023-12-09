@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector } from '@mui/material';
+import { useLocation } from 'react-router';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/product';
@@ -81,8 +82,14 @@ export default function EcommerceCheckout() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.product);
+  const { createOrderSuccess } = useSelector((state) => state.order);
+
   const { cart, address, activeStep } = checkout;
   console.log('activeStep', activeStep);
+  const search = useLocation().search;
+
+  const resultCode = new URLSearchParams(search).get('resultCode');
+
   const isComplete = activeStep === STEPS.length;
 
   useEffect(() => {
@@ -143,6 +150,7 @@ export default function EcommerceCheckout() {
         ) : (
           <CheckoutOrderComplete open={isComplete} />
         )}
+        {/* {createOrderSuccess && <CheckoutOrderComplete open={createOrderSuccess} />} */}
       </Container>
     </Page>
   );

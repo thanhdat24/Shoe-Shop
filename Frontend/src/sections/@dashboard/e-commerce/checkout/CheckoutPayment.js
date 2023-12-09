@@ -59,6 +59,9 @@ export default function CheckoutPayment() {
 
   const { checkout } = useSelector((state) => state.product);
 
+  // const { createOrderSuccess } = useSelector((state) => state.order);
+  // console.log('createOrderSuccess', createOrderSuccess);
+
   const { payments } = useSelector((state) => state.payment);
 
   const { total, discount, subtotal, shipping } = checkout;
@@ -142,10 +145,10 @@ export default function CheckoutPayment() {
   };
 
   useEffect(() => {
-    if (orderId) {
+    if (orderId && requestId) {
       handleNextStep();
     }
-  }, [orderId]);
+  }, [orderId && requestId]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

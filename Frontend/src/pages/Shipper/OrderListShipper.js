@@ -181,7 +181,7 @@ export default function OrderListShipper() {
   return (
     <div className="h-full">
       {valueBottom === 0 && (
-        <Box>
+        <Box sx={{ paddingBottom: 3 }}>
           <Card className="mx-4">
             {' '}
             <Grid container sx={{ p: '15px' }} spacing={2}>
@@ -231,7 +231,7 @@ export default function OrderListShipper() {
           <Typography align="left" variant="h6" sx={{ marginLeft: '16px' }}>
             Đơn hàng mới
           </Typography>
-          <Box sx={{ minHeight: '45vh', overflow: 'auto', marginBottom: '50px' }}>
+          <Box sx={{ minHeight: '65vh', overflow: 'auto', marginBottom: '50px' }}>
             {' '}
             {orderShipper
               ?.filter((item) => item.status === 'Đang vận chuyển')
@@ -404,7 +404,7 @@ export default function OrderListShipper() {
                               </Typography>
                               <Box className="flex mt-2">
                                 {' '}
-                                <PlaceIcon color="primary"  className="mr-1" />
+                                <PlaceIcon color="primary" className="mr-1" />
                                 <Typography align="left" variant="body2">
                                   {item.address.fullAddress}
                                 </Typography>
@@ -519,7 +519,7 @@ export default function OrderListShipper() {
         sx={{
           // borderTop:"1px solid gray",
           overflow: 'hidden',
-          position: 'absolute',
+          position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
