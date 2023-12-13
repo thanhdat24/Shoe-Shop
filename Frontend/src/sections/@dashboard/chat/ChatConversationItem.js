@@ -55,7 +55,7 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
   const isGroup = details.otherParticipants?.length > 1;
   const isUnread = conversation.unreadCount > 0;
   // const isOnlineGroup = isGroup && details.otherParticipants.map((item) => item.status).includes('online');
-
+  console.log('details', details);
   return (
     <RootStyle
       onClick={onSelectConversation}
@@ -101,7 +101,7 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
       {isOpenSidebar && (
         <>
           <ListItemText
-            primary={details.displayNames[0].displayName}
+            primary={details?.displayNames[0]?.displayName}
             primaryTypographyProps={{
               noWrap: true,
               variant: 'subtitle2',

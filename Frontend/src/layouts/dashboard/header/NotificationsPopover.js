@@ -35,11 +35,10 @@ import { updateOrder } from '../../../redux/slices/order';
 export default function NotificationsPopover() {
   const dispatch = useDispatch();
 
-
   const { notifications } = useSelector((state) => state.notification);
   const { orderUpdate } = useSelector((state) => state.order);
 
-  console.log('notifications', notifications);
+  // console.log('notifications', notifications);
 
   const totalUnRead = notifications?.filter((item) => !item.isRead).length;
 
@@ -160,12 +159,12 @@ NotificationItem.propTypes = {
 };
 
 function NotificationItem({ notification, setOpen }) {
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { photoURL, title } = renderContent(notification);
 
   const handleRead = async (id) => {
-   await dispatch(updateOrder(id,{isRead:true}))
+    await dispatch(updateOrder(id, { isRead: true }));
     setOpen(null);
   };
   return (

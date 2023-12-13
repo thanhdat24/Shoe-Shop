@@ -2,15 +2,13 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 // @mui
-import { alpha, styled } from '@mui/material/styles';
-import { Box, List, Button, Rating, Avatar, ListItem, Pagination, Typography } from '@mui/material';
+import { Avatar, Box, List, ListItem, Pagination, Rating, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 // utils
 import { fDate } from '../utils/formatTime';
-import { fShortenNumber } from '../utils/formatNumber';
 // components
 import Iconify from '../components/Iconify';
 import Image from '../components/Image';
-import { CarouselArrowIndex } from '../components/carousel';
 
 // ----------------------------------------------------------------------
 
@@ -19,8 +17,14 @@ ProductDetailsReviewList.propTypes = {
 };
 
 export default function ProductDetailsReviewList({ product }) {
-  // const { reviews } = product;
-  // const {}
+  const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+  const startIndex = (page - 1) * 8;
+  const endIndex = startIndex + 8;
+  const paginatedProducts = product?.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(product?.length / 8);
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
       <List disablePadding>
@@ -28,11 +32,11 @@ export default function ProductDetailsReviewList({ product }) {
           if (review.active) {
             return <ReviewItem key={review.id} review={review} />;
           }
-           return <></>
+          return <></>;
         })}
       </List>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
+        <Pagination count={totalPages} page={page} onChange={handleChange} color="primary" />
       </Box>
     </Box>
   );
@@ -233,29 +237,6 @@ function ReviewItem({ review }) {
               </Slider>
             </Box>
           </RootStyle>
-          <Box
-            sx={{
-              mt: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-            }}
-          >
-            {/* {!likes && (
-              <Typography variant="body2" sx={{ mr: 1 }}>
-                Nhận xét này có hữu ích cho bạn?
-              </Typography>
-            )}
-
-            <Button
-              size="small"
-              color="inherit"
-              startIcon={<Iconify icon={!likes ? 'ic:round-thumb-up' : 'eva:checkmark-fill'} />}
-              onClick={handleClickHelpful}
-            >
-              {likes ? 'Helpful' : 'Thích'}({fShortenNumber(!likes ? helpful : helpful + 1) })
-            </Button> */}
-          </Box>
         </div>
       </ListItem>
     </>

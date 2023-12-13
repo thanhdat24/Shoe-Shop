@@ -107,8 +107,7 @@ export default function ShopFilterSidebar({
   const search = searchParams.get('q') || 'tất cả sản phẩm';
 
   const searchGender = searchParams.get('gender');
-  console.log('searchGender123', searchGender);
-  console.log('search123', search);
+
   const handleChange = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
       return;

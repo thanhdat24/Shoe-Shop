@@ -36,7 +36,6 @@ ProductDetailsReviewOverview.propTypes = {
 
 export default function ProductDetailsReviewOverview({ product }) {
   const { totalRating, totalReview, ratings } = product;
-
   const total = sumBy(ratings, (star) => star.starCount);
 
   return (
@@ -46,11 +45,11 @@ export default function ProductDetailsReviewOverview({ product }) {
           Đánh giá trung bình
         </Typography>
         <Typography variant="h2" gutterBottom sx={{ color: 'error.main' }}>
-          {fShortenNumber(totalRating) || 0}/5
+          {totalRating || 0}/5
         </Typography>
         <RatingStyle readOnly value={totalRating} precision={0.1} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          ({fShortenNumber(totalReview) || 0}
+          ({totalReview || 0}
           &nbsp;nhận xét)
         </Typography>
       </GridStyle>
@@ -91,7 +90,7 @@ function ProgressItem({ star, total }) {
         }}
       />
       <Typography variant="body2" sx={{ color: 'text.secondary', minWidth: 64, textAlign: 'right' }}>
-        {fShortenNumber(reviewCount)}
+        {reviewCount} nhận xét
       </Typography>
     </Stack>
   );

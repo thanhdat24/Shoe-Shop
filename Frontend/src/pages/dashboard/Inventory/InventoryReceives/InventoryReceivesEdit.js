@@ -145,8 +145,6 @@ export default function InventoryReceivesNew() {
   const totalPrice = () => {
     return inventoryData.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
-  console.log('detailReceipt?.receiptDetail', detailReceipt?.receiptDetail);
-  console.log('detailReceipt', detailReceipt);
   const groupByReceiptDetail = _(detailReceipt?.receiptDetail)
     .groupBy((x) => x.idProductDetail.idProduct.name)
     .map((value, key) => {
@@ -163,7 +161,7 @@ export default function InventoryReceivesNew() {
   useEffect(() => {
     dispatch(getDetailReceipts(receiptCode));
     dispatch(getPayments());
-  }, [dispatch, newReceipt]);
+  }, [dispatch, newReceipt, receiptCode]);
 
   useEffect(() => {
     dispatch(getAllTransactionsByReceiptId(detailReceipt?.id));

@@ -183,12 +183,12 @@ export default function InventoryReceivesNew() {
       console.log('error', error);
     }
   };
-
   useEffect(() => {
     if (error) {
       enqueueSnackbar(error, { variant: 'error' }); // Hiển thị thông báo lỗi bằng enqueueSnackbar
     } else if (newReceipt) {
-      enqueueSnackbar('Nhập hàng thành công!');
+      const message = newReceipt.inventoryStatus === 1 ? 'Lưu nháp thành công!' : 'Nhập hàng thành công!';
+      enqueueSnackbar(message);
       navigate(PATH_DASHBOARD.inventory.inventory_receives_edit(newReceipt.receiptCode));
     }
 

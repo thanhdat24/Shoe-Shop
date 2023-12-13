@@ -28,9 +28,6 @@ export default function Search() {
 
   const priceLte = searchParams.get('price_lte');
 
-  console.log('search', search);
-  console.log('priceGte', priceGte);
-
   useEffect(() => {
     dispatch(getAllCate());
     dispatch(getAllSize());
@@ -66,9 +63,7 @@ export default function Search() {
     return colorName.push(item.name);
   });
   const FILTER_COLOR_OPTIONS = colors;
-  console.log('searchList', searchList);
   const filteredProducts = applyFilter(searchList, filters, priceGte, priceLte, page, 6);
-  console.log('filteredProducts', filteredProducts);
 
   const defaultValues = {
     gender: filters.gender,
@@ -238,8 +233,6 @@ export default function Search() {
 function applyFilter(products, filters, priceGte, priceLte, page, pageSize) {
   const stabilizedThis = products?.map((el, index) => [el, index]);
   products = stabilizedThis?.map((el) => el[0]);
-  console.log('filters.gender', filters.gender);
-  // console.log('searchGender', searchGender);
 
   // FILTER PRODUCTS
   if (filters.gender.length > 0) {

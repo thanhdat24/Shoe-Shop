@@ -30,6 +30,7 @@ import {
   Paper,
 } from '@mui/material';
 import _ from 'lodash';
+import slug from 'slug';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   createProduct,
@@ -259,6 +260,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               style: newProduct.style,
               idColor: newProduct.color[j],
               idSize: newProduct.size[i],
+              slug: slug(newProduct.name),
             };
             arrayItemProduct.push(itemProduct);
           }

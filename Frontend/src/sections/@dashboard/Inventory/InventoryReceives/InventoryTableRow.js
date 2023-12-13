@@ -61,7 +61,6 @@ export default function InventoryTableRow({
     }, {})
   );
 
-
   const sortedProductDetail = [...productDetail].sort((item1, item2) => {
     const sizeComparison = item1.idSize.name - item2.idSize.name;
 
@@ -151,7 +150,6 @@ export default function InventoryTableRow({
     });
   };
 
-
   const renderSortedProductDetail = () => {
     return sortedProductDetail.map((item, index) => (
       <TableCell key={index} sx={{ display: 'flex', alignItems: 'center', paddingLeft: '73px !important' }}>
@@ -216,7 +214,7 @@ export default function InventoryTableRow({
 
   const renderTotalPrice = () => {
     return sortedProductDetail.map((item, index) => {
-      const calculatedPrice = priceValues[item.id] * quantityValues[item.id];
+      const calculatedPrice = priceValues[item.id] * quantityValues[item.id] || 0;
       return (
         <TableCell
           key={index}

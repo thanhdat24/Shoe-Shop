@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Card, DialogContent, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import moment from 'moment';
 import { styled } from '@mui/material/styles';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SmsIcon from '@mui/icons-material/Sms';
@@ -45,7 +46,7 @@ export default function OrderDetail() {
   };
 
   const handleSubmit = async (e) => {
-    dispatch(updateOrder(id, { status: 'Đã giao hàng' }));
+    dispatch(updateOrder(id, { status: 'Đã giao hàng', deliveryDate: new Date() }));
     setOpen(false);
     setTimeout(() => {
       enqueueSnackbar('Giao hàng thành công!');
@@ -245,7 +246,9 @@ export default function OrderDetail() {
                     </Grid>
                     <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                       <Item>
-                        <Box className="text-gray-900 text-lg font-semibold">{fCurrency(orderDetail?.total)} ₫</Box>
+                        <Box className="text-gray-900 text-lg font-semibold whitespace-nowrap">
+                          {fCurrency(orderDetail?.total)} ₫
+                        </Box>
                       </Item>
                     </Grid>
                   </Grid>
@@ -322,7 +325,7 @@ export default function OrderDetail() {
                       xs={6}
                       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', whiteSpace: 'nowrap' }}
                     >
-                      <Item>{orderDetail?.createdAt}</Item>
+                      <Item>{moment(orderDetail?.createdAt).format('HH:mm DD-MM-YY')}</Item>
                     </Grid>
                   </Grid>
                 </Box>

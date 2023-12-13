@@ -21,6 +21,7 @@ import Iconify from '../../../../components/Iconify';
 import Label from '../../../../components/Label';
 import { TableMoreMenu } from '../../../../components/table';
 import { getUsers, resetAdmin, updateAdmin } from '../../../../redux/slices/admin';
+import { resetUser, updateUser } from '../../../../redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +35,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const { error, adminUpdate } = useSelector((state) => state.admin);
+  const { error, updateSuccess } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const { name, displayName, email, role, gender, active, photoURL, _id, phoneNumber } = row;
@@ -51,25 +52,12 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   };
   const handleUpdate = () => {
     setOpen(false);
-    dispatch(updateAdmin({ active: checked }, _id));
+    dispatch(updateUser({ active: checked }, _id));
     handleCloseMenu();
   };
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
   };
-
-  useEffect(() => {
-    if (error) {
-      enqueueSnackbar('Cập nhật không thành công!', { variant: 'error' });
-    } else if (adminUpdate) {
-      enqueueSnackbar('Cập nhật  thành công!');
-      dispatch(getUsers());
-      // navigate(PATH_DASHBOARD.user.list);
-    }
-    setTimeout(() => {
-      dispatch(resetAdmin());
-    }, 3000);
-  }, [error, adminUpdate]);
 
   const handleChange = (event) => {
     setChecked(event.target.checked);

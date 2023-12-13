@@ -74,7 +74,6 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
   const [activeError, setActiveError] = useState('');
   const [expandForm, setExpandForm] = useState(false);
   const [OTP, setOTP] = useState('');
-  console.log('OTP', OTP);
   const { enqueueSnackbar } = useSnackbar();
 
   const [openFormPhone, setOpenFormPhone] = useState(false);
@@ -122,7 +121,7 @@ export default function LoginUserForm({ open, onClose, onNextStep, onCreateBilli
       setActiveError('');
       setExpandForm(true);
       onCaptchVerify();
-      const formatPhone = '+84' + phoneNumber.slice(1);
+      const formatPhone = `+84${phoneNumber.slice(1)}`;
       const appVerifier = window.recaptchaVerifier;
       signInWithPhoneNumber(AUTH, formatPhone, appVerifier)
         .then((confirmationResult) => {

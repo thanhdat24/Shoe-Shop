@@ -63,7 +63,7 @@ export default function BestSellerCard({ index, product, onSelected }) {
             width: '375px',
             transform: 'translateY(-13%) translateX(-14%) rotate(-40deg)',
           }}
-          image={product?.productImages[0].cover}
+          image={product?.productImages[0].cover || product?.productImages[0].url[0]}
           title="green iguana"
         />
       </Box>

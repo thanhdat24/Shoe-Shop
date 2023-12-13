@@ -13,6 +13,8 @@ const initialState = {
   success: '',
   users: null,
 
+  updateSuccess: null,
+
   updateUserSuccess: null,
   errorUpdateUser: null,
 };
@@ -46,6 +48,10 @@ const slice = createSlice({
       state.updateUserSuccess = action.payload;
       state.isLoading = false;
     },
+    updateUserSuccess(state, action) {
+      state.updateSuccess = action.payload;
+      state.isLoading = false;
+    },
 
     // CLOSE MODAL
     closeModal(state) {
@@ -55,6 +61,7 @@ const slice = createSlice({
     },
     resetUser(state) {
       state.updateUserSuccess = null;
+      state.updateSuccess = null;
       state.errorUpdateUser = null;
     },
   },
@@ -87,6 +94,19 @@ export function updateCurrentUser(data) {
       const response = await axios.patch('/api/v1/user/updateMe', data);
       console.log('response', response);
       dispatch(slice.actions.updateCurrentSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateUser(data, id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`/api/v1/user/${id}`, data);
+      console.log('response', response);
+      dispatch(slice.actions.updateUserSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

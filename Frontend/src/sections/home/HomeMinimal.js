@@ -39,7 +39,6 @@ export default function HomeMinimal() {
     dispatch(getProducts());
   }, [dispatch, page]);
   const newProducts = products.data?.filter((item) => !isCurrentDateGreaterThanSevenDays(item.createdAt));
-
   const startIndex = (page - 1) * 8;
   const endIndex = startIndex + 8;
   const paginatedProducts = newProducts?.slice(startIndex, endIndex);

@@ -32,7 +32,7 @@ export default function HomeAdvertisement() {
     <Container component={MotionViewport} sx={{ position: 'relative', textAlign: 'center', marginTop: 10 }}>
       <m.div variants={varFade().inUp}>
         <Typography variant="h2" sx={{ mb: 3 }}>
-          Sản phẩm độc quyền
+          Sản phẩm nổi bật
         </Typography>
       </m.div>
       <ContentStyle>

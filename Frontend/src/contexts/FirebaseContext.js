@@ -109,16 +109,12 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(AUTH, async (user) => {
-      console.log('userOTP', user?.uid);
-
-      if (user !== null) {
+      if (user) {
         const accessToken = await user.getIdToken();
 
         const response = await axios.get('/api/v1/user/checkUserExist', { params: { uid: user?.uid } });
-        console.log('data123', response);
         if (response.data.data !== null) {
           const response = await axios.get('/api/v1/user/getUserUID', { params: { uid: user?.uid } });
-          console.log('response123', response);
           setSession(accessToken);
           setUser(response.data.data);
           dispatch({
@@ -140,8 +136,6 @@ function AuthProvider({ children }) {
               phoneNumber: (user.phoneNumber && user?.phoneNumber.slice(3)) || '',
             },
           };
-
-          console.log('>>>>>>>>>', user);
 
           setSession(accessToken);
           setUser(data);
@@ -256,7 +250,6 @@ function AuthProvider({ children }) {
       },
     });
   };
-  console.log('state?.user', state?.user);
 
   return (
     <AuthContext.Provider

@@ -104,7 +104,9 @@ export default function CheckoutProductList({ products, onDelete, onIncreaseQuan
                   </Box>
                 </TableCell>
 
-                <TableCell align="left">{fCurrency(price)} ₫</TableCell>
+                <TableCell align="left" className="whitespace-nowrap !pl-0">
+                  {fCurrency(price)} ₫
+                </TableCell>
 
                 <TableCell align="left">
                   <Incrementer

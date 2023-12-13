@@ -99,22 +99,20 @@ export default function SearchModelProductRow({
             <TableHeadCustom headLabel={TABLE_HEAD} rowCount={tableData.length} onSort={onSort} />
 
             <TableBody>
-              {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) =>
-                  row ? (
-                    <SearchModelProductTableRow
-                      key={row.id}
-                      row={row}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
-                      onSelectRowInventory={onSelectRowInventory}
-                      selectedInventory={selectedInventory}
-                    />
-                  ) : (
-                    !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                  )
-                )}
+              {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
+                row ? (
+                  <SearchModelProductTableRow
+                    key={row.id}
+                    row={row}
+                    selected={selected.includes(row.id)}
+                    onSelectRow={() => onSelectRow(row.id)}
+                    onSelectRowInventory={onSelectRowInventory}
+                    selectedInventory={selectedInventory}
+                  />
+                ) : (
+                  !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                )
+              )}
 
               {/* <TableEmptyRows
                           height={denseHeight}

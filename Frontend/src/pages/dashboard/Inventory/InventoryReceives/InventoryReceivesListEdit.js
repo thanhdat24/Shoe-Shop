@@ -38,7 +38,6 @@ export default function InventoryReceivesListEdit({
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
-  console.log('groupByReceiptDetail', groupByReceiptDetail);
   return (
     <TableContainer sx={{ marginTop: 5 }}>
       <Table size={dense ? 'small' : 'medium'}>

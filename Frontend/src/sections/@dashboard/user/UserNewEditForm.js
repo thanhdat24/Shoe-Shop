@@ -53,6 +53,7 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
     email: Yup.string().required('Email is required').email(),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
+    role: Yup.string().required('Role is required'),
     gender: Yup.string().required('gender is required'),
     // password: Yup.string().required('password is required'),
     // passwordConfirm: Yup.string().required('passwordConfirm is required'),
@@ -68,6 +69,7 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
       address: currentAdmin?.address || '',
       gender: currentAdmin?.gender || '',
       active: currentAdmin?.active || false,
+      role: currentAdmin?.role || '',
       // password: currentAdmin?.displayName || '',
       // passwordConfirm: currentAdmin?.displayName || '',
       dateOfBirth: currentAdmin?.dateOfBirth || '',
@@ -105,11 +107,11 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
   const onSubmit = async (account) => {
     try {
       // await new Promise((resolve) => setTimeout(resolve, 500));
-      await dispatch(createShipper(account))
+      await dispatch(createAdmin(account))
         .then(() => {
-          navigate(PATH_DASHBOARD.shipper.list);
+          navigate(PATH_DASHBOARD.staff.list);
         })
-        .catch((err) => {
+        .catch((error) => {
           console.log('Error', error);
         });
 
@@ -126,17 +128,8 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = function (e) {
-        // sau khi thực hiên xong lênh trên thì set giá trị có được
         setValue('avatarUrl', e.target.result);
       };
-      // if (file) {
-      //   setValue(
-      //     'avatarUrl',
-      //     Object.assign(file, {
-      //       preview: URL.createObjectURL(file),
-      //     })
-      //   );
-      // }
     },
     [setValue]
   );
@@ -250,6 +243,12 @@ export default function UserNewEditForm({ isEdit, currentAdmin }) {
                   />
                 )}
               />
+              <RHFSelect name="role" label="Quyền" placeholder="Quyền">
+                <option value="" />
+                {['nhân viên kho', 'nhân viên bán hàng'].map((option, index) => (
+                  <option value={option}>{option}</option>
+                ))}
+              </RHFSelect>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

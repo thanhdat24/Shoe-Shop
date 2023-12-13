@@ -67,7 +67,7 @@ export default function EcommerceProductDetails() {
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
   const { product, error, checkout } = useSelector((state) => state.product);
-
+  console.log('product.review', product.review);
   useEffect(() => {
     dispatch(getProduct(name));
   }, [dispatch, name]);

@@ -23,6 +23,7 @@ import {
   Stack,
   Tabs,
   Tab,
+  Pagination,
 } from '@mui/material';
 
 import { useForm } from 'react-hook-form';
@@ -65,7 +66,6 @@ import {
 import { getOrders } from '../../../redux/slices/order';
 import { getBrands } from '../../../redux/slices/brand';
 import { getShippers, resetShipper } from '../../../redux/slices/shipper';
-
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
@@ -328,63 +328,7 @@ export default function ShipperList() {
             <Card sx={{ mb: 5 }}>
               <Scrollbar>
                 <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-                  {/* {selected.length > 0 && (
-                    <TableSelectedActions
-                      dense={dense}
-                      numSelected={selected.length}
-                      rowCount={tableData.length}
-                      onSelectAllRows={(checked) =>
-                        onSelectAllRows(
-                          checked,
-                          tableData.map((row) => row.id)
-                        )
-                      }
-                      actions={
-                        <Stack spacing={1} direction="row">
-                          <Tooltip title="Sent">
-                            <IconButton color="primary">
-                              <Iconify icon={'ic:round-send'} />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip title="Download">
-                            <IconButton color="primary">
-                              <Iconify icon={'eva:download-outline'} />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip title="Print">
-                            <IconButton color="primary">
-                              <Iconify icon={'eva:printer-fill'} />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip title="Delete">
-                            <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                              <Iconify icon={'eva:trash-2-outline'} />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                      }
-                    />
-                  )} */}
-
                   <Table size={dense ? 'small' : 'medium'}>
-                    {/* <TableHeadCustom
-                      order={order}
-                      orderBy={orderBy}
-                      headLabel={TABLE_HEAD_ORDER}
-                      rowCount={tableData.length}
-                      numSelected={selected.length}
-                      onSort={onSort}
-                      onSelectAllRows={(checked) =>
-                        onSelectAllRows(
-                          checked,
-                          tableData.map((row) => row.id)
-                        )
-                      }
-                    /> */}
-
                     <TableBody>
                       {orderShipper?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                         <InvoiceTableRow
@@ -404,6 +348,18 @@ export default function ShipperList() {
                   </Table>
                 </TableContainer>
               </Scrollbar>
+
+              <Box sx={{ position: 'relative' }}>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={orderShipper?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={onChangePage}
+                  onRowsPerPageChange={onChangeRowsPerPage}
+                />
+              </Box>
             </Card>
           </DialogContent>
         </DialogAnimate>

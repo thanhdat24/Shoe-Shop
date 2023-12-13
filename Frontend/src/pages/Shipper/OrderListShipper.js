@@ -127,7 +127,8 @@ export default function OrderListShipper() {
     setOpenDialog(false);
   };
   const handleAccept = (item) => {
-    dispatch(updateOrder(item._id, { ...item, status: 'Đã giao hàng' }));
+    setOpenDialog(false);
+    dispatch(updateOrder(item._id, { ...item, status: 'Đã giao hàng', deliveryDate: new Date() }));
   };
   const handleCancel = (item) => {
     dispatch(updateOrder(item._id, { ...item, status: 'Đang xử lý' }));

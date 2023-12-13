@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   Grid,
+  Link,
   Pagination,
   Paper,
   Stack,
@@ -114,7 +115,7 @@ export default function Order() {
   };
 
   const handleConfirmOrder = (e) => {
-    dispatch(updateOrder(orderItem, { status: 'Đã nhận' }));
+    dispatch(updateOrder(orderItem, { status: 'Đã nhận', receiveDay: new Date() }));
     setConfirmOrder(false);
     setTimeout(() => {
       enqueueSnackbar('Xác nhận thành công!');
@@ -126,7 +127,7 @@ export default function Order() {
     setRatingOrder(false);
     setTimeout(() => {
       onFilterStatus(e, 'Hoàn thành');
-      enqueueSnackbar('Xời, tuyệt vời! Cảm ơn bạn');
+      enqueueSnackbar('Xời, tuyệt vời! Cảm ơn bạn, Chờ duyệt bạn nhé!');
       dispatch(changeRating({ resetRatingList: '' }));
     }, 500);
   };
@@ -229,7 +230,7 @@ export default function Order() {
                   <hr />
                   {order?.orderDetail?.map((item, index) => {
                     return (
-                      <div>
+                      <Link component={RouterLink} to={`/product/${item?.idProduct?.slug}`} underline="none">
                         {' '}
                         <div
                           // key={index}
@@ -269,7 +270,7 @@ export default function Order() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     );
                   })}
                   <hr />

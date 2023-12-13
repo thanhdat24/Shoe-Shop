@@ -50,7 +50,6 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [detailColorSize, setDetailColorSize] = useState({});
-
   const { id, name, sizes, price, cover, status, colors, priceSale, inventoryType } = product;
   const { totalRating, totalReview } = ratingList;
   const alreadyProduct = cart?.map((item) => item.id).includes(id);
@@ -127,19 +126,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
           {inventoryType || ''}
         </Label>
 
-        <Typography
-          variant="overline"
-          sx={{
-            mt: 2,
-            mb: 1,
-            display: 'block',
-            color: status === 'sale' ? 'error.main' : 'info.main',
-          }}
-        >
-          {status}
-        </Typography>
-
-        <Typography variant="h5" paragraph>
+        <Typography sx={{ mt: 2 }} variant="h5" paragraph>
           {name}
         </Typography>
 
@@ -147,7 +134,7 @@ export default function ProductDetailsSummary({ cart, product, ratingList, onAdd
           <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
             <Rating readOnly value={totalRating} precision={0.1} />
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(totalReview)}
+              ({totalReview || 0}
               &nbsp;nhận xét)
             </Typography>
           </Stack>

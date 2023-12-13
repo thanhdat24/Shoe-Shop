@@ -1,19 +1,18 @@
-import { sentenceCase } from 'change-case';
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 // @mui
-import { alpha, styled } from '@mui/material/styles';
-import { Box, Tab, Card, Grid, Divider, Container, Typography } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { ProductDetailsCarousel, ProductDetailsSummary } from '../sections/@dashboard/e-commerce/product-details';
-import { useDispatch, useSelector } from '../redux/store';
-import { getProductRating } from '../redux/slices/rating';
-import { addCart, getProduct, onGotoStep, resetProduct } from '../redux/slices/product';
-import Page from '../components/Page';
-import useSettings from '../hooks/useSettings';
-import { SkeletonProduct } from '../components/skeleton';
+import { Box, Card, Container, Divider, Grid, Tab, Typography } from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
 import Iconify from '../components/Iconify';
 import Markdown from '../components/Markdown';
+import Page from '../components/Page';
+import { SkeletonProduct } from '../components/skeleton';
+import useSettings from '../hooks/useSettings';
+import { addCart, getProduct, onGotoStep, resetProduct } from '../redux/slices/product';
+import { getProductRating } from '../redux/slices/rating';
+import { useDispatch, useSelector } from '../redux/store';
+import { ProductDetailsCarousel, ProductDetailsSummary } from '../sections/@dashboard/e-commerce/product-details';
 import ProductDetailsReview from './ProductDetailsReview';
 
 // ----------------------------------------------------------------------

@@ -11386,6 +11386,11 @@
   "resolved" "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz"
   "version" "1.8.1"
 
+"slug@^8.2.3":
+  "integrity" "sha512-fXjhAZszNecz855GUNIwW0+sFPi9WV4bMiEKDOCA4wcq1ts1UnUVNy/F78B0Aat7/W3rA+se//33ILKNMrbeYQ=="
+  "resolved" "https://registry.npmjs.org/slug/-/slug-8.2.3.tgz"
+  "version" "8.2.3"
+
 "snake-case@^3.0.4":
   "integrity" "sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg=="
   "resolved" "https://registry.npmjs.org/snake-case/-/snake-case-3.0.4.tgz"

@@ -285,7 +285,7 @@ export default function MainHeader() {
           </Box>
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-          {user.email !== undefined ? (
+          {user.email !== undefined && user.role === 'khách hàng' ? (
             <AccountPopover />
           ) : (
             <button onClick={handleClickOpen}>

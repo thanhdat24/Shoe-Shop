@@ -30,8 +30,6 @@ export default function SearchGender() {
 
   const priceLte = searchParams.get('price_lte');
 
-  console.log('priceLte', priceLte);
-  console.log('gender', gender);
   useEffect(() => {
     dispatch(getAllCate());
     dispatch(getAllSize());
@@ -238,7 +236,6 @@ export default function SearchGender() {
 function applyFilter(products, filters, priceGte, priceLte, page, pageSize) {
   const stabilizedThis = products?.map((el, index) => [el, index]);
   products = stabilizedThis?.map((el) => el[0]);
-  console.log('filters.gender', filters.gender);
   // FILTER PRODUCTS
   if (filters.gender.length > 0) {
     products = products.filter((product) => filters.gender.includes(product.idObjectUse.name));
@@ -263,7 +260,7 @@ function applyFilter(products, filters, priceGte, priceLte, page, pageSize) {
     totalCount: products?.length,
     totalPages: Math.ceil(products?.length / pageSize),
     currentPage: page,
-    pageSize: pageSize,
+    pageSize,
     data: paginatedProducts,
   };
 }

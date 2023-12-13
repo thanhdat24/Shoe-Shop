@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 
 // @mui
-import { Box, Stack, Dialog, Button, DialogContent, DialogActions, TextField } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { Box, Button, Dialog, DialogActions, DialogContent, Stack, TextField } from '@mui/material';
+import moment from 'moment';
 import { useSnackbar } from 'notistack';
-import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
-import { formatPriceInVND } from '../../../../utils/formatNumber';
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { makeSupplierPayment,  } from '../../../../redux/slices/receipt';
+import { useForm } from 'react-hook-form';
 import { FormProvider, RHFRadioGroupName } from '../../../../components/hook-form';
+import ModalDialog from '../../../../components/ModalDialog/DialogTitle';
+import { makeSupplierPayment } from '../../../../redux/slices/receipt';
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { formatPriceInVND } from '../../../../utils/formatNumber';
 
 SupplierPaymentDialog.propTypes = {
   open: PropTypes.bool,
@@ -28,7 +29,7 @@ export default function SupplierPaymentDialog({ open, onClose, detailReceipt }) 
   };
   const methods = useForm({ defaultValues });
 
-  const {  watch, setValue } = methods;
+  const { watch, setValue } = methods;
   const values = watch();
 
   const handlePaymentClick = () => {
@@ -43,6 +44,7 @@ export default function SupplierPaymentDialog({ open, onClose, detailReceipt }) 
           message: 'Giao dịch thành công.',
         },
       },
+      tranDate: moment(new Date()).format(),
     };
     try {
       if (!values.paymentMethod) {

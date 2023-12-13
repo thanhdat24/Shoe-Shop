@@ -1,39 +1,38 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Tab,
-  Tabs,
   Card,
-  Table,
-  Button,
-  Tooltip,
   Divider,
-  TableBody,
-  Container,
   IconButton,
+  Tab,
+  Table,
+  TableBody,
   TableContainer,
   TablePagination,
+  Tabs,
+  Tooltip,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from '../../../redux/store';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
-import useTabs from '../../../hooks/useTabs';
 import useSettings from '../../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../../hooks/useTable';
+import useTable, { emptyRows, getComparator } from '../../../hooks/useTable';
+import useTabs from '../../../hooks/useTabs';
 // components
-import Page from '../../../components/Page';
-import Iconify from '../../../components/Iconify';
-import Scrollbar from '../../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Iconify from '../../../components/Iconify';
+import Page from '../../../components/Page';
+import Scrollbar from '../../../components/Scrollbar';
 import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../../components/table';
 // sections
-import { UserTableToolBar, UserTableRow } from '../../../sections/@dashboard/user/list';
-import { getUsers } from '../../../redux/slices/user';
+import { getUsers, resetUser } from '../../../redux/slices/user';
+import { UserTableRow, UserTableToolBar } from '../../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
 
@@ -53,12 +52,20 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  const { users } = useSelector((state) => state.user);
-  console.log('users', users);
+  const { users, updateSuccess } = useSelector((state) => state.user);
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      enqueueSnackbar('Cập nhật thành công!');
+      dispatch(getUsers());
+    }
+    return () => dispatch(resetUser());
+  }, [updateSuccess]);
   const {
     dense,
     page,

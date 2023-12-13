@@ -72,5 +72,5 @@ export function isCurrentDateGreaterThanSevenDays(date) {
   const diffInMilliseconds = currentDate.getTime() - comparedDate.getTime();
   const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
 
-  return diffInDays > 7;
+  return diffInDays > 14;
 }

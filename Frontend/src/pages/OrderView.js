@@ -12,6 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect } from 'react';
+import moment from 'moment';
+
 import { NavLink as RouterLink, useParams } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Label from '../components/Label';
@@ -33,12 +35,11 @@ export default function OrderView() {
   const { id = '' } = useParams();
 
   const { orderDetail } = useSelector((state) => state.order);
-
   useEffect(() => {
     dispatch(getOrderDetail(id));
     //   return dispatch(resetProduct());
   }, [dispatch, id]);
-
+  console.log('orderDetail', orderDetail);
   const TABLE_HEAD = [
     { id: 'product', label: 'Sản phẩm', alignRight: false },
     { id: 'price', label: 'Giá', alignRight: false },
@@ -108,7 +109,30 @@ export default function OrderView() {
                   }}
                 >
                   <div>
-                    <p className="text-gray-500">{orderDetail?.paymentMethod?.name}</p>
+                    <p className="font-semibold">
+                      Ngày đặt hàng:{' '}
+                      <span className="text-gray-500 !font-normal">
+                        {moment(orderDetail?.createdAt).format('HH:mm DD-MM-YY')}
+                      </span>
+                    </p>
+                    <p className="font-semibold mt-2">
+                      Ngày giao hàng:{' '}
+                      {orderDetail?.deliveryDate && (
+                        <span className="text-gray-500 !font-normal">
+                          {moment(orderDetail?.deliveryDate).format('HH:mm DD-MM-YY')}
+                        </span>
+                      )}
+                    </p>
+                    {orderDetail?.idShipper && (
+                      <p className="font-semibold mt-2">
+                        Thông tin shipper:{' '}
+                        <span className="text-gray-500 !font-normal">
+                          {orderDetail.idShipper.displayName}, {orderDetail.idShipper.phoneNumber}
+                        </span>
+                      </p>
+                    )}
+
+                    <p className="text-gray-500 mt-2">{orderDetail?.paymentMethod?.name}</p>
                     <p className="font-semibold mt-2">
                       Vui lòng thanh toán{' '}
                       <span className="text-red-500">
