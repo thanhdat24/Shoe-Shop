@@ -70,9 +70,13 @@ exports.verifyOTPGoogle = catchAsync(async (req, res, next) => {
   const { phoneNumber, phoneId } = req.body;
   console.log('req.body', req.body);
   const customPhoneNumber = 0 + phoneNumber.slice(3);
+  console.log('customPhoneNumber', customPhoneNumber);
+
   let existUser = await User.findOne({
     phoneNumber: Number(customPhoneNumber),
   });
+  console.log('existUser', existUser);
+
   if (existUser) {
     createSendToken(existUser, 200, res);
   }

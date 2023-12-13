@@ -12,7 +12,7 @@ const transactionsSchema = new mongoose.Schema(
     receiptId: { type: mongoose.Schema.ObjectId, ref: 'Receipt' },
     totalDebt: { type: Number, required: true },
     amount: { type: Number, required: true },
-    tranDate: { type: Date, required: true, default: Date.now() },
+    tranDate: { type: Date },
     paymentMethod: paymentModelSchema,
     paidBy: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
   },

@@ -6,6 +6,8 @@ const catchAsync = require('../utils/catchAsync');
 const _ = require('lodash');
 const cloudinary = require('../utils/cloudinary');
 const fullTextSearch = require('fulltextsearch');
+const slug = require('slug');
+
 const fullTextSearchVi = fullTextSearch.vi;
 
 exports.getDetailProduct = factory.getOne(Product, {
@@ -17,9 +19,6 @@ exports.getDetailProductByName = factory.getOneByName(Product, {
 
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
-// exports.getAllProduct = factory.getAll(Product, {
-//   path: 'productDetail productImages',
-// });
 
 exports.getAllProduct = catchAsync(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
@@ -108,48 +107,21 @@ exports.searchProduct = catchAsync(async (req, res, next) => {
   const skip = (page - 1) * limit;
 
   const count = await Product.countDocuments();
-  const totalPages = Math.ceil(count / limit);
-  const { search } = req.query;
-  console.log('req.query.page', req.query.page);
+  let { search } = req.query;
+  search = search.replace(/\.$/, '');
   var filter = {};
   if (search != '') {
     filter.name = new RegExp(fullTextSearchVi(search), 'i');
   }
-  // if (req.query.page) {
-  //   await Product.find(filter)
-  //     .populate('productImages productDetail')
-  //     .skip(skip)
-  //     .limit(6)
-  //     .then((records) => {
-  //       res.status(200).json({
-  //         status: 'success',
-  //         result: records.length,
-  //         data: records,
-  //         page,
-  //         totalPages,
-  //         count,
-  //       });
-  //     });
-  // } else {
-  //   await Product.find(filter)
-  //     .populate('productImages productDetail')
-  //     .then((records) => {
-  //       res.status(200).json({
-  //         status: 'success',
-  //         result: records.length,
-  //         data: records,
-  //       });
-  //     });
-  // }
-      await Product.find(filter)
-        .populate('productImages productDetail')
-        .then((records) => {
-          res.status(200).json({
-            status: 'success',
-            result: records.length,
-            data: records,
-          });
-        });
+  await Product.find(filter)
+    .populate('productImages productDetail')
+    .then((records) => {
+      res.status(200).json({
+        status: 'success',
+        result: records.length,
+        data: records,
+      });
+    });
 });
 
 exports.searchGender = catchAsync(async (req, res, next) => {

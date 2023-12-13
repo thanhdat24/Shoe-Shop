@@ -42,8 +42,8 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   if (!password) {
     // Nếu không có mật khẩu được cung cấp, gán mật khẩu mặc định
-    password = '123456';
-    passwordConfirm = '123456'; // Cần cập nhật cả mật khẩu xác nhận
+    password = '12345678';
+    passwordConfirm = '12345678'; // Cần cập nhật cả mật khẩu xác nhận
   }
 
   const avatarUrl = gravatarUrl.url(req.body.email, {
@@ -55,7 +55,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     displayName: req.body.displayName,
     phoneNumber: req.body.phoneNumber,
     gender: req.body.gender,
-    idRole: req.body.idRole,
+    role: req.body.role,
     email: req.body.email,
     dateOfBirth: req.body.dateOfBirth,
     password,

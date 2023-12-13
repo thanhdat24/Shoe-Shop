@@ -12,6 +12,10 @@ router
   .post(productRouters.createProduct)
   .get(productRouters.getAllProduct);
 
-router.route('/id/:id').get(productRouters.getDetailProduct).patch(productRouters.updateProduct);
+router
+  .route('/id/:id')
+  .get(productRouters.getDetailProduct)
+  .patch(productRouters.updateProduct);
 router.route('/product').get(productRouters.getDetailProductByName);
+
 module.exports = router;

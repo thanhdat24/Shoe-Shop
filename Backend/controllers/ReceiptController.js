@@ -224,7 +224,7 @@ exports.updateReceipt = factory.updateOne(Receipt);
 
 exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
   const _id = req.params.id;
-  const { paymentHistory, amount, totalPrice } = req.body;
+  const { paymentHistory, amount, totalPrice, tranDate } = req.body;
   // Tìm phiếu nhập hàng dựa trên _id
   const receipt = await Receipt.findById(_id);
 
@@ -258,6 +258,7 @@ exports.makeSupplierPayment = catchAsync(async (req, res, next) => {
     totalDebt: totalPrice - receipt.supplierPaidCost,
     paymentMethod: paymentHistory.paymentMethod, // Cần đảm bảo paymentMethod đã được định nghĩa trong yêu cầu
     paidBy: req.user._id,
+    tranDate,
   };
 
   const transactions = await Transactions.create(transactionsData);

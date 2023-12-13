@@ -1,7 +1,6 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
-const { capitalCase } = require('change-case');
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -68,7 +67,7 @@ exports.createOne = (Model, uploadCloudName, imageModelName) =>
 
 exports.getOneByName = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
-    let query = Model.find({ name: capitalCase(req.query.name) });
+    let query = Model.find({ slug: req.query.name });
     if (populateOptions) query = query.populate(populateOptions);
     const doc = await query;
     if (!doc) {

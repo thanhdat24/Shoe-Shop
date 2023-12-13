@@ -141,7 +141,9 @@ exports.getUserLoginGoogle = catchAsync(async (req, res, next) => {
 exports.checkUserExist = catchAsync(async (req, res, next) => {
   const { uid } = req.query;
   try {
-    const checkUserExist = await User.findOne({ googleId: uid });
+    const checkUserExist = await User.findOne({
+      $or: [{ googleId: uid }, { phoneId: uid }],
+    });
 
     if (!checkUserExist) {
       return next(new AppError('Người dùng không tồn tại!', 401));
@@ -160,7 +162,9 @@ exports.checkUserExist = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserUID = catchAsync(async (req, res, next) => {
-  let query = User.findOne({ googleId: req.query.uid });
+  let query = User.findOne({
+    $or: [{ googleId: req.query.uid }, { phoneId: req.query.uid }],
+  });
   const doc = await query;
   if (!doc) {
     return next(new AppError('Không tồn tại người dùng có uid', 404));

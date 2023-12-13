@@ -131,8 +131,8 @@ exports.getProductRating = catchAsync(async (req, res, next) => {
   const doc = await query;
 
   let filterDoc = doc.filter((item) => item.idProduct.id === id);
-
-  result = _(filterDoc)
+  let activeFilterDoc = filterDoc.filter((item) => item.active === true);
+  result = _(activeFilterDoc)
     .groupBy('rating')
     .map((array, key) => ({
       starName: key,
@@ -140,16 +140,15 @@ exports.getProductRating = catchAsync(async (req, res, next) => {
       reviewCount: array.reduce((total, item, index) => (total += index), 1),
     }))
     .value();
-
   let newRatings = {
-    totalReview: filterDoc.length,
-    totalRating: (
-      filterDoc.reduce((total, item) => (total += item.rating), 0) /
-      filterDoc.length
-    ).toFixed(1),
-    data: filterDoc,
+    totalReview: activeFilterDoc.length,
+    totalRating:
+      activeFilterDoc.reduce((total, item) => (total += item.rating), 0) /
+      activeFilterDoc.length,
+    data: activeFilterDoc,
     ratings: result,
   };
+
   res.status(200).json({
     status: 'success',
     length: newRatings.length,

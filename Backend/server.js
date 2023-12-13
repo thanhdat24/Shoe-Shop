@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cron = require('node-cron');
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 🧨 Shutting down...');
@@ -9,6 +10,7 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config({ path: './.env' });
 const app = require('./app');
+const { autoUpdateOrderStatus } = require('./controllers/orderController');
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -40,4 +42,9 @@ process.on('unhandledRejection', (err) => {
   server.close(() => {
     process.exit(1);
   });
+});
+
+cron.schedule('*/30 * * * *', () => {
+  autoUpdateOrderStatus();
+  console.log('1234');
 });

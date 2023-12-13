@@ -15,7 +15,7 @@ router.get('/checkUserExist', userController.checkUserExist);
 router.get('/getUserUID', userController.getUserUID);
 router
   .route('/:id')
-  .put(userController.updateUser)
+  .patch(userController.updateUser)
   .get(userController.getDetailUser);
 
 router.post('/createUser', userController.createUser);

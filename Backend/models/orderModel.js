@@ -74,6 +74,9 @@ const orderModelSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    deliveryDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

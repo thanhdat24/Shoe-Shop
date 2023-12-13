@@ -1,6 +1,7 @@
 const Order = require('../models/orderModel');
 const OrderDetail = require('../models/orderDetailModel');
 const Product = require('../models/productModel');
+const Receipt = require('../models/receiptModel');
 const ProductDetail = require('../models/productDetailModel');
 const ProductImages = require('../models/productImagesModel');
 const Promotion = require('../models/promotionModel');
@@ -50,8 +51,6 @@ const filterObj = (obj, ...allowedField) => {
 
 exports.createOrder = catchAsync(async (req, res, next) => {
   const { _id } = req.user;
-  // console.log('req.user', req.user);
-  console.log('req.body', req.body);
   try {
     req.body.idUser = _id;
     const objOrder = filterObj(
@@ -64,12 +63,15 @@ exports.createOrder = catchAsync(async (req, res, next) => {
       'idPromotion',
       'status'
     );
-    const checkOrderExit = await Order.find({
-      'paymentMethod.orderId': req.body.paymentMethod.orderId,
-    });
 
-    if (checkOrderExit.length > 0) {
-      return next(new AppError('Order is exist', 400));
+    if (req.body.paymentMethod.orderId !== '') {
+      const checkOrderExit = await Order.find({
+        'paymentMethod.orderId': req.body.paymentMethod.orderId,
+      });
+
+      if (checkOrderExit.length > 0) {
+        return next(new AppError('Order is exist', 400));
+      }
     }
 
     const order = await Order.create(objOrder);
@@ -109,7 +111,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
               idSize: item.idSize,
               idProduct: product._id,
             });
-            console.log('idColorAndSize', idColorAndSize);
             if (idColorAndSize) {
               idColorAndSize[0].quantity -= item.quantity;
               console.log(
@@ -368,6 +369,7 @@ exports.updateOrder = catchAsync(async (req, res, next) => {
           'paymentMethod.resultCode': 0,
           'paymentMethod.message': 'Thành công.',
           status: req.body.status,
+          receiveDay: req.body.receiveDay,
         },
       },
       options
@@ -401,13 +403,12 @@ exports.monthlyProductRevenue = catchAsync(async (req, res, next) => {
 
   doc = doc.filter(
     (item) =>
-      item.idOrder.status === 'Đã nhận' ||
-      item.idOrder.status === 'Đã đánh giá' ||
-      item.idOrder.status === 'Đã giao hàng'
+      item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
   );
   let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('DD-MM-YYYY'))
     .map((value, key) => ({ nameYear: key, orderRevenueDay: value }))
+    .orderBy('nameYear')
     .value();
 
   let array = _(result)
@@ -456,9 +457,7 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
   let doc = await OrderDetail.find({ idProduct });
   doc = doc.filter(
     (item) =>
-      item.idOrder.status === 'Đã nhận' ||
-      item.idOrder.status === 'Đã đánh giá' ||
-      item.idOrder.status === 'Đã giao hàng'
+      item.idOrder.status === 'Đã nhận' || item.idOrder.status === 'Đã đánh giá'
   );
   let result = _(doc)
     .groupBy((x) => moment(x.createdAt).format('MM-YYYY'))
@@ -474,7 +473,6 @@ exports.yearlyProductRevenue = catchAsync(async (req, res, next) => {
       orderRevenueMonth: value,
     }))
     .value();
-  console.log('array', array);
 
   const arrayMonth = [];
   const totalQuality = [];
@@ -544,4 +542,118 @@ exports.bestSellingProductsRevenue = catchAsync(async (req, res, next) => {
     arrayQuality,
     arrayName,
   });
+});
+
+exports.totalRevenue = catchAsync(async (req, res, next) => {
+  const now = moment();
+
+  const startOfToday = now.startOf('day').format('');
+  const endOfToday = now.endOf('day').format('');
+  const startOfThisWeek = now.startOf('isoWeek').format('');
+  const endOfWeek = now.endOf('isoWeek').format('');
+  const startOfMonth = now.startOf('month').format('');
+  const endOfMonth = now.endOf('month').format('');
+  const startOfYear = now.startOf('year').format('');
+  const endOfYear = now.endOf('year').format('');
+  console.log('startOfToday', startOfToday);
+  console.log('endOfToday', endOfToday);
+  console.log('startOfThisWeek', startOfThisWeek);
+  console.log('endOfWeek', endOfWeek);
+  console.log('startOfMonth', startOfMonth);
+  console.log('endOfMonth', endOfMonth);
+  console.log('startOfYear', startOfYear);
+  console.log('endOfYear', endOfYear);
+  const getOrderTotal = async (query) => {
+    const orders = await Order.find(query);
+    return orders.reduce((total, order) => total + order.total, 0);
+  };
+
+  const getReceiptTotal = async (query) => {
+    const receipts = await Receipt.find(query);
+    return receipts.reduce((total, receipt) => total + receipt.totalPrice, 0);
+  };
+
+  const [
+    totalRevenueToday,
+    totalRevenueThisWeek,
+    totalRevenueThisMonth,
+    totalRevenueThisYear,
+    totalReceiptToday,
+    totalReceiptThisWeek,
+    totalReceiptThisMonth,
+    totalReceiptThisYear,
+  ] = await Promise.all([
+    getOrderTotal({
+      status: { $in: ['Đã đánh giá', 'Đã nhận'] },
+      receiveDay: { $gte: startOfToday, $lte: endOfToday },
+    }),
+    getOrderTotal({
+      status: { $in: ['Đã đánh giá', 'Đã nhận'] },
+      receiveDay: { $gte: startOfThisWeek, $lte: endOfWeek },
+    }),
+    getOrderTotal({
+      status: { $in: ['Đã đánh giá', 'Đã nhận'] },
+      receiveDay: { $gte: startOfMonth, $lte: endOfMonth },
+    }),
+    getOrderTotal({
+      status: { $in: ['Đã đánh giá', 'Đã nhận'] },
+      receiveDay: { $gte: startOfYear, $lte: endOfYear },
+    }),
+    getReceiptTotal({
+      createdAt: { $gte: startOfToday, $lte: endOfToday },
+    }),
+    getReceiptTotal({
+      createdAt: { $gte: startOfThisWeek, $lte: endOfWeek },
+    }),
+    getReceiptTotal({
+      createdAt: { $gte: startOfMonth, $lte: endOfMonth },
+    }),
+    getReceiptTotal({
+      createdAt: { $gte: startOfYear, $lte: endOfYear },
+    }),
+  ]);
+
+  res.status(200).json({
+    totalRevenueToday,
+    totalRevenueThisWeek,
+    totalRevenueThisMonth,
+    totalRevenueThisYear,
+    totalReceiptToday,
+    totalReceiptThisWeek,
+    totalReceiptThisMonth,
+    totalReceiptThisYear,
+  });
+});
+
+exports.getAllUpdate = catchAsync(async (req, res, next) => {
+  const ordersToUpdate = await Order.find({
+    status: { $in: ['Đã đánh giá', 'Đã nhận'] },
+  });
+
+  ordersToUpdate.forEach(async (order) => {
+    order.deliveryDate = order.updatedAt; // Cập nhật receiveDay bằng updatedAt
+
+    // Lưu thay đổi vào cơ sở dữ liệu
+    await order.save();
+  });
+
+  res.status(200).json({
+    status: 'success',
+    result: ordersToUpdate.length,
+    data: ordersToUpdate,
+  });
+});
+
+exports.autoUpdateOrderStatus = catchAsync(async (req, res, next) => {
+  const ordersToUpdate = await Order.find({
+    status: 'Đã giao hàng',
+    updatedAt: { $lte: moment().subtract(3, 'days').toDate() },
+  });
+
+  console.log('ordersToUpdate', ordersToUpdate);
+  for (const order of ordersToUpdate) {
+    order.status = 'Đã nhận';
+    order.receiveDay = new Date(); // Cập nhật receiveDay bằng updatedAt
+    await order.save();
+  }
 });

@@ -25,7 +25,11 @@ router
   .route('/best-selling-products-revenue')
   .get(orderController.bestSellingProductsRevenue);
 
-
+router.route('/getAllUpdate').get(orderController.getAllUpdate);
+router.route('/totalRevenue').get(orderController.totalRevenue);
+router
+  .route('/autoUpdateOrderStatus')
+  .get(orderController.autoUpdateOrderStatus);
 
 router
   .route('/:id')

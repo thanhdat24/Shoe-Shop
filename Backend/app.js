@@ -5,6 +5,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const cron = require('node-cron');
 
 const app = express();
 
@@ -31,6 +32,7 @@ const receiptRouters = require('./routers/receiptRouters');
 const receiptDetailRouters = require('./routers/receiptDetailRouters');
 const transactionsRouters = require('./routers/transactionsRouters');
 const OTPRouters = require('./routers/OTPRouters');
+const { autoUpdateOrderStatus } = require('./controllers/orderController');
 
 // Serving static files
 // const publicPathDirectory = path.join(__dirname, 'public')
